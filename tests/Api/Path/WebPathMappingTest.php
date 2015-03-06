@@ -1,0 +1,103 @@
+<?php
+
+/*
+ * This file is part of the puli/web-resource-plugin package.
+ *
+ * (c) Bernhard Schussek <bschussek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Puli\WebResourcePlugin\Tests\Api\Path;
+
+use PHPUnit_Framework_TestCase;
+use Puli\WebResourcePlugin\Api\Path\WebPathMapping;
+
+/**
+ * @since  1.0
+ * @author Bernhard Schussek <bschussek@gmail.com>
+ */
+class WebPathMappingTest extends PHPUnit_Framework_TestCase
+{
+    public function testCreate()
+    {
+        $mapping = new WebPathMapping('/blog/public', 'local', 'blog');
+
+        $this->assertSame('/blog/public', $mapping->getRepositoryPath());
+        $this->assertSame('local', $mapping->getTargetName());
+        $this->assertSame('blog', $mapping->getWebPath());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfRepositoryPathNull()
+    {
+        new WebPathMapping(null, 'local', 'blog');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfRepositoryPathEmpty()
+    {
+        new WebPathMapping('', 'local', 'blog');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfRepositoryPathNoString()
+    {
+        new WebPathMapping(1234, 'local', 'blog');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfTargetNameNull()
+    {
+        new WebPathMapping('/blog/public', null, 'blog');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfTargetNameEmpty()
+    {
+        new WebPathMapping('/blog/public', '', 'blog');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfTargetNameNoString()
+    {
+        new WebPathMapping('/blog/public', 1234, 'blog');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfWebPathNull()
+    {
+        new WebPathMapping('/blog/public', 'local', null);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfWebPathEmpty()
+    {
+        new WebPathMapping('/blog/public', 'local', '');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfWebPathNoString()
+    {
+        new WebPathMapping('/blog/public', 'local', 1234);
+    }
+}
