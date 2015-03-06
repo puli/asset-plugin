@@ -22,7 +22,8 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $target = new InstallTarget('local', 'symlink', 'web/assets', '/assets/%s', array('user' => 'webmozart'));
+        $target = new InstallTarget('local', 'symlink', 'web/assets',
+            '/assets/%s', array('user' => 'webmozart'));
 
         $this->assertSame('local', $target->getName());
         $this->assertSame('symlink', $target->getInstallerName());

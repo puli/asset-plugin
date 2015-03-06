@@ -109,7 +109,7 @@ class InstallTargetCollection implements IteratorAggregate, ArrayAccess, Countab
      *
      * @return bool Whether the target exists.
      */
-    public function has($targetName)
+    public function contains($targetName)
     {
         if (InstallTarget::DEFAULT_TARGET === $targetName) {
             return null !== $this->defaultTarget;
@@ -218,7 +218,7 @@ class InstallTargetCollection implements IteratorAggregate, ArrayAccess, Countab
      */
     public function offsetExists($targetName)
     {
-        return $this->has($targetName);
+        return $this->contains($targetName);
     }
 
     /**

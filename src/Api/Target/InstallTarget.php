@@ -45,6 +45,11 @@ class InstallTarget
     const DEFAULT_TARGET = 'default';
 
     /**
+     * The default URL format.
+     */
+    const DEFAULT_URL_FORMAT = '/%s';
+
+    /**
      * @var string
      */
     private $name;
@@ -81,7 +86,7 @@ class InstallTarget
      * @param array  $parameters    Additional parameters to be processed by the
      *                              resource installer or the URL generator.
      */
-    public function __construct($name, $installerName, $location, $urlFormat = '/%s', array $parameters = array())
+    public function __construct($name, $installerName, $location, $urlFormat = self::DEFAULT_URL_FORMAT, array $parameters = array())
     {
         Assert::string($name, 'The target name must be a string. Got: %s');
         Assert::notEmpty($name, 'The target name must not be empty.');

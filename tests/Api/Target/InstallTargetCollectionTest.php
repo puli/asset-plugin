@@ -45,8 +45,10 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
     {
         $this->collection = new InstallTargetCollection();
         $this->target1 = new InstallTarget('target1', 'symlink', 'web');
-        $this->target2 = new InstallTarget('target2', 'rsync', 'ssh://my.cdn.com', 'http://my.cdn.com/%s');
-        $this->target3 = new InstallTarget('target3', 'ftp', 'ftp://example.com/assets', 'http://example.com/assets/%s');
+        $this->target2 = new InstallTarget('target2', 'rsync',
+            'ssh://my.cdn.com', 'http://my.cdn.com/%s');
+        $this->target3 = new InstallTarget('target3', 'ftp',
+            'ftp://example.com/assets', 'http://example.com/assets/%s');
     }
 
     public function testCreate()
@@ -160,12 +162,12 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
         $this->collection->get('foobar');
     }
 
-    public function testHas()
+    public function testContains()
     {
         $this->collection->add($this->target1);
 
-        $this->assertTrue($this->collection->has('target1'));
-        $this->assertFalse($this->collection->has('foobar'));
+        $this->assertTrue($this->collection->contains('target1'));
+        $this->assertFalse($this->collection->contains('foobar'));
     }
 
     public function testIsEmpty()
@@ -315,10 +317,10 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertSame($this->target2, $this->collection->get(InstallTarget::DEFAULT_TARGET));
     }
 
-    public function testHasWithDefaultTarget()
+    public function testContainsWithDefaultTarget()
     {
-        $this->assertFalse($this->collection->has(InstallTarget::DEFAULT_TARGET));
+        $this->assertFalse($this->collection->contains(InstallTarget::DEFAULT_TARGET));
         $this->collection->add($this->target1);
-        $this->assertTrue($this->collection->has(InstallTarget::DEFAULT_TARGET));
+        $this->assertTrue($this->collection->contains(InstallTarget::DEFAULT_TARGET));
     }
 }
