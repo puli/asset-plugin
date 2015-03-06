@@ -40,6 +40,11 @@ use Puli\RepositoryManager\Assert\Assert;
 class InstallTarget
 {
     /**
+     * The alias for the default target.
+     */
+    const DEFAULT_TARGET = 'default';
+
+    /**
      * @var string
      */
     private $name;
@@ -80,6 +85,7 @@ class InstallTarget
     {
         Assert::string($name, 'The target name must be a string. Got: %s');
         Assert::notEmpty($name, 'The target name must not be empty.');
+        Assert::notEq($name, self::DEFAULT_TARGET, 'The target name must not be "'.self::DEFAULT_TARGET.'".');
         Assert::string($installerName, 'The installer name must be a string. Got: %s');
         Assert::notEmpty($installerName, 'The installer name must not be empty.');
         Assert::string($location, 'The target location must be a string. Got: %s');

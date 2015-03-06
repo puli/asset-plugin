@@ -64,7 +64,6 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
         $collection = new InstallTargetCollection();
 
         $this->assertSame(array(), $collection->toArray());
-        $this->assertNull($collection->getDefaultTarget());
     }
 
     public function testAdd()
@@ -253,8 +252,9 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertSame($this->target2, $this->collection->getDefaultTarget());
 
         $this->collection->remove('target2');
+        $this->collection->add($this->target1);
 
-        $this->assertNull($this->collection->getDefaultTarget());
+        $this->assertSame($this->target1, $this->collection->getDefaultTarget());
     }
 
     public function testClearResetsDefaultTarget()
@@ -262,8 +262,9 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
         $this->collection->add($this->target1);
         $this->collection->add($this->target2);
         $this->collection->clear();
+        $this->collection->add($this->target2);
 
-        $this->assertNull($this->collection->getDefaultTarget());
+        $this->assertSame($this->target2, $this->collection->getDefaultTarget());
     }
 
     public function testSetDefaultTarget()
@@ -282,5 +283,42 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
     public function testSetDefaultTargetFailsIfNotFound()
     {
         $this->collection->setDefaultTarget('foobar');
+    }
+
+    /**
+     * @expectedException \Puli\WebResourcePlugin\Api\Target\NoSuchTargetException
+     */
+    public function testGetDefaultTargetFailsIfEmpty()
+    {
+        $this->collection->getDefaultTarget();
+    }
+
+    public function testGetWithDefaultTarget()
+    {
+        $this->collection->add($this->target1);
+        $this->collection->add($this->target2);
+
+        $this->assertSame($this->target1, $this->collection->get(InstallTarget::DEFAULT_TARGET));
+
+        $this->collection->setDefaultTarget('target2');
+
+        $this->assertSame($this->target2, $this->collection->get(InstallTarget::DEFAULT_TARGET));
+    }
+
+    public function testRemoveWithDefaultTarget()
+    {
+        $this->collection->add($this->target1);
+        $this->collection->add($this->target2);
+
+        $this->collection->remove(InstallTarget::DEFAULT_TARGET);
+
+        $this->assertSame($this->target2, $this->collection->get(InstallTarget::DEFAULT_TARGET));
+    }
+
+    public function testHasWithDefaultTarget()
+    {
+        $this->assertFalse($this->collection->has(InstallTarget::DEFAULT_TARGET));
+        $this->collection->add($this->target1);
+        $this->assertTrue($this->collection->has(InstallTarget::DEFAULT_TARGET));
     }
 }

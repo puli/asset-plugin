@@ -66,6 +66,14 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
+    public function testFailIfNameDefault()
+    {
+        new InstallTarget(InstallTarget::DEFAULT_TARGET, 'symlink', 'web/assets');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testFailIfInstallerNameNull()
     {
         new InstallTarget('local', null, 'web/assets');

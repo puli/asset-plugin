@@ -71,6 +71,10 @@ class InstallTargetCollection implements IteratorAggregate, ArrayAccess, Countab
      */
     public function get($targetName)
     {
+        if (InstallTarget::DEFAULT_TARGET === $targetName) {
+            return $this->getDefaultTarget();
+        }
+
         if (!isset($this->targets[$targetName])) {
             throw NoSuchTargetException::forTargetName($targetName);
         }
@@ -87,6 +91,10 @@ class InstallTargetCollection implements IteratorAggregate, ArrayAccess, Countab
      */
     public function remove($targetName)
     {
+        if (InstallTarget::DEFAULT_TARGET === $targetName && $this->defaultTarget) {
+            $targetName = $this->defaultTarget->getName();
+        }
+
         unset($this->targets[$targetName]);
 
         if ($this->defaultTarget && $targetName === $this->defaultTarget->getName()) {
@@ -103,6 +111,10 @@ class InstallTargetCollection implements IteratorAggregate, ArrayAccess, Countab
      */
     public function has($targetName)
     {
+        if (InstallTarget::DEFAULT_TARGET === $targetName) {
+            return null !== $this->defaultTarget;
+        }
+
         return isset($this->targets[$targetName]);
     }
 
@@ -176,11 +188,16 @@ class InstallTargetCollection implements IteratorAggregate, ArrayAccess, Countab
      * By default, the first added target is the default target. The default
      * target can be changed with {@link setDefaultTarget}.
      *
-     * @return InstallTarget Returns the default target or `null` if the
-     *                       collection is empty.
+     * @return InstallTarget Returns the default target.
+     *
+     * @throws NoSuchTargetException If the collection is empty.
      */
     public function getDefaultTarget()
     {
+        if (!$this->defaultTarget) {
+            throw new NoSuchTargetException('Cannot get the default target of an empty collection.');
+        }
+
         return $this->defaultTarget;
     }
 
