@@ -21,7 +21,7 @@ use RuntimeException;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class InstallTargetManagerImpl implements InstallTargetManager
+class PackageFileInstallTargetManager implements InstallTargetManager
 {
     /**
      * The config key that stores the install target data.

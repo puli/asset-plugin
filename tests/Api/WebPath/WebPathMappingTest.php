@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Path;
+namespace Puli\WebResourcePlugin\Tests\Api\WebPath;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Path\WebPathMapping;
+use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
+use Rhumsaa\Uuid\Uuid;
 
 /**
  * @since  1.0
@@ -27,6 +28,18 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
         $this->assertSame('/blog/public', $mapping->getRepositoryPath());
         $this->assertSame('local', $mapping->getTargetName());
         $this->assertSame('blog', $mapping->getWebPath());
+        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $mapping->getUuid());
+    }
+
+    function testCreateWithUuid()
+    {
+        $uuid = Uuid::uuid4();
+        $mapping = new WebPathMapping('/blog/public', 'local', 'blog', $uuid);
+
+        $this->assertSame('/blog/public', $mapping->getRepositoryPath());
+        $this->assertSame('local', $mapping->getTargetName());
+        $this->assertSame('blog', $mapping->getWebPath());
+        $this->assertSame($uuid, $mapping->getUuid());
     }
 
     /**

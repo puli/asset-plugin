@@ -15,7 +15,7 @@ namespace Puli\WebResourcePlugin\Tests\Target;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class InstallTargetManagerImplLoadedTest extends InstallTargetManagerImplUnloadedTest
+class PackageFileInstallTargetManagerLoadedTest extends PackageFileInstallTargetManagerUnloadedTest
 {
     protected function populateDefaultManager()
     {

@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Path;
+namespace Puli\WebResourcePlugin\Api\WebPath;
 
 use Puli\RepositoryManager\Assert\Assert;
+use Rhumsaa\Uuid\Uuid;
 
 /**
  * Maps a repository path to a web path on an install target.
@@ -21,6 +22,31 @@ use Puli\RepositoryManager\Assert\Assert;
  */
 class WebPathMapping
 {
+    /**
+     * The UUID field in {@link Expression} instances.
+     */
+    const UUID = 'uuid';
+
+    /**
+     * The repository path field in {@link Expression} instances.
+     */
+    const REPOSITORY_PATH = 'repositoryPath';
+
+    /**
+     * The target name field in {@link Expression} instances.
+     */
+    const TARGET_NAME = 'targetName';
+
+    /**
+     * The web path field in {@link Expression} instances.
+     */
+    const WEB_PATH = 'webPath';
+
+    /**
+     * @var Uuid
+     */
+    private $uuid;
+
     /**
      * @var string
      */
@@ -43,8 +69,9 @@ class WebPathMapping
      * @param string $targetName     The name of the install target.
      * @param string $webPath        The web path of the resource in the install
      *                               target.
+     * @param Uuid   $uuid           The UUID of the mapping.
      */
-    public function __construct($repositoryPath, $targetName, $webPath)
+    public function __construct($repositoryPath, $targetName, $webPath, Uuid $uuid = null)
     {
         Assert::string($repositoryPath, 'The repository path must be a string. Got: %s');
         Assert::notEmpty($repositoryPath, 'The repository path must not be empty.');
@@ -53,9 +80,20 @@ class WebPathMapping
         Assert::string($webPath, 'The web path must be a string. Got: %s');
         Assert::notEmpty($webPath, 'The web path must not be empty.');
 
+        $this->uuid = $uuid ?: Uuid::uuid4();
         $this->repositoryPath = $repositoryPath;
         $this->targetName = $targetName;
         $this->webPath = $webPath;
+    }
+
+    /**
+     * Returns the UUID of the mapping.
+     *
+     * @return Uuid The UUID of the mapping.
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 
     /**
