@@ -14,15 +14,15 @@ namespace Puli\WebResourcePlugin\Api\Installer;
 use Exception;
 
 /**
- * Thrown when an installer parameter was not found.
+ * Thrown when an installer parameter is missing.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class NoSuchParameterException extends Exception
+class MissingParameterException extends Exception
 {
     /**
-     * Creates an exception for a parameter name that was not found.
+     * Creates an exception for a parameter name that is missing.
      *
      * @param string    $parameterName The parameter name.
      * @param string    $installerName The installer name.
@@ -34,7 +34,7 @@ class NoSuchParameterException extends Exception
     public static function forParameterName($parameterName, $installerName, $code = 0, Exception $cause = null)
     {
         return new static(sprintf(
-            'The installer parameter "%s" does not exist for the "%s" installer.',
+            'The installer parameter "%s" is required for the "%s" installer.',
             $parameterName,
             $installerName
         ), $code, $cause);

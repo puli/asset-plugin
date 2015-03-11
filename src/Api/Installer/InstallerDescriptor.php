@@ -125,7 +125,7 @@ class InstallerDescriptor
     public function getParameter($parameterName)
     {
         if (!isset($this->parameters[$parameterName])) {
-            throw NoSuchParameterException::forParameterName($parameterName);
+            throw NoSuchParameterException::forParameterName($parameterName, $this->name);
         }
 
         return $this->parameters[$parameterName];

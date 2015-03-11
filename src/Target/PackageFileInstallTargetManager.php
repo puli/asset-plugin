@@ -12,6 +12,7 @@
 namespace Puli\WebResourcePlugin\Target;
 
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
+use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
@@ -34,6 +35,11 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     private $rootPackageFileManager;
 
     /**
+     * @var InstallerManager
+     */
+    private $installerManager;
+
+    /**
      * @var InstallTargetCollection
      */
     private $targets;
@@ -43,9 +49,10 @@ class PackageFileInstallTargetManager implements InstallTargetManager
      */
     private $targetsData = array();
 
-    public function __construct(RootPackageFileManager $rootPackageFileManager)
+    public function __construct(RootPackageFileManager $rootPackageFileManager, InstallerManager $installerManager)
     {
         $this->rootPackageFileManager = $rootPackageFileManager;
+        $this->installerManager = $installerManager;
     }
 
     /**
@@ -197,7 +204,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
 
         return new InstallTarget(
             $targetName,
-            $targetData['installer'],
+            $this->installerManager->getInstallerDescriptor($targetData['installer']),
             $targetData['location'],
             isset($targetData['url-format'])
                 ? $targetData['url-format']
@@ -211,7 +218,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     private function targetToData(InstallTarget $target)
     {
         $targetData = array(
-            'installer' => $target->getInstallerName(),
+            'installer' => $target->getInstallerDescriptor()->getName(),
             'location' => $target->getLocation(),
         );
 
@@ -219,7 +226,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
             $targetData['url-format'] = $urlFormat;
         }
 
-        if ($parameters = $target->getParameters()) {
+        if ($parameters = $target->getParameterValues()) {
             $targetData['parameters'] = $parameters;
 
             return $targetData;
