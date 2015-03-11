@@ -94,8 +94,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testGetTargetWithParameters()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn(array(
                 'local' => array(
                     'installer' => 'symlink',
@@ -115,8 +115,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testGetTargetWithoutUrlFormat()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn(array(
                 'local' => array(
                     'installer' => 'symlink',
@@ -135,8 +135,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testFailIfMissingInstallerKey()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn(array(
                 'local' => array(
                     'location' => 'web',
@@ -152,8 +152,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testFailIfMissingLocationKey()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn(array(
                 'local' => array(
                     'installer' => 'symlink',
@@ -169,8 +169,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testFailIfKeyNotAnArray()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn('foobar');
 
         $this->targetManager->getTarget('local');
@@ -206,8 +206,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testHasNoTargets()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY, array())
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY, array())
             ->willReturn(array());
 
         $this->assertFalse($this->targetManager->hasTargets());
@@ -218,8 +218,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->populateDefaultManager();
 
         $this->packageFileManager->expects($this->once())
-            ->method('setConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY, array(
+            ->method('setExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY, array(
                 'local' => array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -244,8 +244,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->populateDefaultManager();
 
         $this->packageFileManager->expects($this->once())
-            ->method('setConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY, array(
+            ->method('setExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY, array(
                 'local' => array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -271,8 +271,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->populateDefaultManager();
 
         $this->packageFileManager->expects($this->once())
-            ->method('setConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY, array(
+            ->method('setExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY, array(
                 'local' => array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -298,8 +298,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testRemoveTarget()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn(array(
                 'local' => array(
                     'installer' => 'symlink',
@@ -315,8 +315,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
             ));
 
         $this->packageFileManager->expects($this->once())
-            ->method('setConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY, array(
+            ->method('setExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY, array(
                 'cdn' => array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
@@ -336,8 +336,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->populateDefaultManager();
 
         $this->packageFileManager->expects($this->once())
-            ->method('removeConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY);
+            ->method('removeExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY);
 
         $this->targetManager->removeTarget('local');
 
@@ -349,9 +349,9 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->populateDefaultManager();
 
         $this->packageFileManager->expects($this->never())
-            ->method('setConfigKey');
+            ->method('setExtraKey');
         $this->packageFileManager->expects($this->never())
-            ->method('removeConfigKey');
+            ->method('removeExtraKey');
 
         $this->targetManager->removeTarget('foobar');
 
@@ -368,8 +368,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     public function testSetDefaultTarget()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn(array(
                 'local' => array(
                     'installer' => 'symlink',
@@ -385,8 +385,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
             ));
 
         $this->packageFileManager->expects($this->any())
-            ->method('setConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY, array(
+            ->method('setExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY, array(
                 'local' => array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -408,8 +408,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     protected function populateDefaultManager()
     {
         $this->packageFileManager->expects($this->any())
-            ->method('getConfigKey')
-            ->with(PackageFileInstallTargetManager::WEB_TARGETS_KEY)
+            ->method('getExtraKey')
+            ->with(PackageFileInstallTargetManager::INSTALL_TARGETS_KEY)
             ->willReturn(array(
                 'local' => array(
                     'installer' => 'symlink',

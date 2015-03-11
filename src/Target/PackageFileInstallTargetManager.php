@@ -25,9 +25,9 @@ use RuntimeException;
 class PackageFileInstallTargetManager implements InstallTargetManager
 {
     /**
-     * The config key that stores the install target data.
+     * The extra key that stores the install target data.
      */
-    const WEB_TARGETS_KEY = 'extra.web-targets';
+    const INSTALL_TARGETS_KEY = 'install-targets';
 
     /**
      * @var RootPackageFileManager
@@ -153,12 +153,12 @@ class PackageFileInstallTargetManager implements InstallTargetManager
             return;
         }
 
-        $targetsData = $this->rootPackageFileManager->getConfigKey(self::WEB_TARGETS_KEY, array());
+        $targetsData = $this->rootPackageFileManager->getExtraKey(self::INSTALL_TARGETS_KEY, array());
 
         if (!is_array($targetsData)) {
             throw new RuntimeException(sprintf(
-                'The config key "%s" must contain an array. Got: %s',
-                self::WEB_TARGETS_KEY,
+                'The extra key "%s" must contain an array. Got: %s',
+                self::INSTALL_TARGETS_KEY,
                 is_object($targetsData) ? get_class($targetsData) : gettype($targetsData)
             ));
         }
@@ -180,9 +180,9 @@ class PackageFileInstallTargetManager implements InstallTargetManager
         if ($this->targetsData) {
             $this->updateDefaultTargetData();
 
-            $this->rootPackageFileManager->setConfigKey(self::WEB_TARGETS_KEY, $this->targetsData);
+            $this->rootPackageFileManager->setExtraKey(self::INSTALL_TARGETS_KEY, $this->targetsData);
         } else {
-            $this->rootPackageFileManager->removeConfigKey(self::WEB_TARGETS_KEY);
+            $this->rootPackageFileManager->removeExtraKey(self::INSTALL_TARGETS_KEY);
         }
     }
 
