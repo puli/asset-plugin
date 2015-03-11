@@ -97,13 +97,10 @@ class InstallTarget
      */
     public function __construct($name, InstallerDescriptor $descriptor, $location, $urlFormat = self::DEFAULT_URL_FORMAT, array $parameterValues = array())
     {
-        Assert::string($name, 'The target name must be a string. Got: %s');
-        Assert::notEmpty($name, 'The target name must not be empty.');
+        Assert::stringNotEmpty($name, 'The target name must be a non-empty string. Got: %s');
         Assert::notEq($name, self::DEFAULT_TARGET, 'The target name must not be "'.self::DEFAULT_TARGET.'".');
-        Assert::string($location, 'The target location must be a string. Got: %s');
-        Assert::notEmpty($location, 'The target location must not be empty.');
-        Assert::string($urlFormat, 'The target URL format must be a string. Got: %s');
-        Assert::notEmpty($urlFormat, 'The target URL format must not be empty.');
+        Assert::stringNotEmpty($location, 'The target location must be a non-empty string. Got: %s');
+        Assert::stringNotEmpty($urlFormat, 'The target URL format must be a non-empty string. Got: %s');
 
         $this->assertParametersValid($parameterValues, $descriptor);
 

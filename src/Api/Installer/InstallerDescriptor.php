@@ -52,12 +52,9 @@ class InstallerDescriptor
      */
     public function __construct($name, $className, $description = null, array $parameters = array())
     {
-        Assert::string($name, 'The installer name must be a string. Got: %s');
-        Assert::notEmpty($name, 'The installer name must not be empty.');
-        Assert::string($className, 'The installer class must be a string. Got: %s');
-        Assert::notEmpty($className, 'The installer class must not be empty.');
-        Assert::nullOrString($description, 'The installer description must be a string or null. Got: %s');
-        Assert::nullOrNotEmpty($description, 'The installer description must not be empty.');
+        Assert::stringNotEmpty($name, 'The installer name must be a non-empty string. Got: %s');
+        Assert::stringNotEmpty($className, 'The installer class must be a non-empty string. Got: %s');
+        Assert::nullOrStringNotEmpty($description, 'The installer description must be a non-empty string or null. Got: %s');
         Assert::allIsInstanceOf($parameters, __NAMESPACE__.'\InstallerParameter');
 
         $this->name = $name;

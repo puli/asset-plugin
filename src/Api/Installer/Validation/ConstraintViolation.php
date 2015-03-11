@@ -11,7 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Api\Installer\Validation;
 
-use Puli\Discovery\Assert\Assert;
+use Webmozart\Assert\Assert;
 
 /**
  * A violation detected during parameter validation.
@@ -73,13 +73,8 @@ class ConstraintViolation
     public function __construct($code, $invalidValue, $installerName, $parameterName = null)
     {
         Assert::oneOf($code, self::$codes, 'The violation code %s is not valid.');
-        Assert::string($installerName, 'The installer name must be a string. Got: %s');
-        Assert::notEmpty($installerName, 'The installer name must not be empty.');
-
-        if (null !== $parameterName) {
-            Assert::string($parameterName, 'The parameter name must be a string. Got: %s');
-            Assert::notEmpty($parameterName, 'The parameter name must not be empty.');
-        }
+        Assert::stringNotEmpty($installerName, 'The installer name must be a non-empty string. Got: %s');
+        Assert::nullOrStringNotEmpty($parameterName, 'The parameter name must be a non-empty string or null. Got: %s');
 
         $this->code = $code;
         $this->installerName = $installerName;

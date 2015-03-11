@@ -73,12 +73,9 @@ class WebPathMapping
      */
     public function __construct($repositoryPath, $targetName, $webPath, Uuid $uuid = null)
     {
-        Assert::string($repositoryPath, 'The repository path must be a string. Got: %s');
-        Assert::notEmpty($repositoryPath, 'The repository path must not be empty.');
-        Assert::string($targetName, 'The target name must be a string. Got: %s');
-        Assert::notEmpty($targetName, 'The target name must not be empty.');
-        Assert::string($webPath, 'The web path must be a string. Got: %s');
-        Assert::notEmpty($webPath, 'The web path must not be empty.');
+        Assert::stringNotEmpty($repositoryPath, 'The repository path must be a non-empty string. Got: %s');
+        Assert::stringNotEmpty($targetName, 'The target name must be a non-empty string. Got: %s');
+        Assert::stringNotEmpty($webPath, 'The web path must be a non-empty string. Got: %s');
 
         $this->uuid = $uuid ?: Uuid::uuid4();
         $this->repositoryPath = $repositoryPath;
