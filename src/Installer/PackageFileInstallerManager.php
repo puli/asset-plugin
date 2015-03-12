@@ -46,11 +46,6 @@ class PackageFileInstallerManager implements InstallerManager
     private $packages;
 
     /**
-     * @var string
-     */
-    private $rootPackageName;
-
-    /**
      * @var InstallerDescriptor[]
      */
     private $installerDescriptors;
@@ -64,7 +59,6 @@ class PackageFileInstallerManager implements InstallerManager
     {
         $this->rootPackageFileManager = $rootPackageFileManager;
         $this->packages = $packages;
-        $this->rootPackageName = $packages->getRootPackageName();
     }
 
     /**
@@ -287,17 +281,6 @@ class PackageFileInstallerManager implements InstallerManager
             isset($parameterData->default) ? $parameterData->default : null,
             isset($parameterData->description) ? $parameterData->description : null
         );
-    }
-
-    private function installersToData(array $installers)
-    {
-        $data = array();
-
-        foreach ($installers as $installerName => $installer) {
-            $data[$installerName] = $this->installerToData($installer);
-        }
-
-        return $data;
     }
 
     private function installerToData(InstallerDescriptor $installer)
