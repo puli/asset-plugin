@@ -3,7 +3,7 @@ The Puli Web Resource Plugin
 
 [![Build Status](https://travis-ci.org/puli/web-resource-plugin.svg?branch=master)](https://travis-ci.org/puli/web-resource-plugin)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/puli/web-resource-plugin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/puli/web-resource-plugin/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/6505ed38-0d0f-4c8d-ac85-f343f8e135a9/mini.png)](https://insight.sensiolabs.com/projects/6505ed38-0d0f-4c8d-ac85-f343f8e135a9)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/2197ba95-f3a5-4434-a11f-0ea4e37a74de/mini.png)](https://insight.sensiolabs.com/projects/2197ba95-f3a5-4434-a11f-0ea4e37a74de)
 [![Latest Stable Version](https://poser.pugx.org/puli/web-resource-plugin/v/stable.svg)](https://packagist.org/packages/puli/web-resource-plugin)
 [![Total Downloads](https://poser.pugx.org/puli/web-resource-plugin/downloads.svg)](https://packagist.org/packages/puli/web-resource-plugin)
 [![Dependency Status](https://www.versioneye.com/php/puli:web-resource-plugin/1.0.0/badge.svg)](https://www.versioneye.com/php/puli:web-resource-plugin/1.0.0)
