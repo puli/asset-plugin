@@ -13,6 +13,7 @@ namespace Puli\WebResourcePlugin\Tests\Installation\Fixtures;
 
 use Puli\Repository\Api\Resource\Resource;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
+use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
 
 /**
@@ -21,8 +22,25 @@ use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
  */
 class TestInstaller implements ResourceInstaller
 {
+    private static $validatedParams;
+
+    public static function getValidatedParams()
+    {
+        return self::$validatedParams;
+    }
+
+    public static function resetValidatedParams()
+    {
+        self::$validatedParams = null;
+    }
+
     public function __construct($param = null)
     {
+    }
+
+    public function validateParams(InstallationParams $params)
+    {
+        self::$validatedParams = $params;
     }
 
     public function installResource(Resource $resource, InstallationParams $params)

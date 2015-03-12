@@ -25,6 +25,10 @@ class TestInstallerWithoutDefaultConstructor implements ResourceInstaller
     {
     }
 
+    public function validateParams(InstallationParams $params)
+    {
+    }
+
     public function installResource(Resource $resource, InstallationParams $params)
     {
     }

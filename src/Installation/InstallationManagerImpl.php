@@ -13,7 +13,7 @@ namespace Puli\WebResourcePlugin\Installation;
 
 use Puli\Repository\Api\Resource\Resource;
 use Puli\RepositoryManager\Api\Environment\ProjectEnvironment;
-use Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException;
+use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
@@ -69,18 +69,18 @@ class InstallationManagerImpl implements InstallationManager
         $resources = $this->environment->getRepository()->find($glob);
 
         if ($resources->isEmpty()) {
-            throw CannotInstallResourcesException::noResourceMatches($glob);
+            throw NotInstallableException::noResourceMatches($glob);
         }
 
         if (!$this->installTargets->contains($targetName)) {
-            throw CannotInstallResourcesException::targetNotFound($targetName);
+            throw NotInstallableException::targetNotFound($targetName);
         }
 
         $target = $this->installTargets->get($targetName);
         $installerName = $target->getInstallerName();
 
         if (!$this->installerManager->hasInstallerDescriptor($installerName)) {
-            throw CannotInstallResourcesException::installerNotFound($installerName);
+            throw NotInstallableException::installerNotFound($installerName);
         }
 
         $installerDescriptor = $this->installerManager->getInstallerDescriptor($installerName);
@@ -100,7 +100,11 @@ class InstallationManagerImpl implements InstallationManager
             $parameterValues
         );
 
-        return new InstallationParams($installer, $resources, $rootDir, $basePath, $location, $webPath, $parameterValues);
+        $params = new InstallationParams($installer, $resources, $rootDir, $basePath, $location, $webPath, $parameterValues);
+
+        $installer->validateParams($params);
+
+        return $params;
     }
 
     /**
@@ -108,6 +112,11 @@ class InstallationManagerImpl implements InstallationManager
      */
     public function installResource(Resource $resource, InstallationParams $params)
     {
+        // Validate, as we cannot guarantee that the installation parameters
+        // were actually retrieved via prepareInstallation()
+        $params->getInstaller()->validateParams($params);
+
+        // Go!
         $params->getInstaller()->installResource($resource, $params);
     }
 
@@ -134,12 +143,12 @@ class InstallationManagerImpl implements InstallationManager
         foreach ($violations as $violation) {
             switch ($violation->getCode()) {
                 case ConstraintViolation::MISSING_PARAMETER:
-                    throw CannotInstallResourcesException::missingParameter(
+                    throw NotInstallableException::missingParameter(
                         $violation->getParameterName(),
                         $violation->getInstallerName()
                     );
                 case ConstraintViolation::NO_SUCH_PARAMETER:
-                    throw CannotInstallResourcesException::noSuchParameter(
+                    throw NotInstallableException::noSuchParameter(
                         $violation->getParameterName(),
                         $violation->getInstallerName()
                     );
@@ -150,17 +159,17 @@ class InstallationManagerImpl implements InstallationManager
     private function validateInstallerClass($installerClass)
     {
         if (!class_exists($installerClass)) {
-            throw CannotInstallResourcesException::installerClassNotFound($installerClass);
+            throw NotInstallableException::installerClassNotFound($installerClass);
         }
 
         $reflClass = new ReflectionClass($installerClass);
 
         if ($reflClass->hasMethod('__construct') && $reflClass->getMethod('__construct')->getNumberOfRequiredParameters() > 0) {
-            throw CannotInstallResourcesException::installerClassNoDefaultConstructor($installerClass);
+            throw NotInstallableException::installerClassNoDefaultConstructor($installerClass);
         }
 
         if (!$reflClass->implementsInterface('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller')) {
-            throw CannotInstallResourcesException::installerClassInvalid($installerClass);
+            throw NotInstallableException::installerClassInvalid($installerClass);
         }
     }
 }

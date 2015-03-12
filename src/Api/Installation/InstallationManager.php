@@ -33,7 +33,7 @@ interface InstallationManager
      *
      * @return InstallationParams The installation parameters.
      *
-     * @throws CannotInstallResourcesException If the installation is not possible.
+     * @throws NotInstallableException If the installation is not possible.
      */
     public function prepareInstallation(WebPathMapping $mapping);
 
@@ -44,7 +44,7 @@ interface InstallationManager
      * @param InstallationParams $params   The installation parameters returned
      *                                     by {@link prepareInstallation()}.
      *
-     * @throws CannotInstallResourcesException If the installation fails.
+     * @throws NotInstallableException If the installation fails.
      */
     public function installResource(Resource $resource, InstallationParams $params);
 }

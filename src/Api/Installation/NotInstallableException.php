@@ -19,7 +19,7 @@ use Exception;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class CannotInstallResourcesException extends Exception
+class NotInstallableException extends Exception
 {
     /**
      * Code: An installer parameter is missing.

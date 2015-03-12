@@ -12,7 +12,7 @@
 namespace Puli\WebResourcePlugin\Api\Installer;
 
 use Puli\Repository\Api\Resource\Resource;
-use Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException;
+use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 
 /**
@@ -24,6 +24,21 @@ use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 interface ResourceInstaller
 {
     /**
+     * Validates whether the given installation parameters can be installed.
+     *
+     * This method can be used to validate the parameters for an installer
+     * independent of the actual installation process. It is guaranteed to be
+     * called before {@link installResource()}.
+     *
+     * @param InstallationParams $params The installation parameters containing
+     *                                   all the additional information needed
+     *                                   to perform the installation.
+     *
+     * @throws NotInstallableException If the parameters are invalid.
+     */
+    public function validateParams(InstallationParams $params);
+
+    /**
      * Installs a resource to a target location.
      *
      * @param Resource           $resource The resource to install.
@@ -31,7 +46,7 @@ interface ResourceInstaller
      *                                     all the additional information needed
      *                                     to perform the installation.
      *
-     * @throws CannotInstallResourcesException If the installation fails.
+     * @throws NotInstallableException If the installation fails.
      */
     public function installResource(Resource $resource, InstallationParams $params);
 }

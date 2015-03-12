@@ -63,6 +63,8 @@ class InstallationManagerImplTest extends ManagerTestCase
             $this->targets,
             $this->installerManager
         );
+
+        TestInstaller::resetValidatedParams();
     }
 
     public function testPrepareInstallation()
@@ -114,6 +116,7 @@ class InstallationManagerImplTest extends ManagerTestCase
         );
 
         $this->assertEquals($params, $this->manager->prepareInstallation($mapping));
+        $this->assertEquals($params, TestInstaller::getValidatedParams());
     }
 
     public function testPrepareInstallationWithNonDynamicGlob()
@@ -167,7 +170,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage param1
      * @expectedExceptionCode 1
      */
@@ -208,7 +211,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage foobar
      * @expectedExceptionCode 2
      */
@@ -250,7 +253,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage foobar
      * @expectedExceptionCode 3
      */
@@ -282,7 +285,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage /path/{css,js}
      * @expectedExceptionCode 4
      */
@@ -321,7 +324,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage foobar
      * @expectedExceptionCode 5
      */
@@ -357,7 +360,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage Puli\WebResourcePlugin\Tests\Installation\Foobar
      * @expectedExceptionCode 6
      */
@@ -399,7 +402,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstallerWithoutDefaultConstructor
      * @expectedExceptionCode 7
      */
@@ -441,7 +444,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstallerInvalid
      * @expectedExceptionCode 8
      */
@@ -501,13 +504,12 @@ class InstallationManagerImplTest extends ManagerTestCase
         );
 
         $installer->expects($this->at(0))
-            ->method('installResource')
-            ->with($first, $params);
+            ->method('validateParams')
+            ->with($params);
         $installer->expects($this->at(1))
             ->method('installResource')
-            ->with($second, $params);
+            ->with($first, $params);
 
         $this->manager->installResource($first, $params);
-        $this->manager->installResource($second, $params);
     }
 }
