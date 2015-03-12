@@ -25,7 +25,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Puli\\WebResourcePlugin\\Tests\\": "tests/"
+            "Puli\\WebResourcePlugin\\Tests\\": "tests/",
+            "Puli\\RepositoryManager\\Tests\\": "vendor/puli/repository-manager/tests/"
         }
     },
     "extra": {

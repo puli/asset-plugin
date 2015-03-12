@@ -66,7 +66,6 @@ class InstallerDescriptor
         }
     }
 
-
     /**
      * Returns the installer name.
      *

@@ -16,19 +16,17 @@ use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
+use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use RuntimeException;
 
 /**
+ * An install target manager that stores the targets in the package file.
+ *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class PackageFileInstallTargetManager implements InstallTargetManager
 {
-    /**
-     * The extra key that stores the install target data.
-     */
-    const INSTALL_TARGETS_KEY = 'install-targets';
-
     /**
      * @var RootPackageFileManager
      */
@@ -153,12 +151,12 @@ class PackageFileInstallTargetManager implements InstallTargetManager
             return;
         }
 
-        $targetsData = $this->rootPackageFileManager->getExtraKey(self::INSTALL_TARGETS_KEY, array());
+        $targetsData = $this->rootPackageFileManager->getExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY, array());
 
         if (!is_array($targetsData)) {
             throw new RuntimeException(sprintf(
                 'The extra key "%s" must contain an array. Got: %s',
-                self::INSTALL_TARGETS_KEY,
+                WebResourcePlugin::INSTALL_TARGETS_KEY,
                 is_object($targetsData) ? get_class($targetsData) : gettype($targetsData)
             ));
         }
@@ -180,9 +178,9 @@ class PackageFileInstallTargetManager implements InstallTargetManager
         if ($this->targetsData) {
             $this->updateDefaultTargetData();
 
-            $this->rootPackageFileManager->setExtraKey(self::INSTALL_TARGETS_KEY, $this->targetsData);
+            $this->rootPackageFileManager->setExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY, $this->targetsData);
         } else {
-            $this->rootPackageFileManager->removeExtraKey(self::INSTALL_TARGETS_KEY);
+            $this->rootPackageFileManager->removeExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY);
         }
     }
 
