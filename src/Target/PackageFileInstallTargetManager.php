@@ -16,7 +16,6 @@ use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
-use RuntimeException;
 use stdClass;
 use Webmozart\Json\JsonValidator;
 use Webmozart\Json\ValidationFailedException;

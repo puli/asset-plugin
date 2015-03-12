@@ -12,8 +12,8 @@
 namespace Puli\WebResourcePlugin\Tests\Api\Installer;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
 use stdClass;
 
 /**
@@ -142,7 +142,7 @@ class InstallerDescriptorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchParameterException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException
      * @expectedExceptionMessage foobar
      */
     public function testGetParameterFailsIfNotFound()
@@ -252,7 +252,7 @@ class InstallerDescriptorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchParameterException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException
      * @expectedExceptionMessage foobar
      */
     public function testGetParameterValueFailsIfNotFound()

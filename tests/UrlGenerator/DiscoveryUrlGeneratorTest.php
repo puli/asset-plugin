@@ -22,7 +22,6 @@ use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
 use Puli\RepositoryManager\Api\Package\Package;
 use Puli\RepositoryManager\Api\Package\PackageFile;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;

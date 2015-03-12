@@ -16,11 +16,11 @@ use Puli\RepositoryManager\Api\Environment\ProjectEnvironment;
 use Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\ConstraintViolation;
-use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\InstallerParameterValidator;
-use Puli\WebResourcePlugin\Api\Installation\ResourceInstaller;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
+use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
+use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
+use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use ReflectionClass;
@@ -159,7 +159,7 @@ class InstallationManagerImpl implements InstallationManager
             throw CannotInstallResourcesException::installerClassNoDefaultConstructor($installerClass);
         }
 
-        if (!$reflClass->implementsInterface('Puli\WebResourcePlugin\Api\Installation\ResourceInstaller')) {
+        if (!$reflClass->implementsInterface('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller')) {
             throw CannotInstallResourcesException::installerClassInvalid($installerClass);
         }
     }

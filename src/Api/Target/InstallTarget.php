@@ -12,8 +12,8 @@
 namespace Puli\WebResourcePlugin\Api\Target;
 
 use Puli\RepositoryManager\Assert\Assert;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchParameterException;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException;
 
 /**
  * A target where resources can be installed.

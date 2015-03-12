@@ -16,9 +16,9 @@ use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
 use Puli\RepositoryManager\Tests\ManagerTestCase;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
+use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
@@ -57,7 +57,7 @@ class InstallationManagerImplTest extends ManagerTestCase
         $this->initEnvironment(__DIR__.'/Fixtures/home', __DIR__.'/Fixtures/root');
 
         $this->targets = new InstallTargetCollection();
-        $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager');
+        $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
         $this->manager = new InstallationManagerImpl(
             $this->environment,
             $this->targets,
@@ -439,7 +439,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             $second = new GenericResource('/path/js'),
         ));
 
-        $installer = $this->getMock('Puli\WebResourcePlugin\Api\Installation\ResourceInstaller');
+        $installer = $this->getMock('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller');
 
         $params = new InstallationParams(
             $installer,

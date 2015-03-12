@@ -13,7 +13,7 @@ namespace Puli\WebResourcePlugin\Tests\Installation\Fixtures;
 
 use Puli\Repository\Api\Resource\Resource;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installation\ResourceInstaller;
+use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
 
 /**
  * @since  1.0

@@ -12,6 +12,7 @@
 namespace Puli\WebResourcePlugin\Api\Installation;
 
 use Puli\Repository\Api\ResourceCollection;
+use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
 
 /**
  * Contains all the necessary information to install resources on a target.

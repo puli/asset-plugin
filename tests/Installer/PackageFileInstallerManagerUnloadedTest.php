@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Installation\Installer;
+namespace Puli\WebResourcePlugin\Tests\Installer;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
@@ -20,8 +20,8 @@ use Puli\RepositoryManager\Api\Package\RootPackage;
 use Puli\RepositoryManager\Api\Package\RootPackageFile;
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
 use Puli\RepositoryManager\Tests\TestException;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Puli\WebResourcePlugin\Installation\Installer\PackageFileInstallerManager;
 
@@ -103,7 +103,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchInstallerException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException
      * @expectedExceptionMessage foobar
      */
     public function testGetInstallerDescriptorFailsIfNotFound()

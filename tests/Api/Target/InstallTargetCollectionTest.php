@@ -12,7 +12,6 @@
 namespace Puli\WebResourcePlugin\Tests\Api\Target;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 

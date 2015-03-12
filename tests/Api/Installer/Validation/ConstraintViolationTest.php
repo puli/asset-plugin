@@ -12,7 +12,7 @@
 namespace Puli\WebResourcePlugin\Tests\Api\Installer\Validation;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\ConstraintViolation;
+use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
 
 /**
  * @since  1.0

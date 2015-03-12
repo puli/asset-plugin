@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Installation;
+namespace Puli\WebResourcePlugin\Api\Installer;
 
 use Puli\Repository\Api\Resource\Resource;
+use Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException;
+use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 
 /**
  * Installs resources to a target location.

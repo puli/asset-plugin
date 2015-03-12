@@ -176,7 +176,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
 
         $manager = $this->plugin->getInstallerManager();
 
-        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager', $manager);
+        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\Installer\InstallerManager', $manager);
 
         $this->assertSame($manager, $this->plugin->getInstallerManager());
     }

@@ -11,10 +11,10 @@
 
 namespace Puli\WebResourcePlugin\Api;
 
+use Installer\InstallerManager;
 use Puli\RepositoryManager\Api\Puli;
 use Puli\RepositoryManager\Api\PuliPlugin;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;

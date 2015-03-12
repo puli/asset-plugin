@@ -12,10 +12,10 @@
 namespace Puli\WebResourcePlugin\Tests\Api\Installer\Validation;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\ConstraintViolation;
-use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\InstallerParameterValidator;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
+use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
 
 /**
  * @since  1.0
