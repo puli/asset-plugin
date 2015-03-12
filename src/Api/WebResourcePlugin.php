@@ -20,7 +20,7 @@ use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
 use Puli\WebResourcePlugin\Console\ConfigListener;
 use Puli\WebResourcePlugin\Installation\InstallationManagerImpl;
-use Puli\WebResourcePlugin\Installation\Installer\PackageFileInstallerManager;
+use Puli\WebResourcePlugin\Installer\PackageFileInstallerManager;
 use Puli\WebResourcePlugin\Target\PackageFileInstallTargetManager;
 use Puli\WebResourcePlugin\UrlGenerator\DiscoveryUrlGenerator;
 use Puli\WebResourcePlugin\WebPath\DiscoveryWebPathManager;

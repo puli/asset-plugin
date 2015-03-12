@@ -23,7 +23,7 @@ use Puli\RepositoryManager\Tests\TestException;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
-use Puli\WebResourcePlugin\Installation\Installer\PackageFileInstallerManager;
+use Puli\WebResourcePlugin\Installer\PackageFileInstallerManager;
 
 /**
  * @since  1.0

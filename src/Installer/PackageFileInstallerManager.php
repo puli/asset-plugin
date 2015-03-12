@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Installation\Installer;
+namespace Puli\WebResourcePlugin\Installer;
 
 use Exception;
 use Puli\RepositoryManager\Api\Package\Package;
