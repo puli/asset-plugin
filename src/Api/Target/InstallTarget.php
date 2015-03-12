@@ -11,13 +11,9 @@
 
 namespace Puli\WebResourcePlugin\Api\Target;
 
-use OutOfBoundsException;
 use Puli\RepositoryManager\Assert\Assert;
 use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installation\Installer\MissingParameterException;
 use Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchParameterException;
-use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\ConstraintViolation;
-use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\InstallerParameterValidator;
 
 /**
  * A target where resources can be installed.

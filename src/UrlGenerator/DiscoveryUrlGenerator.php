@@ -16,10 +16,8 @@ use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\UrlGenerator\CannotGenerateUrlException;
 use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
-use Puli\WebResourcePlugin\Api\WebPath\NoSuchWebPathMappingException;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Webmozart\Glob\Glob;
-use Webmozart\PathUtil\Path;
 
 /**
  * A resource URL generator that uses a {@link ResourceDiscovery} as backend.

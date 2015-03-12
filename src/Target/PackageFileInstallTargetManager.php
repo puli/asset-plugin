@@ -12,7 +12,6 @@
 namespace Puli\WebResourcePlugin\Target;
 
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
-use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
