@@ -100,7 +100,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             WebResourcePlugin::BINDING_TYPE,
             array(
                 WebResourcePlugin::TARGET_PARAMETER => 'target1',
-                WebResourcePlugin::PATH_PARAMETER => 'css',
+                WebResourcePlugin::PATH_PARAMETER => '/css',
             )
         );
         $this->binding2 = new BindingDescriptor(
@@ -108,7 +108,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             WebResourcePlugin::BINDING_TYPE,
             array(
                 WebResourcePlugin::TARGET_PARAMETER => 'target2',
-                WebResourcePlugin::PATH_PARAMETER => 'js',
+                WebResourcePlugin::PATH_PARAMETER => '/js',
             )
         );
     }
@@ -122,7 +122,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             WebResourcePlugin::BINDING_TYPE,
             array(
                 WebResourcePlugin::TARGET_PARAMETER => 'target1',
-                WebResourcePlugin::PATH_PARAMETER => 'css',
+                WebResourcePlugin::PATH_PARAMETER => '/css',
             ),
             'glob',
             $uuid
@@ -132,7 +132,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->method('addBinding')
             ->with($expectedBinding);
 
-        $this->manager->addWebPathMapping(new WebPathMapping('/path', 'target1', 'css', $uuid));
+        $this->manager->addWebPathMapping(new WebPathMapping('/path', 'target1', '/css', $uuid));
     }
 
     /**
@@ -144,7 +144,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $this->discoveryManager->expects($this->never())
             ->method('addBinding');
 
-        $this->manager->addWebPathMapping(new WebPathMapping('/path', 'foobar', 'css'));
+        $this->manager->addWebPathMapping(new WebPathMapping('/path', 'foobar', '/css'));
     }
 
     public function testRemoveRootWebPathMapping()
@@ -215,7 +215,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->uuid($uuid))
             ->willReturn(array($this->binding1));
 
-        $expected = new WebPathMapping('/path', 'target1', 'css', $uuid);
+        $expected = new WebPathMapping('/path', 'target1', '/css', $uuid);
 
         $this->assertEquals($expected, $this->manager->getWebPathMapping($uuid));
     }
@@ -243,8 +243,8 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->willReturn(array($this->binding1, $this->binding2));
 
         $expected = array(
-            new WebPathMapping('/path', 'target1', 'css', $this->binding1->getUuid()),
-            new WebPathMapping('/other/path', 'target2', 'js', $this->binding2->getUuid()),
+            new WebPathMapping('/path', 'target1', '/css', $this->binding1->getUuid()),
+            new WebPathMapping('/other/path', 'target2', '/js', $this->binding2->getUuid()),
         );
 
         $this->assertEquals($expected, $this->manager->getWebPathMappings());
@@ -268,7 +268,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->willReturn(array($this->binding2));
 
         $expr = Expr::same(WebPathMapping::WEB_PATH, '/other/path');
-        $expected = new WebPathMapping('/other/path', 'target2', 'js', $this->binding2->getUuid());
+        $expected = new WebPathMapping('/other/path', 'target2', '/js', $this->binding2->getUuid());
 
         $this->assertEquals(array($expected), $this->manager->findWebPathMappings($expr));
     }

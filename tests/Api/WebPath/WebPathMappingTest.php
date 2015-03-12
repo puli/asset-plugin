@@ -23,23 +23,37 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $mapping = new WebPathMapping('/blog/public', 'local', 'blog');
+        $mapping = new WebPathMapping('/blog/public', 'local', '/blog');
 
         $this->assertSame('/blog/public', $mapping->getGlob());
         $this->assertSame('local', $mapping->getTargetName());
-        $this->assertSame('blog', $mapping->getWebPath());
+        $this->assertSame('/blog', $mapping->getWebPath());
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $mapping->getUuid());
     }
 
     function testCreateWithUuid()
     {
         $uuid = Uuid::uuid4();
-        $mapping = new WebPathMapping('/blog/public', 'local', 'blog', $uuid);
+        $mapping = new WebPathMapping('/blog/public', 'local', '/blog', $uuid);
 
         $this->assertSame('/blog/public', $mapping->getGlob());
         $this->assertSame('local', $mapping->getTargetName());
-        $this->assertSame('blog', $mapping->getWebPath());
+        $this->assertSame('/blog', $mapping->getWebPath());
         $this->assertSame($uuid, $mapping->getUuid());
+    }
+
+    public function testCreateNormalizesWebPath()
+    {
+        $mapping = new WebPathMapping('/blog/public', 'local', 'blog/');
+
+        $this->assertSame('/blog', $mapping->getWebPath());
+    }
+
+    public function testCreateWithEmptyWebPath()
+    {
+        $mapping = new WebPathMapping('/blog/public', 'local', '');
+
+        $this->assertSame('/', $mapping->getWebPath());
     }
 
     /**
@@ -96,14 +110,6 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
     public function testFailIfWebPathNull()
     {
         new WebPathMapping('/blog/public', 'local', null);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFailIfWebPathEmpty()
-    {
-        new WebPathMapping('/blog/public', 'local', '');
     }
 
     /**

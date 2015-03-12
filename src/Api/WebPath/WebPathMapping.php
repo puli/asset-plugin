@@ -75,12 +75,12 @@ class WebPathMapping
     {
         Assert::stringNotEmpty($glob, 'The glob must be a non-empty string. Got: %s');
         Assert::stringNotEmpty($targetName, 'The target name must be a non-empty string. Got: %s');
-        Assert::stringNotEmpty($webPath, 'The web path must be a non-empty string. Got: %s');
+        Assert::string($webPath, 'The web path must be a string. Got: %s');
 
         $this->uuid = $uuid ?: Uuid::uuid4();
         $this->glob = $glob;
         $this->targetName = $targetName;
-        $this->webPath = $webPath;
+        $this->webPath = '/'.trim($webPath, '/');
     }
 
     /**

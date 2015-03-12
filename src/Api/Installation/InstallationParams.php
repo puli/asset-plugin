@@ -80,7 +80,7 @@ class InstallationParams
         $this->rootDir = $rootDir;
         $this->basePath = $basePath;
         $this->targetLocation = $targetLocation;
-        $this->webPath = trim($webPath, '/');
+        $this->webPath = '/'.trim($webPath, '/');
         $this->parameterValues = $parameterValues;
     }
 
@@ -147,7 +147,7 @@ class InstallationParams
      */
     public function getWebPath()
     {
-        return $this->webPath ?: '/';
+        return $this->webPath;
     }
 
     /**
