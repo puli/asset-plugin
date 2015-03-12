@@ -18,7 +18,7 @@ use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
-use Puli\WebResourcePlugin\Console\ConfigListener;
+use Puli\WebResourcePlugin\Console\ConsoleListener;
 use Puli\WebResourcePlugin\Installation\InstallationManagerImpl;
 use Puli\WebResourcePlugin\Installer\PackageFileInstallerManager;
 use Puli\WebResourcePlugin\Target\PackageFileInstallTargetManager;
@@ -102,7 +102,7 @@ class WebResourcePlugin implements PuliPlugin
     {
         $this->puli = $puli;
 
-        $puli->getEventDispatcher()->addListener(ConsoleEvents::CONFIG, array(new ConfigListener($this), 'handleConfigEvent'));
+        $puli->getEventDispatcher()->addListener(ConsoleEvents::CONFIG, array(new ConsoleListener($this), 'handleConfigEvent'));
     }
 
     /**
