@@ -12,6 +12,8 @@
 namespace Puli\WebResourcePlugin\Target;
 
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
+use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
+use Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
@@ -34,6 +36,11 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     private $rootPackageFileManager;
 
     /**
+     * @var InstallerManager
+     */
+    private $installerManager;
+
+    /**
      * @var InstallTargetCollection
      */
     private $targets;
@@ -43,9 +50,10 @@ class PackageFileInstallTargetManager implements InstallTargetManager
      */
     private $targetsData = array();
 
-    public function __construct(RootPackageFileManager $rootPackageFileManager)
+    public function __construct(RootPackageFileManager $rootPackageFileManager, InstallerManager $installerManager)
     {
         $this->rootPackageFileManager = $rootPackageFileManager;
+        $this->installerManager = $installerManager;
     }
 
     /**
@@ -54,6 +62,10 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     public function addTarget(InstallTarget $target)
     {
         $this->assertTargetsLoaded();
+
+        if (!$this->installerManager->hasInstallerDescriptor($target->getInstallerName())) {
+            throw NoSuchInstallerException::forInstallerName($target->getInstallerName());
+        }
 
         $this->targets->add($target);
 

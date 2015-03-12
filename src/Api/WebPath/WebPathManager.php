@@ -11,6 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Api\WebPath;
 
+use Puli\WebResourcePlugin\Api\Target\NoSuchTargetException;
 use Rhumsaa\Uuid\Uuid;
 use Webmozart\Expression\Expression;
 
@@ -26,6 +27,9 @@ interface WebPathManager
      * Adds a web path mapping to the repository.
      *
      * @param WebPathMapping $mapping The web path mapping.
+     *
+     * @throws NoSuchTargetException If the target referred to by the mapping
+     *                               does not exist.
      */
     public function addWebPathMapping(WebPathMapping $mapping);
 

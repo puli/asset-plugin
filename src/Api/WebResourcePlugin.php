@@ -180,7 +180,8 @@ class WebResourcePlugin implements PuliPlugin
     {
         if (!$this->installTargetManager) {
             $this->installTargetManager = new PackageFileInstallTargetManager(
-                $this->getPuli()->getRootPackageFileManager()
+                $this->getPuli()->getRootPackageFileManager(),
+                $this->getInstallerManager()
             );
         }
 

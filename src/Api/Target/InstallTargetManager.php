@@ -11,6 +11,8 @@
 
 namespace Puli\WebResourcePlugin\Api\Target;
 
+use Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException;
+
 /**
  * Manages the targets where resources can be installed.
  *
@@ -26,6 +28,9 @@ interface InstallTargetManager
      * overwritten.
      *
      * @param InstallTarget $target The target to add.
+     *
+     * @throws NoSuchInstallerException If the installer referred to by the
+     *                                  target does not exist.
      */
     public function addTarget(InstallTarget $target);
 

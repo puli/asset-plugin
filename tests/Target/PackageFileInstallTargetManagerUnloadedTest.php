@@ -14,6 +14,7 @@ namespace Puli\WebResourcePlugin\Tests\Target;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
+use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Puli\WebResourcePlugin\Target\PackageFileInstallTargetManager;
@@ -30,6 +31,11 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     protected $packageFileManager;
 
     /**
+     * @var PHPUnit_Framework_MockObject_MockObject|InstallerManager
+     */
+    protected $installerManager;
+
+    /**
      * @var PackageFileInstallTargetManager
      */
     protected $targetManager;
@@ -37,7 +43,15 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     protected function setUp()
     {
         $this->packageFileManager = $this->getMock('Puli\RepositoryManager\Api\Package\RootPackageFileManager');
-        $this->targetManager = new PackageFileInstallTargetManager($this->packageFileManager);
+        $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
+        $this->targetManager = new PackageFileInstallTargetManager($this->packageFileManager, $this->installerManager);
+
+        $this->installerManager->expects($this->any())
+            ->method('hasInstallerDescriptor')
+            ->willReturnMap(array(
+                array('symlink', true),
+                array('rsync', true),
+            ));
     }
 
     public function testGetTarget()
@@ -228,6 +242,21 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->targetManager->addTarget($target);
 
         $this->assertSame($target, $this->targetManager->getTarget('cdn'));
+    }
+
+    /**
+     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException
+     */
+    public function testAddTargetFailsIfInstallerNotFound()
+    {
+        $this->populateDefaultManager();
+
+        $this->packageFileManager->expects($this->never())
+            ->method('setExtraKey');
+
+        $target = new InstallTarget('cdn', 'foobar', 'ssh://my.cdn.com');
+
+        $this->targetManager->addTarget($target);
     }
 
     public function testRemoveTarget()
