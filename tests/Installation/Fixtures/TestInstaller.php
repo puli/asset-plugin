@@ -25,7 +25,7 @@ class TestInstaller implements ResourceInstaller
     {
     }
 
-    public function installResource(Resource $resource, InstallationParams $request)
+    public function installResource(Resource $resource, InstallationParams $params)
     {
     }
 }
