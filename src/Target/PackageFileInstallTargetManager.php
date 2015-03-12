@@ -17,6 +17,9 @@ use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use RuntimeException;
+use stdClass;
+use Webmozart\Json\JsonValidator;
+use Webmozart\Json\ValidationFailedException;
 
 /**
  * An install target manager that stores the targets in the package file.
@@ -144,23 +147,28 @@ class PackageFileInstallTargetManager implements InstallTargetManager
             return;
         }
 
-        $targetsData = $this->rootPackageFileManager->getExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY, array());
+        $targetsData = $this->rootPackageFileManager->getExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY);
 
-        if (!is_array($targetsData)) {
-            throw new RuntimeException(sprintf(
-                'The extra key "%s" must contain an array. Got: %s',
-                WebResourcePlugin::INSTALL_TARGETS_KEY,
-                is_object($targetsData) ? get_class($targetsData) : gettype($targetsData)
-            ));
+        if ($targetsData) {
+            $jsonValidator = new JsonValidator();
+            $errors = $jsonValidator->validate($targetsData, __DIR__.'/../../res/schema/install-targets-schema-1.0.json');
+
+            if (count($errors) > 0) {
+                throw new ValidationFailedException(sprintf(
+                    "The extra key \"%s\" is invalid:\n%s",
+                    WebResourcePlugin::INSTALL_TARGETS_KEY,
+                    implode("\n", $errors)
+                ));
+            }
         }
 
         $this->targets = new InstallTargetCollection();
-        $this->targetsData = $targetsData;
+        $this->targetsData = (array) $targetsData;
 
         foreach ($this->targetsData as $targetName => $targetData) {
             $this->targets->add($this->dataToTarget($targetName, $targetData));
 
-            if (isset($targetData['default'])) {
+            if (isset($targetData->default) && $targetData->default) {
                 $this->targets->setDefaultTarget($targetName);
             }
         }
@@ -171,70 +179,49 @@ class PackageFileInstallTargetManager implements InstallTargetManager
         if ($this->targetsData) {
             $this->updateDefaultTargetData();
 
-            $this->rootPackageFileManager->setExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY, $this->targetsData);
+            $this->rootPackageFileManager->setExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) $this->targetsData);
         } else {
             $this->rootPackageFileManager->removeExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY);
         }
     }
 
-    private function dataToTarget($targetName, $targetData)
+    private function dataToTarget($targetName, stdClass $data)
     {
-        if (!isset($targetData['installer'])) {
-            throw new RuntimeException(sprintf(
-                'The "installer" key is missing for the install target "%s".',
-                $targetName
-            ));
-        }
-
-        if (!isset($targetData['location'])) {
-            throw new RuntimeException(sprintf(
-                'The "location" key is missing for the install target "%s".',
-                $targetName
-            ));
-        }
-
         return new InstallTarget(
             $targetName,
-            $targetData['installer'],
-            $targetData['location'],
-            isset($targetData['url-format'])
-                ? $targetData['url-format']
-                : InstallTarget::DEFAULT_URL_FORMAT,
-            isset($targetData['parameters'])
-                ? $targetData['parameters']
-                : array()
+            $data->installer,
+            $data->location,
+            isset($data->{'url-format'}) ? $data->{'url-format'} : InstallTarget::DEFAULT_URL_FORMAT,
+            isset($data->parameters) ? (array) $data->parameters : array()
         );
     }
 
     private function targetToData(InstallTarget $target)
     {
-        $targetData = array(
-            'installer' => $target->getInstallerName(),
-            'location' => $target->getLocation(),
-        );
+        $data = new stdClass();
+        $data->installer = $target->getInstallerName();
+        $data->location = $target->getLocation();
 
         if (InstallTarget::DEFAULT_URL_FORMAT !== ($urlFormat = $target->getUrlFormat())) {
-            $targetData['url-format'] = $urlFormat;
+            $data->{'url-format'} = $urlFormat;
         }
 
         if ($parameters = $target->getParameterValues()) {
-            $targetData['parameters'] = $parameters;
-
-            return $targetData;
+            $data->parameters = (object) $parameters;
         }
 
-        return $targetData;
+        return $data;
     }
 
     private function updateDefaultTargetData()
     {
         $defaultTarget = $this->targets->isEmpty() ? null : $this->targets->getDefaultTarget()->getName();
 
-        foreach ($this->targetsData as $targetName => &$targetData) {
+        foreach ($this->targetsData as $targetName => &$data) {
             if ($targetName === $defaultTarget) {
-                $targetData['default'] = true;
+                $data->default = true;
             } else {
-                unset($targetData['default']);
+                unset($data->default);
             }
         }
     }

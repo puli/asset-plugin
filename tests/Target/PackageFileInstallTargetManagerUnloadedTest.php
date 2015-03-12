@@ -68,12 +68,12 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
             ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
-            ->willReturn(array(
-                'local' => array(
+            ->willReturn((object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
-                    'parameters' => array('param' => 'value'),
+                    'parameters' => (object) array('param' => 'value'),
                 )
             ));
 
@@ -89,8 +89,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
             ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
-            ->willReturn(array(
-                'local' => array(
+            ->willReturn((object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                 )
@@ -102,41 +102,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     }
 
     /**
-     * @expectedException \RuntimeException
-     */
-    public function testFailIfMissingInstallerKey()
-    {
-        $this->packageFileManager->expects($this->any())
-            ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
-            ->willReturn(array(
-                'local' => array(
-                    'location' => 'web',
-                )
-            ));
-
-        $this->targetManager->getTarget('local');
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testFailIfMissingLocationKey()
-    {
-        $this->packageFileManager->expects($this->any())
-            ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
-            ->willReturn(array(
-                'local' => array(
-                    'installer' => 'symlink',
-                )
-            ));
-
-        $this->targetManager->getTarget('local');
-    }
-
-    /**
-     * @expectedException \RuntimeException
+     * @expectedException \Webmozart\Json\ValidationFailedException
      */
     public function testFailIfKeyNotAnArray()
     {
@@ -179,8 +145,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, array())
-            ->willReturn(array());
+            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->willReturn(null);
 
         $this->assertFalse($this->targetManager->hasTargets());
     }
@@ -191,14 +157,14 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, array(
-                'local' => array(
+            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
                     'default' => true,
                 ),
-                'cdn' => array(
+                'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
                 ),
@@ -217,14 +183,14 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, array(
-                'local' => array(
+            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
                     'default' => true,
                 ),
-                'cdn' => array(
+                'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
                     'url-format' => 'http://my.cdn.com/%s'
@@ -244,17 +210,17 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, array(
-                'local' => array(
+            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
                     'default' => true,
                 ),
-                'cdn' => array(
+                'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
-                    'parameters' => array('param' => 'value'),
+                    'parameters' => (object) array('param' => 'value'),
                 ),
             ));
 
@@ -272,27 +238,27 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
             ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
-            ->willReturn(array(
-                'local' => array(
+            ->willReturn((object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
                     'default' => true,
                 ),
-                'cdn' => array(
+                'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
-                    'parameters' => array('param' => 'value'),
+                    'parameters' => (object) array('param' => 'value'),
                 ),
             ));
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, array(
-                'cdn' => array(
+            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+                'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
-                    'parameters' => array('param' => 'value'),
+                    'parameters' => (object) array('param' => 'value'),
                     'default' => true,
                 ),
             ));
@@ -342,32 +308,32 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
             ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
-            ->willReturn(array(
-                'local' => array(
+            ->willReturn((object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
                     'default' => true,
                 ),
-                'cdn' => array(
+                'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
-                    'parameters' => array('param' => 'value'),
+                    'parameters' => (object) array('param' => 'value'),
                 ),
             ));
 
         $this->packageFileManager->expects($this->any())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, array(
-                'local' => array(
+            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
                 ),
-                'cdn' => array(
+                'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
-                    'parameters' => array('param' => 'value'),
+                    'parameters' => (object) array('param' => 'value'),
                     'default' => true,
                 ),
             ));
@@ -382,8 +348,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
             ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
-            ->willReturn(array(
-                'local' => array(
+            ->willReturn((object) array(
+                'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
                     'url-format' => '/public/%s',
