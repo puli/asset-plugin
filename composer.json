@@ -1,6 +1,6 @@
 {
     "name": "puli/web-resource-plugin",
-    "description": "A Puli plugin for managing web resources.",
+    "description": "A Puli plugin for managing web assets.",
     "homepage": "http://puli.io",
     "license": "MIT",
     "authors": [
