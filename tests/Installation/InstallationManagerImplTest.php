@@ -116,6 +116,56 @@ class InstallationManagerImplTest extends ManagerTestCase
         $this->assertEquals($params, $this->manager->prepareInstallation($mapping));
     }
 
+    public function testPrepareInstallationWithNonDynamicGlob()
+    {
+        $resources = new ArrayResourceCollection(array(
+            new GenericResource('/path/css'),
+        ));
+        $installerDescriptor = new InstallerDescriptor('rsync', self::INSTALLER_CLASS, null, array(
+            new InstallerParameter('param1', InstallerParameter::REQUIRED),
+            new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default1'),
+            new InstallerParameter('param3', InstallerParameter::OPTIONAL, 'default2'),
+        ));
+        $target = new InstallTarget('server', 'rsync', 'ssh://server/public_html', '/%s', array(
+            'param1' => 'custom1',
+            'param3' => 'custom2',
+        ));
+        $mapping = new WebPathMapping('/path/css', 'server', 'assets');
+
+        $this->targets->add($target);
+
+        $this->repo->expects($this->any())
+            ->method('find')
+            ->with('/path/css')
+            ->willReturn($resources);
+
+        $this->installerManager->expects($this->any())
+            ->method('hasInstallerDescriptor')
+            ->with('rsync')
+            ->willReturn(true);
+
+        $this->installerManager->expects($this->any())
+            ->method('getInstallerDescriptor')
+            ->with('rsync')
+            ->willReturn($installerDescriptor);
+
+        $params = new InstallationParams(
+            new TestInstaller(),
+            $resources,
+            $this->environment->getRootDirectory(),
+            '/path/css',
+            'ssh://server/public_html',
+            'assets',
+            array(
+                'param1' => 'custom1',
+                'param2' => 'default1',
+                'param3' => 'custom2',
+            )
+        );
+
+        $this->assertEquals($params, $this->manager->prepareInstallation($mapping));
+    }
+
     /**
      * @expectedException \Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException
      * @expectedExceptionMessage param1

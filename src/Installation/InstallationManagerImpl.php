@@ -90,7 +90,7 @@ class InstallationManagerImpl implements InstallationManager
 
         $installer = $this->loadInstaller($installerDescriptor);
         $rootDir = $this->environment->getRootDirectory();
-        $basePath = Glob::getBasePath($glob);
+        $basePath = Glob::isDynamic($glob) ? Glob::getBasePath($glob) : $glob;
         $location = $target->getLocation();
         $webPath = $mapping->getWebPath();
 

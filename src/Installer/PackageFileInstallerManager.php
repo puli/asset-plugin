@@ -228,7 +228,7 @@ class PackageFileInstallerManager implements InstallerManager
         }
 
         $jsonValidator = new JsonValidator();
-        $errors = $jsonValidator->validate($installersData, __DIR__.'/../../../res/schema/installers-schema-1.0.json');
+        $errors = $jsonValidator->validate($installersData, __DIR__.'/../../res/schema/installers-schema-1.0.json');
 
         if (count($errors) > 0) {
             throw new ValidationFailedException(sprintf(
