@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Installer\Validation;
+namespace Puli\WebResourcePlugin\Api\Installation\Installer\Validation;
 
 use Webmozart\Assert\Assert;
 

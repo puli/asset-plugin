@@ -12,8 +12,8 @@
 namespace Puli\WebResourcePlugin\Tests\Api\Target;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 
 /**
@@ -22,25 +22,12 @@ use Puli\WebResourcePlugin\Api\Target\InstallTarget;
  */
 class InstallTargetTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var InstallerDescriptor
-     */
-    private $installer;
-
-    protected function setUp()
-    {
-        $this->installer = new InstallerDescriptor('symlink', 'Installer\Class', null, array(
-            new InstallerParameter('param1'),
-            new InstallerParameter('param2'),
-        ));
-    }
-
     public function testCreate()
     {
-        $target = new InstallTarget('local', $this->installer, 'web/assets', '/assets/%s');
+        $target = new InstallTarget('local', 'symlink', 'web/assets', '/assets/%s');
 
         $this->assertSame('local', $target->getName());
-        $this->assertSame($this->installer, $target->getInstallerDescriptor());
+        $this->assertSame('symlink', $target->getInstallerName());
         $this->assertSame('web/assets', $target->getLocation());
         $this->assertSame('/assets/%s', $target->getUrlFormat());
         $this->assertSame(array(), $target->getParameterValues());
@@ -48,7 +35,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
 
     public function testCreateWithParameter()
     {
-        $target = new InstallTarget('local', $this->installer, 'web/assets', '/%s', array(
+        $target = new InstallTarget('local', 'symlink', 'web/assets', '/%s', array(
             'param1' => 'webmozart',
         ));
 
@@ -57,7 +44,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
 
     public function testCreateWithDefaultUrlFormat()
     {
-        $target = new InstallTarget('local', $this->installer, 'web/assets');
+        $target = new InstallTarget('local', 'symlink', 'web/assets');
 
         $this->assertSame('/%s', $target->getUrlFormat());
         $this->assertSame(array(), $target->getParameterValues());
@@ -68,7 +55,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfNameNull()
     {
-        new InstallTarget(null, $this->installer, 'web/assets');
+        new InstallTarget(null, 'symlink', 'web/assets');
     }
 
     /**
@@ -76,7 +63,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfNameEmpty()
     {
-        new InstallTarget('', $this->installer, 'web/assets');
+        new InstallTarget('', 'symlink', 'web/assets');
     }
 
     /**
@@ -84,7 +71,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfNameNoString()
     {
-        new InstallTarget(1234, $this->installer, 'web/assets');
+        new InstallTarget(1234, 'symlink', 'web/assets');
     }
 
     /**
@@ -92,7 +79,31 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfNameDefault()
     {
-        new InstallTarget(InstallTarget::DEFAULT_TARGET, $this->installer, 'web/assets');
+        new InstallTarget(InstallTarget::DEFAULT_TARGET, 'symlink', 'web/assets');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfInstallerNameNull()
+    {
+        new InstallTarget('local', null, 'web/assets');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfInstallerNameEmpty()
+    {
+        new InstallTarget('local', '', 'web/assets');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFailIfInstallerNameNoString()
+    {
+        new InstallTarget('local', 1234, 'web/assets');
     }
 
     /**
@@ -100,7 +111,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfLocationNull()
     {
-        new InstallTarget('local', $this->installer, null);
+        new InstallTarget('local', 'symlink', null);
     }
 
     /**
@@ -108,7 +119,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfLocationEmpty()
     {
-        new InstallTarget('local', $this->installer, '');
+        new InstallTarget('local', 'symlink', '');
     }
 
     /**
@@ -116,7 +127,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfLocationNoString()
     {
-        new InstallTarget('local', $this->installer, 1234);
+        new InstallTarget('local', 'symlink', 1234);
     }
 
     /**
@@ -124,7 +135,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfUrlFormatNull()
     {
-        new InstallTarget('local', $this->installer, 'web/assets', null);
+        new InstallTarget('local', 'symlink', 'web/assets', null);
     }
 
     /**
@@ -132,7 +143,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfUrlFormatEmpty()
     {
-        new InstallTarget('local', $this->installer, 'web/assets', '');
+        new InstallTarget('local', 'symlink', 'web/assets', '');
     }
 
     /**
@@ -140,31 +151,31 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfUrlFormatNoString()
     {
-        new InstallTarget('local', $this->installer, 'web/assets', 1234);
+        new InstallTarget('local', 'symlink', 'web/assets', 1234);
     }
 
     public function testGetParameterValue()
     {
-        $target = new InstallTarget('local', $this->installer, 'web', '/%s', array('param1' => 'value1', 'param2' => 'value2'));
+        $target = new InstallTarget('local', 'symlink', 'web', '/%s', array('param1' => 'value1', 'param2' => 'value2'));
 
         $this->assertSame('value1', $target->getParameterValue('param1'));
         $this->assertSame('value2', $target->getParameterValue('param2'));
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchParameterException
      * @expectedExceptionMessage foobar
      */
     public function testGetParameterValueFailsIfNotFound()
     {
-        $target = new InstallTarget('local', $this->installer, 'web');
+        $target = new InstallTarget('local', 'symlink', 'web');
 
         $target->getParameterValue('foobar');
     }
 
     public function testHasParameterValue()
     {
-        $target = new InstallTarget('local', $this->installer, 'web', '/%s', array('param1' => 'value1', 'param2' => 'value2'));
+        $target = new InstallTarget('local', 'symlink', 'web', '/%s', array('param1' => 'value1', 'param2' => 'value2'));
 
         $this->assertTrue($target->hasParameterValue('param1'));
         $this->assertTrue($target->hasParameterValue('param2'));
@@ -173,39 +184,15 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
 
     public function testHasParameterValues()
     {
-        $target = new InstallTarget('local', $this->installer, 'web', '/%s', array('param1' => 'value1'));
+        $target = new InstallTarget('local', 'symlink', 'web', '/%s', array('param1' => 'value1'));
 
         $this->assertTrue($target->hasParameterValues());
     }
 
     public function testHasNoParameterValues()
     {
-        $target = new InstallTarget('local', $this->installer, 'web', '/%s', array());
+        $target = new InstallTarget('local', 'symlink', 'web', '/%s', array());
 
         $this->assertFalse($target->hasParameterValues());
-    }
-
-    /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException
-     * @expectedExceptionMessage foo
-     */
-    public function testFailIfInvalidParameter()
-    {
-        new InstallTarget('local', $this->installer, 'web/assets', '/%s', array(
-            'foo' => 'bar',
-        ));
-    }
-
-    /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\MissingParameterException
-     * @expectedExceptionMessage required
-     */
-    public function testFailIfMissingParameter()
-    {
-        $this->installer = new InstallerDescriptor('symlink', 'Installer\Class', null, array(
-            new InstallerParameter('required', InstallerParameter::REQUIRED),
-        ));
-
-        new InstallTarget('local', $this->installer, 'web/assets');
     }
 }

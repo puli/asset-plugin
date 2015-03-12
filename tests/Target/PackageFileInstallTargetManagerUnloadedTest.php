@@ -14,9 +14,9 @@ namespace Puli\WebResourcePlugin\Tests\Target;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Puli\WebResourcePlugin\Target\PackageFileInstallTargetManager;
@@ -33,50 +33,21 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     protected $packageFileManager;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|InstallerManager
-     */
-    protected $installerManager;
-
-    /**
      * @var PackageFileInstallTargetManager
      */
     protected $targetManager;
 
-    /**
-     * @var InstallerDescriptor
-     */
-    protected $symlinkInstaller;
-
-    /**
-     * @var InstallerDescriptor
-     */
-    protected $rsyncInstaller;
-
     protected function setUp()
     {
         $this->packageFileManager = $this->getMock('Puli\RepositoryManager\Api\Package\RootPackageFileManager');
-        $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
-        $this->targetManager = new PackageFileInstallTargetManager($this->packageFileManager, $this->installerManager);
-        $this->symlinkInstaller = new InstallerDescriptor('symlink', 'Installer\Class', null, array(
-             new InstallerParameter('param'),
-        ));
-        $this->rsyncInstaller = new InstallerDescriptor('rsync', 'Installer\Class', null, array(
-             new InstallerParameter('param'),
-        ));
-
-        $this->installerManager->expects($this->any())
-            ->method('getInstallerDescriptor')
-            ->willReturnMap(array(
-                array('symlink', $this->symlinkInstaller),
-                array('rsync', $this->rsyncInstaller),
-            ));
+        $this->targetManager = new PackageFileInstallTargetManager($this->packageFileManager);
     }
 
     public function testGetTarget()
     {
         $this->populateDefaultManager();
 
-        $target = new InstallTarget('local', $this->symlinkInstaller, 'web', '/public/%s');
+        $target = new InstallTarget('local', 'symlink', 'web', '/public/%s');
 
         $this->assertEquals($target, $this->targetManager->getTarget('local'));
     }
@@ -106,7 +77,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
                 )
             ));
 
-        $target = new InstallTarget('local', $this->symlinkInstaller, 'web', '/public/%s', array(
+        $target = new InstallTarget('local', 'symlink', 'web', '/public/%s', array(
             'param' => 'value',
         ));
 
@@ -125,7 +96,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
                 )
             ));
 
-        $target = new InstallTarget('local', $this->symlinkInstaller, 'web');
+        $target = new InstallTarget('local', 'symlink', 'web');
 
         $this->assertEquals($target, $this->targetManager->getTarget('local'));
     }
@@ -181,7 +152,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->populateDefaultManager();
 
-        $target = new InstallTarget('local', $this->symlinkInstaller, 'web', '/public/%s');
+        $target = new InstallTarget('local', 'symlink', 'web', '/public/%s');
 
         $collection = $this->targetManager->getTargets();
 
@@ -233,7 +204,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
                 ),
             ));
 
-        $target = new InstallTarget('cdn', $this->rsyncInstaller, 'ssh://my.cdn.com');
+        $target = new InstallTarget('cdn', 'rsync', 'ssh://my.cdn.com');
 
         $this->targetManager->addTarget($target);
 
@@ -260,7 +231,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
                 ),
             ));
 
-        $target = new InstallTarget('cdn', $this->rsyncInstaller, 'ssh://my.cdn.com', 'http://my.cdn.com/%s');
+        $target = new InstallTarget('cdn', 'rsync', 'ssh://my.cdn.com', 'http://my.cdn.com/%s');
 
         $this->targetManager->addTarget($target);
 
@@ -287,7 +258,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
                 ),
             ));
 
-        $target = new InstallTarget('cdn', $this->rsyncInstaller, 'ssh://my.cdn.com', '/%s', array(
+        $target = new InstallTarget('cdn', 'rsync', 'ssh://my.cdn.com', '/%s', array(
             'param' => 'value',
         ));
 

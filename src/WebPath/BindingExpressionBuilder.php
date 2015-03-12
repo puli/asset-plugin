@@ -87,7 +87,7 @@ class BindingExpressionBuilder implements ExpressionVisitor
                 case WebPathMapping::UUID:
                     return new Key(BindingDescriptor::UUID, $expr->getExpression());
 
-                case WebPathMapping::REPOSITORY_PATH:
+                case WebPathMapping::GLOB:
                     $queryExpr = $expr->getExpression();
 
                     if ($queryExpr instanceof Same) {

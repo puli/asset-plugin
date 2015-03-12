@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Installer;
+namespace Puli\WebResourcePlugin\Tests\Installation\Installer;
 
 /**
  * @since  1.0

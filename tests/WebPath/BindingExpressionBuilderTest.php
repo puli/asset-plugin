@@ -49,7 +49,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
         $expr1 = Expr::startsWith(WebPathMapping::UUID, 'abcd')
             ->orSame(WebPathMapping::TARGET_NAME, 'local')
             ->orX(
-                Expr::same(WebPathMapping::REPOSITORY_PATH, '/path')
+                Expr::same(WebPathMapping::GLOB, '/path')
                     ->andSame(WebPathMapping::WEB_PATH, 'css')
             );
 
@@ -70,7 +70,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForSame()
     {
-        $expr1 = Expr::same(WebPathMapping::REPOSITORY_PATH, '/path');
+        $expr1 = Expr::same(WebPathMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, WebResourcePlugin::BINDING_TYPE)
@@ -82,7 +82,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForEquals()
     {
-        $expr1 = Expr::equals(WebPathMapping::REPOSITORY_PATH, '/path');
+        $expr1 = Expr::equals(WebPathMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, WebResourcePlugin::BINDING_TYPE)
@@ -94,7 +94,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForNotSame()
     {
-        $expr1 = Expr::notSame(WebPathMapping::REPOSITORY_PATH, '/path');
+        $expr1 = Expr::notSame(WebPathMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, WebResourcePlugin::BINDING_TYPE)
@@ -106,7 +106,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForNotEquals()
     {
-        $expr1 = Expr::notEquals(WebPathMapping::REPOSITORY_PATH, '/path');
+        $expr1 = Expr::notEquals(WebPathMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, WebResourcePlugin::BINDING_TYPE)
@@ -118,7 +118,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForEndsWith()
     {
-        $expr1 = Expr::endsWith(WebPathMapping::REPOSITORY_PATH, '.css');
+        $expr1 = Expr::endsWith(WebPathMapping::GLOB, '.css');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, WebResourcePlugin::BINDING_TYPE)

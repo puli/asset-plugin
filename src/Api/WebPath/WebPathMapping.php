@@ -15,7 +15,7 @@ use Puli\RepositoryManager\Assert\Assert;
 use Rhumsaa\Uuid\Uuid;
 
 /**
- * Maps a repository path to a web path on an install target.
+ * Maps Puli resources to a web path on an install target.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
@@ -28,9 +28,9 @@ class WebPathMapping
     const UUID = 'uuid';
 
     /**
-     * The repository path field in {@link Expression} instances.
+     * The glob field in {@link Expression} instances.
      */
-    const REPOSITORY_PATH = 'repositoryPath';
+    const GLOB = 'glob';
 
     /**
      * The target name field in {@link Expression} instances.
@@ -50,7 +50,7 @@ class WebPathMapping
     /**
      * @var string
      */
-    private $repositoryPath;
+    private $glob;
 
     /**
      * @var string
@@ -65,20 +65,20 @@ class WebPathMapping
     /**
      * Creates the mapping.
      *
-     * @param string $repositoryPath The repository path of a resource.
-     * @param string $targetName     The name of the install target.
-     * @param string $webPath        The web path of the resource in the install
-     *                               target.
-     * @param Uuid   $uuid           The UUID of the mapping.
+     * @param string $glob       A glob for resources in the repository.
+     * @param string $targetName The name of the install target.
+     * @param string $webPath    The web path of the resource in the install
+     *                           target.
+     * @param Uuid   $uuid       The UUID of the mapping.
      */
-    public function __construct($repositoryPath, $targetName, $webPath, Uuid $uuid = null)
+    public function __construct($glob, $targetName, $webPath, Uuid $uuid = null)
     {
-        Assert::stringNotEmpty($repositoryPath, 'The repository path must be a non-empty string. Got: %s');
+        Assert::stringNotEmpty($glob, 'The glob must be a non-empty string. Got: %s');
         Assert::stringNotEmpty($targetName, 'The target name must be a non-empty string. Got: %s');
         Assert::stringNotEmpty($webPath, 'The web path must be a non-empty string. Got: %s');
 
         $this->uuid = $uuid ?: Uuid::uuid4();
-        $this->repositoryPath = $repositoryPath;
+        $this->glob = $glob;
         $this->targetName = $targetName;
         $this->webPath = $webPath;
     }
@@ -94,13 +94,13 @@ class WebPathMapping
     }
 
     /**
-     * Returns the repository path of the mapped resource.
+     * Returns the glob for the resources in the repository.
      *
      * @return string The repository path.
      */
-    public function getRepositoryPath()
+    public function getGlob()
     {
-        return $this->repositoryPath;
+        return $this->glob;
     }
 
     /**

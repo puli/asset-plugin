@@ -13,11 +13,11 @@ namespace Puli\WebResourcePlugin\Api\Target;
 
 use OutOfBoundsException;
 use Puli\RepositoryManager\Assert\Assert;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\MissingParameterException;
-use Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException;
-use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
-use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installation\Installer\MissingParameterException;
+use Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchParameterException;
+use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\ConstraintViolation;
+use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\InstallerParameterValidator;
 
 /**
  * A target where resources can be installed.
@@ -62,7 +62,7 @@ class InstallTarget
     /**
      * @var string
      */
-    private $installerDescriptor;
+    private $installerName;
 
     /**
      * @var string
@@ -82,30 +82,22 @@ class InstallTarget
     /**
      * Creates a new install target.
      *
-     * @param string              $name            The name of the target.
-     * @param InstallerDescriptor $descriptor       The installer descriptor.
-     * @param string              $location        The location where resources
-     *                                             are installed.
-     * @param string              $urlFormat       The format of the generated
-     *                                             resource URLs. Include the
-     *                                             placeholder "%s" for the
-     *                                             resource path relative to the
-     *                                             target location.
-     * @param array               $parameterValues Values for the parameters
-     *                                             defined by the installer
-     *                                             descriptor.
+     * @param string $name            The name of the target.
+     * @param string $installerName   The name of the used installer.
+     * @param string $location        The location where resources are installed.
+     * @param string $urlFormat       The format of the generated resource URLs. Include the placeholder "%s" for the resource path relative to the target location.
+     * @param array  $parameterValues Values for the parameters defined by the installer descriptor.
      */
-    public function __construct($name, InstallerDescriptor $descriptor, $location, $urlFormat = self::DEFAULT_URL_FORMAT, array $parameterValues = array())
+    public function __construct($name, $installerName, $location, $urlFormat = self::DEFAULT_URL_FORMAT, array $parameterValues = array())
     {
         Assert::stringNotEmpty($name, 'The target name must be a non-empty string. Got: %s');
+        Assert::stringNotEmpty($installerName, 'The installer name must be a non-empty string. Got: %s');
         Assert::notEq($name, self::DEFAULT_TARGET, 'The target name must not be "'.self::DEFAULT_TARGET.'".');
         Assert::stringNotEmpty($location, 'The target location must be a non-empty string. Got: %s');
         Assert::stringNotEmpty($urlFormat, 'The target URL format must be a non-empty string. Got: %s');
 
-        $this->assertParametersValid($parameterValues, $descriptor);
-
         $this->name = $name;
-        $this->installerDescriptor = $descriptor;
+        $this->installerName = $installerName;
         $this->location = $location;
         $this->urlFormat = $urlFormat;
         $this->parameterValues = $parameterValues;
@@ -126,9 +118,9 @@ class InstallTarget
      *
      * @return InstallerDescriptor The installer descriptor.
      */
-    public function getInstallerDescriptor()
+    public function getInstallerName()
     {
-        return $this->installerDescriptor;
+        return $this->installerName;
     }
 
     /**
@@ -169,7 +161,7 @@ class InstallTarget
     public function getParameterValue($name)
     {
         if (!isset($this->parameterValues[$name])) {
-            throw NoSuchParameterException::forParameterName($name, $this->installerDescriptor->getName());
+            throw NoSuchParameterException::forParameterName($name, $this->installerName);
         }
 
         return $this->parameterValues[$name];
@@ -207,26 +199,5 @@ class InstallTarget
     public function hasParameterValues()
     {
         return count($this->parameterValues) > 0;
-    }
-
-    private function assertParametersValid(array $parameterValues, InstallerDescriptor $descriptor)
-    {
-        $validator = new InstallerParameterValidator();
-        $violations = $validator->validate($parameterValues, $descriptor);
-
-        foreach ($violations as $violation) {
-            switch ($violation->getCode()) {
-                case ConstraintViolation::NO_SUCH_PARAMETER:
-                    throw NoSuchParameterException::forParameterName(
-                        $violation->getParameterName(),
-                        $violation->getInstallerName()
-                    );
-                case ConstraintViolation::MISSING_PARAMETER:
-                    throw MissingParameterException::forParameterName(
-                        $violation->getParameterName(),
-                        $violation->getInstallerName()
-                    );
-            }
-        }
     }
 }

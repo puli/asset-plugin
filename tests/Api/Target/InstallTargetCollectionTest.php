@@ -12,7 +12,7 @@
 namespace Puli\WebResourcePlugin\Tests\Api\Target;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 
@@ -22,11 +22,6 @@ use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
  */
 class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var InstallerDescriptor
-     */
-    private $installer;
-
     /**
      * @var InstallTargetCollection
      */
@@ -49,11 +44,10 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->installer = new InstallerDescriptor('symlink', 'Installer\Class');
         $this->collection = new InstallTargetCollection();
-        $this->target1 = new InstallTarget('target1', $this->installer, 'web');
-        $this->target2 = new InstallTarget('target2', $this->installer, 'ssh://my.cdn.com', 'http://my.cdn.com/%s');
-        $this->target3 = new InstallTarget('target3', $this->installer, 'ftp://example.com/assets', 'http://example.com/assets/%s');
+        $this->target1 = new InstallTarget('target1', 'symlink', 'web');
+        $this->target2 = new InstallTarget('target2', 'rsync', 'ssh://my.cdn.com', 'http://my.cdn.com/%s');
+        $this->target3 = new InstallTarget('target3', 'ftp', 'ftp://example.com/assets', 'http://example.com/assets/%s');
     }
 
     public function testCreate()

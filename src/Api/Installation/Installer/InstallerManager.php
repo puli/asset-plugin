@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Installer;
+namespace Puli\WebResourcePlugin\Api\Installation\Installer;
 
 /**
  * Manages the installers used to install resources on install targets.

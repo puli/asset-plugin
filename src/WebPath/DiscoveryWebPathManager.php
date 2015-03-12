@@ -65,7 +65,7 @@ class DiscoveryWebPathManager implements WebPathManager
 
         $this->discoveryManager->addBinding(new BindingDescriptor(
             // Match directories as well as all of their contents
-            $mapping->getRepositoryPath().'{,/**}',
+            $mapping->getGlob().'{,/**}',
             WebResourcePlugin::BINDING_TYPE,
             array(
                 WebResourcePlugin::TARGET_PARAMETER => $mapping->getTargetName(),

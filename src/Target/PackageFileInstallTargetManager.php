@@ -12,7 +12,7 @@
 namespace Puli\WebResourcePlugin\Target;
 
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
@@ -33,11 +33,6 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     private $rootPackageFileManager;
 
     /**
-     * @var InstallerManager
-     */
-    private $installerManager;
-
-    /**
      * @var InstallTargetCollection
      */
     private $targets;
@@ -47,10 +42,9 @@ class PackageFileInstallTargetManager implements InstallTargetManager
      */
     private $targetsData = array();
 
-    public function __construct(RootPackageFileManager $rootPackageFileManager, InstallerManager $installerManager)
+    public function __construct(RootPackageFileManager $rootPackageFileManager)
     {
         $this->rootPackageFileManager = $rootPackageFileManager;
-        $this->installerManager = $installerManager;
     }
 
     /**
@@ -202,7 +196,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
 
         return new InstallTarget(
             $targetName,
-            $this->installerManager->getInstallerDescriptor($targetData['installer']),
+            $targetData['installer'],
             $targetData['location'],
             isset($targetData['url-format'])
                 ? $targetData['url-format']
@@ -216,7 +210,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     private function targetToData(InstallTarget $target)
     {
         $targetData = array(
-            'installer' => $target->getInstallerDescriptor()->getName(),
+            'installer' => $target->getInstallerName(),
             'location' => $target->getLocation(),
         );
 

@@ -22,7 +22,7 @@ use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
 use Puli\RepositoryManager\Api\Package\Package;
 use Puli\RepositoryManager\Api\Package\PackageFile;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
@@ -64,11 +64,6 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
      */
     private $resources;
 
-    /**
-     * @var InstallerDescriptor
-     */
-    private $installer;
-
     protected function setUp()
     {
         $this->discovery = $this->getMock('Puli\Discovery\Api\ResourceDiscovery');
@@ -80,12 +75,11 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
             new BindingParameter(WebResourcePlugin::PATH_PARAMETER),
         ));
         $this->resources = new ArrayResourceCollection(array(new GenericResource('/path')));
-        $this->installer = new InstallerDescriptor('symlink', 'Installer\Class');
     }
 
     public function testGenerateUrl()
     {
-        $this->targets->add(new InstallTarget('local', $this->installer, 'public_html'));
+        $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
             '/path/css{,/**}',
@@ -107,7 +101,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
 
     public function testAcceptWebPathWithLeadingSlash()
     {
-        $this->targets->add(new InstallTarget('local', $this->installer, 'public_html'));
+        $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
             '/path/css{,/**}',
@@ -129,7 +123,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
 
     public function testAcceptWebPathWithTrailingSlash()
     {
-        $this->targets->add(new InstallTarget('local', $this->installer, 'public_html'));
+        $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
             '/path/css{,/**}',
@@ -151,7 +145,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
 
     public function testOnlyReplacePrefix()
     {
-        $this->targets->add(new InstallTarget('local', $this->installer, 'public_html'));
+        $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
             '/path{,/**}',

@@ -12,7 +12,7 @@
 namespace Puli\WebResourcePlugin\Tests\Api\Installer;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
 use stdClass;
 
 /**

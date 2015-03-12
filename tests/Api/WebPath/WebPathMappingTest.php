@@ -25,7 +25,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
     {
         $mapping = new WebPathMapping('/blog/public', 'local', 'blog');
 
-        $this->assertSame('/blog/public', $mapping->getRepositoryPath());
+        $this->assertSame('/blog/public', $mapping->getGlob());
         $this->assertSame('local', $mapping->getTargetName());
         $this->assertSame('blog', $mapping->getWebPath());
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $mapping->getUuid());
@@ -36,7 +36,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
         $uuid = Uuid::uuid4();
         $mapping = new WebPathMapping('/blog/public', 'local', 'blog', $uuid);
 
-        $this->assertSame('/blog/public', $mapping->getRepositoryPath());
+        $this->assertSame('/blog/public', $mapping->getGlob());
         $this->assertSame('local', $mapping->getTargetName());
         $this->assertSame('blog', $mapping->getWebPath());
         $this->assertSame($uuid, $mapping->getUuid());

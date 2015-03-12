@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Installer;
+namespace Puli\WebResourcePlugin\Installation\Installer;
 
 use Exception;
 use Puli\RepositoryManager\Api\Package\Package;
 use Puli\RepositoryManager\Api\Package\PackageCollection;
 use Puli\RepositoryManager\Api\Package\RootPackage;
 use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
+use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Installation\Installer\NoSuchInstallerException;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use RuntimeException;
 use stdClass;
@@ -228,7 +228,7 @@ class PackageFileInstallerManager implements InstallerManager
         }
 
         $jsonValidator = new JsonValidator();
-        $errors = $jsonValidator->validate($installersData, __DIR__.'/../../res/schema/installers-schema-1.0.json');
+        $errors = $jsonValidator->validate($installersData, __DIR__.'/../../../res/schema/installers-schema-1.0.json');
 
         if (count($errors) > 0) {
             throw new ValidationFailedException(sprintf(
