@@ -11,7 +11,8 @@
 
 namespace Puli\WebResourcePlugin\Tests\Installation\Fixtures;
 
-use Puli\WebResourcePlugin\Api\Installation\InstallationRequest;
+use Puli\Repository\Api\Resource\Resource;
+use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 use Puli\WebResourcePlugin\Api\Installation\ResourceInstaller;
 
 /**
@@ -24,7 +25,7 @@ class TestInstallerWithoutDefaultConstructor implements ResourceInstaller
     {
     }
 
-    public function installResources(InstallationRequest $request)
+    public function installResource(Resource $resource, InstallationParams $request)
     {
     }
 }

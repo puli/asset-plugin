@@ -15,7 +15,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
 use Puli\RepositoryManager\Tests\ManagerTestCase;
-use Puli\WebResourcePlugin\Api\Installation\InstallationRequest;
+use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerParameter;
@@ -99,7 +99,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             ->with('rsync')
             ->willReturn($installerDescriptor);
 
-        $request = new InstallationRequest(
+        $params = new InstallationParams(
             new TestInstaller(),
             $resources,
             $this->environment->getRootDirectory(),
@@ -113,7 +113,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             )
         );
 
-        $this->assertEquals($request, $this->manager->prepareInstallation($mapping));
+        $this->assertEquals($params, $this->manager->prepareInstallation($mapping));
     }
 
     /**
@@ -430,5 +430,34 @@ class InstallationManagerImplTest extends ManagerTestCase
             ->willReturn($installerDescriptor);
 
         $this->manager->prepareInstallation($mapping);
+    }
+
+    public function testInstallResource()
+    {
+        $resources = new ArrayResourceCollection(array(
+            $first = new GenericResource('/path/css'),
+            $second = new GenericResource('/path/js'),
+        ));
+
+        $installer = $this->getMock('Puli\WebResourcePlugin\Api\Installation\ResourceInstaller');
+
+        $params = new InstallationParams(
+            $installer,
+            $resources,
+            $this->environment->getRootDirectory(),
+            '/path',
+            'ssh://server/public_html',
+            'assets'
+        );
+
+        $installer->expects($this->at(0))
+            ->method('installResource')
+            ->with($first, $params);
+        $installer->expects($this->at(1))
+            ->method('installResource')
+            ->with($second, $params);
+
+        $this->manager->installResource($first, $params);
+        $this->manager->installResource($second, $params);
     }
 }

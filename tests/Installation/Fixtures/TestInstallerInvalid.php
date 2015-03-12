@@ -11,7 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Tests\Installation\Fixtures;
 
-use Puli\WebResourcePlugin\Api\Installation\InstallationRequest;
+use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 
 /**
  * @since  1.0
@@ -19,7 +19,7 @@ use Puli\WebResourcePlugin\Api\Installation\InstallationRequest;
  */
 class TestInstallerInvalid
 {
-    public function installResources(InstallationRequest $request)
+    public function installResources(InstallationParams $request)
     {
     }
 }

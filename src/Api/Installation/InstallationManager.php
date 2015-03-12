@@ -11,6 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Api\Installation;
 
+use Puli\Repository\Api\Resource\Resource;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 
 /**
@@ -25,24 +26,25 @@ interface InstallationManager
      * Prepares the installation of a web path mapping.
      *
      * If the preparation succeeds, this method returns an
-     * {@link InstallationRequest} which can be passed to
+     * {@link InstallationParams} instance which can be passed to
      * {@link executeInstallation()}.
      *
      * @param WebPathMapping $mapping The web path mapping.
      *
-     * @return InstallationRequest The installation request.
+     * @return InstallationParams The installation parameters.
      *
      * @throws CannotInstallResourcesException If the installation is not possible.
      */
     public function prepareInstallation(WebPathMapping $mapping);
 
     /**
-     * Installs resources on their target.
+     * Installs a resource on its target.
      *
-     * @param InstallationRequest $request The installation request obtained by
-     *                                     {@link prepareInstallation()}.
+     * @param Resource           $resource The resource to install.
+     * @param InstallationParams $params   The installation parameters returned
+     *                                     by {@link prepareInstallation()}.
      *
      * @throws CannotInstallResourcesException If the installation fails.
      */
-    public function executeInstallation(InstallationRequest $request);
+    public function installResource(Resource $resource, InstallationParams $params);
 }

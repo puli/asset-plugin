@@ -19,7 +19,7 @@ use Puli\Repository\Api\ResourceCollection;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class InstallationRequest
+class InstallationParams
 {
     /**
      * @var ResourceInstaller

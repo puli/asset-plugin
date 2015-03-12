@@ -11,6 +11,8 @@
 
 namespace Puli\WebResourcePlugin\Api\Installation;
 
+use Puli\Repository\Api\Resource\Resource;
+
 /**
  * Installs resources to a target location.
  *
@@ -20,13 +22,14 @@ namespace Puli\WebResourcePlugin\Api\Installation;
 interface ResourceInstaller
 {
     /**
-     * Installs resources to a target location.
+     * Installs a resource to a target location.
      *
-     * @param InstallationRequest $request The installation request containing
-     *                                     all the information needed to perform
-     *                                     the installation.
+     * @param Resource           $resource The resource to install.
+     * @param InstallationParams $request  The installation parameters containing
+     *                                     all the additional information needed
+     *                                     to perform the installation.
      *
      * @throws CannotInstallResourcesException If the installation fails.
      */
-    public function installResources(InstallationRequest $request);
+    public function installResource(Resource $resource, InstallationParams $request);
 }

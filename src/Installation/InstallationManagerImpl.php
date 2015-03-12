@@ -11,10 +11,11 @@
 
 namespace Puli\WebResourcePlugin\Installation;
 
+use Puli\Repository\Api\Resource\Resource;
 use Puli\RepositoryManager\Api\Environment\ProjectEnvironment;
 use Puli\WebResourcePlugin\Api\Installation\CannotInstallResourcesException;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
-use Puli\WebResourcePlugin\Api\Installation\InstallationRequest;
+use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installation\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Installation\Installer\Validation\ConstraintViolation;
@@ -99,15 +100,15 @@ class InstallationManagerImpl implements InstallationManager
             $parameterValues
         );
 
-        return new InstallationRequest($installer, $resources, $rootDir, $basePath, $location, $webPath, $parameterValues);
+        return new InstallationParams($installer, $resources, $rootDir, $basePath, $location, $webPath, $parameterValues);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function executeInstallation(InstallationRequest $request)
+    public function installResource(Resource $resource, InstallationParams $params)
     {
-        $request->getInstaller()->installResources($request);
+        $params->getInstaller()->installResource($resource, $params);
     }
 
     private function loadInstaller(InstallerDescriptor $descriptor)
