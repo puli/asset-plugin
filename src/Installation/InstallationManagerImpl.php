@@ -84,23 +84,10 @@ class InstallationManagerImpl implements InstallationManager
         }
 
         $installerDescriptor = $this->installerManager->getInstallerDescriptor($installerName);
-        $parameterValues = $target->getParameterValues();
-
-        $this->validateParameterValues($parameterValues, $installerDescriptor);
-
         $installer = $this->loadInstaller($installerDescriptor);
         $rootDir = $this->environment->getRootDirectory();
-        $basePath = Glob::isDynamic($glob) ? Glob::getBasePath($glob) : $glob;
-        $location = $target->getLocation();
-        $webPath = $mapping->getWebPath();
 
-        // Merge with default parameters
-        $parameterValues = array_replace(
-            $installerDescriptor->getParameterValues(),
-            $parameterValues
-        );
-
-        $params = new InstallationParams($installer, $resources, $rootDir, $basePath, $location, $webPath, $parameterValues);
+        $params = new InstallationParams($installer, $installerDescriptor, $resources, $mapping, $target, $rootDir);
 
         $installer->validateParams($params);
 
@@ -133,27 +120,6 @@ class InstallationManagerImpl implements InstallationManager
         }
 
         return $this->installers[$installerName];
-    }
-
-    private function validateParameterValues(array $parameterValues, InstallerDescriptor $installerDescriptor)
-    {
-        $validator = new InstallerParameterValidator();
-        $violations = $validator->validate($parameterValues, $installerDescriptor);
-
-        foreach ($violations as $violation) {
-            switch ($violation->getCode()) {
-                case ConstraintViolation::MISSING_PARAMETER:
-                    throw NotInstallableException::missingParameter(
-                        $violation->getParameterName(),
-                        $violation->getInstallerName()
-                    );
-                case ConstraintViolation::NO_SUCH_PARAMETER:
-                    throw NotInstallableException::noSuchParameter(
-                        $violation->getParameterName(),
-                        $violation->getInstallerName()
-                    );
-            }
-        }
     }
 
     private function validateInstallerClass($installerClass)

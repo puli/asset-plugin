@@ -103,153 +103,15 @@ class InstallationManagerImplTest extends ManagerTestCase
 
         $params = new InstallationParams(
             new TestInstaller(),
+            $installerDescriptor,
             $resources,
-            $this->environment->getRootDirectory(),
-            '/path',
-            'ssh://server/public_html',
-            'assets',
-            array(
-                'param1' => 'custom1',
-                'param2' => 'default1',
-                'param3' => 'custom2',
-            )
+            $mapping,
+            $target,
+            $this->environment->getRootDirectory()
         );
 
         $this->assertEquals($params, $this->manager->prepareInstallation($mapping));
         $this->assertEquals($params, TestInstaller::getValidatedParams());
-    }
-
-    public function testPrepareInstallationWithNonDynamicGlob()
-    {
-        $resources = new ArrayResourceCollection(array(
-            new GenericResource('/path/css'),
-        ));
-        $installerDescriptor = new InstallerDescriptor('rsync', self::INSTALLER_CLASS, null, array(
-            new InstallerParameter('param1', InstallerParameter::REQUIRED),
-            new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default1'),
-            new InstallerParameter('param3', InstallerParameter::OPTIONAL, 'default2'),
-        ));
-        $target = new InstallTarget('server', 'rsync', 'ssh://server/public_html', '/%s', array(
-            'param1' => 'custom1',
-            'param3' => 'custom2',
-        ));
-        $mapping = new WebPathMapping('/path/css', 'server', 'assets');
-
-        $this->targets->add($target);
-
-        $this->repo->expects($this->any())
-            ->method('find')
-            ->with('/path/css')
-            ->willReturn($resources);
-
-        $this->installerManager->expects($this->any())
-            ->method('hasInstallerDescriptor')
-            ->with('rsync')
-            ->willReturn(true);
-
-        $this->installerManager->expects($this->any())
-            ->method('getInstallerDescriptor')
-            ->with('rsync')
-            ->willReturn($installerDescriptor);
-
-        $params = new InstallationParams(
-            new TestInstaller(),
-            $resources,
-            $this->environment->getRootDirectory(),
-            '/path/css',
-            'ssh://server/public_html',
-            'assets',
-            array(
-                'param1' => 'custom1',
-                'param2' => 'default1',
-                'param3' => 'custom2',
-            )
-        );
-
-        $this->assertEquals($params, $this->manager->prepareInstallation($mapping));
-    }
-
-    /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
-     * @expectedExceptionMessage param1
-     * @expectedExceptionCode 1
-     */
-    public function testFailIfMissingRequiredParameter()
-    {
-        $resources = new ArrayResourceCollection(array(
-            new GenericResource('/path/css'),
-            new GenericResource('/path/js'),
-        ));
-        $installerDescriptor = new InstallerDescriptor('rsync', self::INSTALLER_CLASS, null, array(
-            new InstallerParameter('param1', InstallerParameter::REQUIRED),
-            new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default1'),
-            new InstallerParameter('param3', InstallerParameter::OPTIONAL, 'default2'),
-        ));
-        $target = new InstallTarget('server', 'rsync', 'ssh://server/public_html', '/%s', array(
-            'param3' => 'custom2',
-        ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
-
-        $this->targets->add($target);
-
-        $this->repo->expects($this->any())
-            ->method('find')
-            ->with('/path/{css,js}')
-            ->willReturn($resources);
-
-        $this->installerManager->expects($this->any())
-            ->method('hasInstallerDescriptor')
-            ->with('rsync')
-            ->willReturn(true);
-
-        $this->installerManager->expects($this->any())
-            ->method('getInstallerDescriptor')
-            ->with('rsync')
-            ->willReturn($installerDescriptor);
-
-        $this->manager->prepareInstallation($mapping);
-    }
-
-    /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
-     * @expectedExceptionMessage foobar
-     * @expectedExceptionCode 2
-     */
-    public function testFailIfUnknownParameter()
-    {
-        $resources = new ArrayResourceCollection(array(
-            new GenericResource('/path/css'),
-            new GenericResource('/path/js'),
-        ));
-        $installerDescriptor = new InstallerDescriptor('rsync', self::INSTALLER_CLASS, null, array(
-            new InstallerParameter('param1', InstallerParameter::REQUIRED),
-            new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default1'),
-            new InstallerParameter('param3', InstallerParameter::OPTIONAL, 'default2'),
-        ));
-        $target = new InstallTarget('server', 'rsync', 'ssh://server/public_html', '/%s', array(
-            'param1' => 'custom1',
-            'foobar' => 'custom2',
-        ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
-
-        $this->targets->add($target);
-
-        $this->repo->expects($this->any())
-            ->method('find')
-            ->with('/path/{css,js}')
-            ->willReturn($resources);
-
-        $this->installerManager->expects($this->any())
-            ->method('hasInstallerDescriptor')
-            ->with('rsync')
-            ->willReturn(true);
-
-        $this->installerManager->expects($this->any())
-            ->method('getInstallerDescriptor')
-            ->with('rsync')
-            ->willReturn($installerDescriptor);
-
-        $this->manager->prepareInstallation($mapping);
     }
 
     /**
@@ -493,14 +355,17 @@ class InstallationManagerImplTest extends ManagerTestCase
         ));
 
         $installer = $this->getMock('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller');
+        $installerDescriptor = new InstallerDescriptor('symlink', get_class($installer));
+        $target = new InstallTarget('server', 'rsync', 'ssh://server/public_html');
+        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
 
         $params = new InstallationParams(
             $installer,
+            $installerDescriptor,
             $resources,
-            $this->environment->getRootDirectory(),
-            '/path',
-            'ssh://server/public_html',
-            'assets'
+            $mapping,
+            $target,
+            $this->environment->getRootDirectory()
         );
 
         $installer->expects($this->at(0))

@@ -14,6 +14,10 @@ namespace Puli\WebResourcePlugin\Tests\Api\Installation;
 use PHPUnit_Framework_TestCase;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
+use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
+use Puli\WebResourcePlugin\Api\Target\InstallTarget;
+use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstaller;
 
 /**
@@ -25,60 +29,110 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $installer = new TestInstaller();
+        $descriptor = new InstallerDescriptor('test', get_class($installer), null, array(
+            new InstallerParameter('param1', InstallerParameter::OPTIONAL, 'default1'),
+            new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default2'),
+        ));
         $resources = new ArrayResourceCollection();
+        $mapping = new WebPathMapping('/path/to/{css,js}', 'target', '/demo');
+        $target = new InstallTarget('target', 'symlink', 'public_html', '/%s', array(
+            'param2' => 'custom',
+        ));
 
         $params = new InstallationParams(
             $installer,
+            $descriptor,
             $resources,
-            '/root',
-            '/base/path',
-            'location',
-            '/web',
-            array('param' => 'value')
+            $mapping,
+            $target,
+            '/root'
         );
 
         $this->assertSame($installer, $params->getInstaller());
+        $this->assertSame($descriptor, $params->getInstallerDescriptor());
         $this->assertSame($resources, $params->getResources());
         $this->assertSame('/root', $params->getRootDirectory());
-        $this->assertSame('/base/path', $params->getBasePath());
-        $this->assertSame('location', $params->getTargetLocation());
-        $this->assertSame('/web', $params->getWebPath());
-        $this->assertSame(array('param' => 'value'), $params->getParameterValues());
+        $this->assertSame('/path/to', $params->getBasePath());
+        $this->assertSame('public_html', $params->getTargetLocation());
+        $this->assertSame('/demo', $params->getWebPath());
+        $this->assertSame(array(
+            'param1' => 'default1',
+            'param2' => 'custom',
+        ), $params->getParameterValues());
     }
 
-    public function testCreateNormalizesWebPath()
+    public function testCreateWithStaticGlob()
     {
         $installer = new TestInstaller();
+        $descriptor = new InstallerDescriptor('test', get_class($installer), null, array(
+            new InstallerParameter('param1', InstallerParameter::OPTIONAL, 'default1'),
+            new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default2'),
+        ));
         $resources = new ArrayResourceCollection();
+        $mapping = new WebPathMapping('/path/to/css', 'target', '/demo');
+        $target = new InstallTarget('target', 'symlink', 'public_html', '/%s', array(
+            'param2' => 'custom',
+        ));
 
         $params = new InstallationParams(
             $installer,
+            $descriptor,
             $resources,
-            '/root',
-            '/base/path',
-            'location',
-            'web/',
-            array('param' => 'value')
+            $mapping,
+            $target,
+            '/root'
         );
 
-        $this->assertSame('/web', $params->getWebPath());
+        $this->assertSame('/path/to/css', $params->getBasePath());
     }
 
-    public function testCreateWithEmptyWebPath()
+    /**
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
+     * @expectedExceptionMessage foobar
+     * @expectedExceptionCode 1
+     */
+    public function testFailIfMissingRequiredParameters()
     {
         $installer = new TestInstaller();
+        $descriptor = new InstallerDescriptor('test', get_class($installer), null, array(
+            new InstallerParameter('foobar', InstallerParameter::REQUIRED),
+        ));
         $resources = new ArrayResourceCollection();
+        $mapping = new WebPathMapping('/path/to/{css,js}', 'target', '/demo');
+        $target = new InstallTarget('target', 'symlink', 'public_html');
 
-        $params = new InstallationParams(
+        new InstallationParams(
             $installer,
+            $descriptor,
             $resources,
-            '/root',
-            '/base/path',
-            'location',
-            '',
-            array('param' => 'value')
+            $mapping,
+            $target,
+            '/root'
         );
+    }
 
-        $this->assertSame('/', $params->getWebPath());
+    /**
+     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
+     * @expectedExceptionMessage foobar
+     * @expectedExceptionCode 2
+     */
+    public function testFailIfUnknownParameter()
+    {
+        $installer = new TestInstaller();
+        $descriptor = new InstallerDescriptor('test', get_class($installer));
+        $resources = new ArrayResourceCollection();
+        $mapping = new WebPathMapping('/path/to/{css,js}', 'target', '/demo');
+        $target = new InstallTarget('target', 'symlink', 'public_html', '/%s', array(
+            'foobar' => 'value',
+        ));
+
+        new InstallationParams(
+            $installer,
+            $descriptor,
+            $resources,
+            $mapping,
+            $target,
+            '/root'
+        );
     }
 }

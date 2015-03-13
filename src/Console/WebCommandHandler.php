@@ -111,9 +111,10 @@ class WebCommandHandler
                 $webPath = rtrim($params->getTargetLocation(), '/').$params->getWebPath();
 
                 $io->writeLine(sprintf(
-                    'Installing <em>%s</em> in <real-path>%s</real-path>...',
+                    'Installing <em>%s</em> in <real-path>%s</real-path> via <u>%s</u>...',
                     $resource->getRepositoryPath(),
-                    trim($webPath, '/')
+                    trim($webPath, '/'),
+                    $params->getInstallerDescriptor()->getName()
                 ));
 
                 $this->installationManager->installResource($resource, $params);

@@ -12,7 +12,13 @@
 namespace Puli\WebResourcePlugin\Api\Installation;
 
 use Puli\Repository\Api\ResourceCollection;
+use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
+use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
+use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
+use Puli\WebResourcePlugin\Api\Target\InstallTarget;
+use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
+use Webmozart\Glob\Glob;
 
 /**
  * Contains all the necessary information to install resources on a target.
@@ -28,29 +34,29 @@ class InstallationParams
     private $installer;
 
     /**
+     * @var InstallerDescriptor
+     */
+    private $installerDescriptor;
+
+    /**
      * @var Resource
      */
     private $resources;
 
     /**
+     * @var WebPathMapping
+     */
+    private $mapping;
+
+    /**
+     * @var InstallTarget
+     */
+    private $installTarget;
+
+    /**
      * @var string
      */
     private $rootDir;
-
-    /**
-     * @var string
-     */
-    private $basePath;
-
-    /**
-     * @var string
-     */
-    private $targetLocation;
-
-    /**
-     * @var string
-     */
-    private $webPath;
 
     /**
      * @var array
@@ -60,28 +66,32 @@ class InstallationParams
     /**
      * Creates the installation request.
      *
-     * @param ResourceInstaller  $installer       The used resource installer.
-     * @param ResourceCollection $resources       The resources to install.
-     * @param string             $rootDir         The project's root directory.
-     * @param string             $basePath        The common repository base
-     *                                            path of all the resources.
-     * @param string             $targetLocation  The location where to install
-     *                                            the resources.
-     * @param string             $webPath         The path where to install the
-     *                                            resources in the target
-     *                                            location.
-     * @param array              $parameterValues Values for the installer
-     *                                            parameters.
+     * @param ResourceInstaller   $installer           The used resource installer.
+     * @param InstallerDescriptor $installerDescriptor The descriptor of the
+     *                                                 resource installer.
+     * @param ResourceCollection  $resources           The resources to install.
+     * @param WebPathMapping      $mapping             The web path mapping.
+     * @param InstallTarget       $installTarget       The install target.
+     * @param string              $rootDir             The project's root directory.
      */
-    public function __construct(ResourceInstaller $installer, ResourceCollection $resources, $rootDir, $basePath, $targetLocation, $webPath, array $parameterValues = array())
+    public function __construct(ResourceInstaller $installer, InstallerDescriptor $installerDescriptor, ResourceCollection $resources, WebPathMapping $mapping, InstallTarget $installTarget, $rootDir)
     {
+        $glob = $mapping->getGlob();
+        $parameterValues = $installTarget->getParameterValues();
+
+        $this->validateParameterValues($parameterValues, $installerDescriptor);
+
         $this->installer = $installer;
+        $this->installerDescriptor = $installerDescriptor;
         $this->resources = $resources;
+        $this->mapping = $mapping;
+        $this->installTarget = $installTarget;
         $this->rootDir = $rootDir;
-        $this->basePath = $basePath;
-        $this->targetLocation = $targetLocation;
-        $this->webPath = '/'.trim($webPath, '/');
-        $this->parameterValues = $parameterValues;
+        $this->basePath = Glob::isDynamic($glob) ? Glob::getBasePath($glob) : $glob;
+        $this->parameterValues = array_replace(
+            $installerDescriptor->getParameterValues(),
+            $parameterValues
+        );
     }
 
     /**
@@ -96,6 +106,16 @@ class InstallationParams
     }
 
     /**
+     * Returns the descriptor of the installer.
+     *
+     * @return InstallerDescriptor The descriptor of the installer.
+     */
+    public function getInstallerDescriptor()
+    {
+        return $this->installerDescriptor;
+    }
+
+    /**
      * Returns the installed resources.
      *
      * @return ResourceCollection The installed resources.
@@ -103,6 +123,26 @@ class InstallationParams
     public function getResources()
     {
         return $this->resources;
+    }
+
+    /**
+     * Returns the web path mapping.
+     *
+     * @return WebPathMapping The web path mapping.
+     */
+    public function getMapping()
+    {
+        return $this->mapping;
+    }
+
+    /**
+     * Returns the install target.
+     *
+     * @return InstallTarget The install target.
+     */
+    public function getInstallTarget()
+    {
+        return $this->installTarget;
     }
 
     /**
@@ -135,7 +175,7 @@ class InstallationParams
      */
     public function getTargetLocation()
     {
-        return $this->targetLocation;
+        return $this->installTarget->getLocation();
     }
 
     /**
@@ -147,7 +187,7 @@ class InstallationParams
      */
     public function getWebPath()
     {
-        return $this->webPath;
+        return $this->mapping->getWebPath();
     }
 
     /**
@@ -161,5 +201,26 @@ class InstallationParams
     public function getParameterValues()
     {
         return $this->parameterValues;
+    }
+
+    private function validateParameterValues(array $parameterValues, InstallerDescriptor $installerDescriptor)
+    {
+        $validator = new InstallerParameterValidator();
+        $violations = $validator->validate($parameterValues, $installerDescriptor);
+
+        foreach ($violations as $violation) {
+            switch ($violation->getCode()) {
+                case ConstraintViolation::MISSING_PARAMETER:
+                    throw NotInstallableException::missingParameter(
+                        $violation->getParameterName(),
+                        $violation->getInstallerName()
+                    );
+                case ConstraintViolation::NO_SUCH_PARAMETER:
+                    throw NotInstallableException::noSuchParameter(
+                        $violation->getParameterName(),
+                        $violation->getInstallerName()
+                    );
+            }
+        }
     }
 }
