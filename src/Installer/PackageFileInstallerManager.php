@@ -12,10 +12,10 @@
 namespace Puli\WebResourcePlugin\Installer;
 
 use Exception;
-use Puli\RepositoryManager\Api\Package\Package;
-use Puli\RepositoryManager\Api\Package\PackageCollection;
-use Puli\RepositoryManager\Api\Package\RootPackage;
-use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
+use Puli\Manager\Api\Package\Package;
+use Puli\Manager\Api\Package\PackageCollection;
+use Puli\Manager\Api\Package\RootPackage;
+use Puli\Manager\Api\Package\RootPackageFileManager;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;

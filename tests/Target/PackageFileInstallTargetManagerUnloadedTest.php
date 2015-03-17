@@ -13,7 +13,7 @@ namespace Puli\WebResourcePlugin\Tests\Target;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
-use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
+use Puli\Manager\Api\Package\RootPackageFileManager;
 use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
@@ -42,7 +42,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
     protected function setUp()
     {
-        $this->packageFileManager = $this->getMock('Puli\RepositoryManager\Api\Package\RootPackageFileManager');
+        $this->packageFileManager = $this->getMock('Puli\Manager\Api\Package\RootPackageFileManager');
         $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
         $this->targetManager = new PackageFileInstallTargetManager($this->packageFileManager, $this->installerManager);
 

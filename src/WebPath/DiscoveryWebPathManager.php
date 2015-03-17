@@ -11,9 +11,9 @@
 
 namespace Puli\WebResourcePlugin\WebPath;
 
-use Puli\RepositoryManager\Api\Discovery\BindingDescriptor;
-use Puli\RepositoryManager\Api\Discovery\DiscoveryManager;
-use Puli\RepositoryManager\Api\Package\RootPackage;
+use Puli\Manager\Api\Discovery\BindingDescriptor;
+use Puli\Manager\Api\Discovery\DiscoveryManager;
+use Puli\Manager\Api\Package\RootPackage;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\Target\NoSuchTargetException;
 use Puli\WebResourcePlugin\Api\WebPath\NoSuchWebPathMappingException;

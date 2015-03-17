@@ -11,7 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Target;
 
-use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
+use Puli\Manager\Api\Package\RootPackageFileManager;
 use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;

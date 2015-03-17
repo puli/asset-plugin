@@ -20,7 +20,6 @@ use Webmozart\Console\Api\IO\IO;
 use Webmozart\Console\UI\Component\Table;
 use Webmozart\Console\UI\Style\TableStyle;
 use Webmozart\Expression\Expr;
-use Webmozart\Glob\Glob;
 
 /**
  * @since  1.0

@@ -14,14 +14,14 @@ namespace Puli\WebResourcePlugin\Tests\Api;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use Puli\Discovery\Api\ResourceDiscovery;
+use Puli\Manager\Api\Discovery\DiscoveryManager;
+use Puli\Manager\Api\Environment\ProjectEnvironment;
+use Puli\Manager\Api\Event\PuliEvents;
+use Puli\Manager\Api\Package\PackageCollection;
+use Puli\Manager\Api\Package\PackageManager;
+use Puli\Manager\Api\Package\RootPackageFileManager;
+use Puli\Manager\Api\Puli;
 use Puli\Repository\Api\ResourceRepository;
-use Puli\RepositoryManager\Api\Discovery\DiscoveryManager;
-use Puli\RepositoryManager\Api\Environment\ProjectEnvironment;
-use Puli\RepositoryManager\Api\Event\PuliEvents;
-use Puli\RepositoryManager\Api\Package\PackageCollection;
-use Puli\RepositoryManager\Api\Package\PackageManager;
-use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
-use Puli\RepositoryManager\Api\Puli;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webmozart\Console\Api\Event\ConsoleEvents;
@@ -79,16 +79,16 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->environment = $this->getMockBuilder('Puli\RepositoryManager\Api\Environment\ProjectEnvironment')
+        $this->environment = $this->getMockBuilder('Puli\Manager\Api\Environment\ProjectEnvironment')
             ->disableOriginalConstructor()
             ->getMock();
         $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-        $this->puli = $this->getMock('Puli\RepositoryManager\Api\Puli');
-        $this->rootPackageFileManager = $this->getMock('Puli\RepositoryManager\Api\Package\RootPackageFileManager');
+        $this->puli = $this->getMock('Puli\Manager\Api\Puli');
+        $this->rootPackageFileManager = $this->getMock('Puli\Manager\Api\Package\RootPackageFileManager');
         $this->repo = $this->getMock('Puli\Repository\Api\ResourceRepository');
         $this->discovery = $this->getMock('Puli\Discovery\Api\ResourceDiscovery');
-        $this->discoveryManager = $this->getMock('Puli\RepositoryManager\Api\Discovery\DiscoveryManager');
-        $this->packageManager = $this->getMock('Puli\RepositoryManager\Api\Package\PackageManager');
+        $this->discoveryManager = $this->getMock('Puli\Manager\Api\Discovery\DiscoveryManager');
+        $this->packageManager = $this->getMock('Puli\Manager\Api\Package\PackageManager');
         $this->plugin = new WebResourcePlugin();
 
         $this->puli->expects($this->any())

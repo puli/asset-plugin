@@ -12,8 +12,8 @@
 namespace Puli\WebResourcePlugin\Tests\WebPath;
 
 use PHPUnit_Framework_TestCase;
-use Puli\RepositoryManager\Api\Discovery\BindingDescriptor;
-use Puli\RepositoryManager\Api\Discovery\BindingState;
+use Puli\Manager\Api\Discovery\BindingDescriptor;
+use Puli\Manager\Api\Discovery\BindingState;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Puli\WebResourcePlugin\WebPath\BindingExpressionBuilder;

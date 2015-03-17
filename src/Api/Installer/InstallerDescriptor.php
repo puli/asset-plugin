@@ -11,7 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Api\Installer;
 
-use Puli\RepositoryManager\Assert\Assert;
+use Puli\Manager\Assert\Assert;
 
 /**
  * Describes a resource installer.

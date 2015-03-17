@@ -11,14 +11,14 @@
 
 namespace Puli\WebResourcePlugin\Api;
 
-use Puli\RepositoryManager\Api\Event\GenerateFactoryEvent;
-use Puli\RepositoryManager\Api\Event\PuliEvents;
-use Puli\RepositoryManager\Api\Php\Argument;
-use Puli\RepositoryManager\Api\Php\Import;
-use Puli\RepositoryManager\Api\Php\Method;
-use Puli\RepositoryManager\Api\Php\ReturnValue;
-use Puli\RepositoryManager\Api\Puli;
-use Puli\RepositoryManager\Api\PuliPlugin;
+use Puli\Manager\Api\Event\GenerateFactoryEvent;
+use Puli\Manager\Api\Event\PuliEvents;
+use Puli\Manager\Api\Php\Argument;
+use Puli\Manager\Api\Php\Import;
+use Puli\Manager\Api\Php\Method;
+use Puli\Manager\Api\Php\ReturnValue;
+use Puli\Manager\Api\Puli;
+use Puli\Manager\Api\PuliPlugin;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
 use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;

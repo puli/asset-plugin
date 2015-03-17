@@ -12,8 +12,8 @@
 namespace Puli\WebResourcePlugin\Api\Installer;
 
 use Puli\Repository\Api\Resource\Resource;
-use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
+use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 
 /**
  * Installs resources to a target location.

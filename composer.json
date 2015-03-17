@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.3.9",
         "puli/repository": "1.0.*",
-        "puli/repository-manager": "~1.0"
+        "puli/manager": "~1.0"
     },
     "require-dev": {
         "puli/cli": "~1.0"
@@ -27,7 +27,7 @@
     "autoload-dev": {
         "psr-4": {
             "Puli\\WebResourcePlugin\\Tests\\": "tests/",
-            "Puli\\RepositoryManager\\Tests\\": "vendor/puli/repository-manager/tests/"
+            "Puli\\Manager\\Tests\\": "vendor/puli/manager/tests/"
         }
     },
     "extra": {

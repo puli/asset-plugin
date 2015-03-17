@@ -13,14 +13,14 @@ namespace Puli\WebResourcePlugin\Tests\WebPath;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
-use Puli\RepositoryManager\Api\Discovery\BindingDescriptor;
-use Puli\RepositoryManager\Api\Discovery\BindingState;
-use Puli\RepositoryManager\Api\Discovery\BindingTypeDescriptor;
-use Puli\RepositoryManager\Api\Discovery\DiscoveryManager;
-use Puli\RepositoryManager\Api\Package\Package;
-use Puli\RepositoryManager\Api\Package\PackageFile;
-use Puli\RepositoryManager\Api\Package\RootPackage;
-use Puli\RepositoryManager\Api\Package\RootPackageFile;
+use Puli\Manager\Api\Discovery\BindingDescriptor;
+use Puli\Manager\Api\Discovery\BindingState;
+use Puli\Manager\Api\Discovery\BindingTypeDescriptor;
+use Puli\Manager\Api\Discovery\DiscoveryManager;
+use Puli\Manager\Api\Package\Package;
+use Puli\Manager\Api\Package\PackageFile;
+use Puli\Manager\Api\Package\RootPackage;
+use Puli\Manager\Api\Package\RootPackageFile;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
@@ -87,7 +87,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->discoveryManager = $this->getMock('Puli\RepositoryManager\Api\Discovery\DiscoveryManager');
+        $this->discoveryManager = $this->getMock('Puli\Manager\Api\Discovery\DiscoveryManager');
         $this->target1 = new InstallTarget('target1', 'symlink', 'public_html');
         $this->target2 = new InstallTarget('target2', 'rsync', 'ssh://server');
         $this->targets = new InstallTargetCollection(array($this->target1, $this->target2));

@@ -11,21 +11,18 @@
 
 namespace Puli\WebResourcePlugin\Installation;
 
+use Puli\Manager\Api\Environment\ProjectEnvironment;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\Api\ResourceRepository;
-use Puli\RepositoryManager\Api\Environment\ProjectEnvironment;
-use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
+use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
-use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
-use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use ReflectionClass;
-use Webmozart\Glob\Glob;
 
 /**
  * @since  1.0

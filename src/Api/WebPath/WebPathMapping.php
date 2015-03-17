@@ -11,7 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Api\WebPath;
 
-use Puli\RepositoryManager\Assert\Assert;
+use Puli\Manager\Assert\Assert;
 use Rhumsaa\Uuid\Uuid;
 
 /**

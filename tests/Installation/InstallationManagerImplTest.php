@@ -12,9 +12,9 @@
 namespace Puli\WebResourcePlugin\Tests\Installation;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Puli\Manager\Tests\ManagerTestCase;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
-use Puli\RepositoryManager\Tests\ManagerTestCase;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\InstallerManager;

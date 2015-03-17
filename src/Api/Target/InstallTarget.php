@@ -11,7 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Api\Target;
 
-use Puli\RepositoryManager\Assert\Assert;
+use Puli\Manager\Assert\Assert;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException;
 

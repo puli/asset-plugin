@@ -13,13 +13,13 @@ namespace Puli\WebResourcePlugin\Tests\Installer;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
-use Puli\RepositoryManager\Api\Package\Package;
-use Puli\RepositoryManager\Api\Package\PackageCollection;
-use Puli\RepositoryManager\Api\Package\PackageFile;
-use Puli\RepositoryManager\Api\Package\RootPackage;
-use Puli\RepositoryManager\Api\Package\RootPackageFile;
-use Puli\RepositoryManager\Api\Package\RootPackageFileManager;
-use Puli\RepositoryManager\Tests\TestException;
+use Puli\Manager\Api\Package\Package;
+use Puli\Manager\Api\Package\PackageCollection;
+use Puli\Manager\Api\Package\PackageFile;
+use Puli\Manager\Api\Package\RootPackage;
+use Puli\Manager\Api\Package\RootPackageFile;
+use Puli\Manager\Api\Package\RootPackageFileManager;
+use Puli\Manager\Tests\TestException;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
@@ -78,7 +78,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->packageFileManager = $this->getMock('Puli\RepositoryManager\Api\Package\RootPackageFileManager');
+        $this->packageFileManager = $this->getMock('Puli\Manager\Api\Package\RootPackageFileManager');
         $this->rootPackageFile = new RootPackageFile('vendor/root');
         $this->packageFile1 = new PackageFile('vendor/package1');
         $this->packageFile2 = new PackageFile('vendor/package2');

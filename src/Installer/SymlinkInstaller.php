@@ -11,12 +11,6 @@
 
 namespace Puli\WebResourcePlugin\Installer;
 
-use Puli\Repository\Api\Resource\Resource;
-use Puli\Repository\FilesystemRepository;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
-use Webmozart\PathUtil\Path;
-
 /**
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
