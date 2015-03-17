@@ -12,6 +12,7 @@
 namespace Puli\WebResourcePlugin\Installation;
 
 use Puli\Repository\Api\Resource\Resource;
+use Puli\Repository\Api\ResourceRepository;
 use Puli\RepositoryManager\Api\Environment\ProjectEnvironment;
 use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
@@ -38,6 +39,11 @@ class InstallationManagerImpl implements InstallationManager
     private $environment;
 
     /**
+     * @var ResourceRepository
+     */
+    private $repo;
+
+    /**
      * @var InstallTargetCollection
      */
     private $installTargets;
@@ -52,9 +58,10 @@ class InstallationManagerImpl implements InstallationManager
      */
     private $installers = array();
 
-    public function __construct(ProjectEnvironment $environment, InstallTargetCollection $installTargets, InstallerManager $installerManager)
+    public function __construct(ProjectEnvironment $environment, ResourceRepository $repo, InstallTargetCollection $installTargets, InstallerManager $installerManager)
     {
         $this->environment = $environment;
+        $this->repo = $repo;
         $this->installTargets = $installTargets;
         $this->installerManager = $installerManager;
     }
@@ -66,7 +73,7 @@ class InstallationManagerImpl implements InstallationManager
     {
         $glob = $mapping->getGlob();
         $targetName = $mapping->getTargetName();
-        $resources = $this->environment->getRepository()->find($glob);
+        $resources = $this->repo->find($glob);
 
         if ($resources->isEmpty()) {
             throw NotInstallableException::noResourceMatches($glob);

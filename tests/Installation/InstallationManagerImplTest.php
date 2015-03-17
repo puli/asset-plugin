@@ -60,6 +60,7 @@ class InstallationManagerImplTest extends ManagerTestCase
         $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
         $this->manager = new InstallationManagerImpl(
             $this->environment,
+            $this->repo,
             $this->targets,
             $this->installerManager
         );

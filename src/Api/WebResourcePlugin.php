@@ -11,6 +11,12 @@
 
 namespace Puli\WebResourcePlugin\Api;
 
+use Puli\RepositoryManager\Api\Event\GenerateFactoryEvent;
+use Puli\RepositoryManager\Api\Event\PuliEvents;
+use Puli\RepositoryManager\Api\Php\Argument;
+use Puli\RepositoryManager\Api\Php\Import;
+use Puli\RepositoryManager\Api\Php\Method;
+use Puli\RepositoryManager\Api\Php\ReturnValue;
 use Puli\RepositoryManager\Api\Puli;
 use Puli\RepositoryManager\Api\PuliPlugin;
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
@@ -18,13 +24,14 @@ use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
-use Puli\WebResourcePlugin\Console\ConsoleListener;
+use Puli\WebResourcePlugin\Console\WebConsoleConfig;
 use Puli\WebResourcePlugin\Installation\InstallationManagerImpl;
 use Puli\WebResourcePlugin\Installer\PackageFileInstallerManager;
 use Puli\WebResourcePlugin\Target\PackageFileInstallTargetManager;
 use Puli\WebResourcePlugin\UrlGenerator\DiscoveryUrlGenerator;
 use Puli\WebResourcePlugin\WebPath\DiscoveryWebPathManager;
 use RuntimeException;
+use Webmozart\Console\Api\Event\ConfigEvent;
 use Webmozart\Console\Api\Event\ConsoleEvents;
 
 /**
@@ -102,7 +109,8 @@ class WebResourcePlugin implements PuliPlugin
     {
         $this->puli = $puli;
 
-        $puli->getEventDispatcher()->addListener(ConsoleEvents::CONFIG, array(new ConsoleListener($this), 'handleConfigEvent'));
+        $puli->getEventDispatcher()->addListener(ConsoleEvents::CONFIG, array($this, 'handleConfigEvent'));
+        $puli->getEventDispatcher()->addListener(PuliEvents::GENERATE_FACTORY, array($this, 'handleGenerateFactoryEvent'));
     }
 
     /**
@@ -146,6 +154,7 @@ class WebResourcePlugin implements PuliPlugin
         if (!$this->installationManager) {
             $this->installationManager = new InstallationManagerImpl(
                 $this->getPuli()->getEnvironment(),
+                $this->getPuli()->getRepository(),
                 $this->getInstallTargetManager()->getTargets(),
                 $this->getInstallerManager()
             );
@@ -203,5 +212,82 @@ class WebResourcePlugin implements PuliPlugin
         }
 
         return $this->urlGenerator;
+    }
+
+    /**
+     * @param ConfigEvent $event
+     *
+     * @internal
+     */
+    public function handleConfigEvent(ConfigEvent $event)
+    {
+        WebConsoleConfig::addConfiguration($event->getConfig(), $this);
+    }
+
+    /**
+     * @param GenerateFactoryEvent $event
+     *
+     * @internal
+     */
+    public function handleGenerateFactoryEvent(GenerateFactoryEvent $event)
+    {
+        $class = $event->getFactoryClass();
+        $class->removeImport('Puli\Factory\PuliFactory');
+        $class->addImport(new Import('Puli\Discovery\Api\ResourceDiscovery'));
+        $class->addImport(new Import('Puli\WebResourcePlugin\Api\Factory\PuliWebFactory'));
+        $class->addImport(new Import('Puli\WebResourcePlugin\Api\Target\InstallTargetCollection'));
+        $class->addImport(new Import('Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator'));
+        $class->addImport(new Import('Puli\WebResourcePlugin\UrlGenerator\DiscoveryUrlGenerator'));
+
+        $class->removeImplementedInterface('PuliFactory');
+        $class->addImplementedInterface('PuliWebFactory');
+
+        $method = new Method('createUrlGenerator');
+        $method->setDescription('Creates the URL generator.');
+
+        $arg = new Argument('discovery');
+        $arg->setTypeHint('ResourceDiscovery');
+        $arg->setType('ResourceDiscovery');
+        $arg->setDescription('The resource discovery to read from.');
+        $method->addArgument($arg);
+
+        $method->setReturnValue(new ReturnValue('$generator', 'ResourceUrlGenerator', 'The created URL generator.'));
+
+        $targets = '';
+
+        foreach ($this->getInstallTargetManager()->getTargets() as $target) {
+            $parameters = '';
+
+            foreach ($target->getParameterValues() as $name => $value) {
+                $parameters .= sprintf(
+                    "\n        %s => %s,",
+                    var_export($name, true),
+                    var_export($value, true)
+                );
+            }
+
+            $targets .= sprintf(
+                "\n    new InstallTarget(%s, %s, %s, %s, array(%s)),",
+                var_export($target->getName(), true),
+                var_export($target->getInstallerName(), true),
+                var_export($target->getLocation(), true),
+                var_export($target->getUrlFormat(), true),
+                $parameters
+            );
+        }
+
+        if ($targets) {
+            $class->addImport(new Import('Puli\WebResourcePlugin\Api\Target\InstallTarget'));
+            $targets .= "\n";
+        }
+
+        $method->setBody(
+<<<EOF
+\$targets = new InstallTargetCollection(array($targets));
+\$generator = new DiscoveryUrlGenerator(\$discovery, \$targets);
+EOF
+        );
+
+        $class->addMethod($method);
     }
 }

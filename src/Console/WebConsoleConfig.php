@@ -15,32 +15,17 @@ use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Webmozart\Console\Api\Args\Format\Argument;
 use Webmozart\Console\Api\Args\Format\Option;
-use Webmozart\Console\Api\Event\ConfigEvent;
+use Webmozart\Console\Api\Config\ApplicationConfig;
 
 /**
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class ConsoleListener
+final class WebConsoleConfig
 {
-    /**
-     * @var WebResourcePlugin
-     */
-    private $plugin;
-
-    public function __construct(WebResourcePlugin $plugin)
+    public static function addConfiguration(ApplicationConfig $config, WebResourcePlugin $plugin)
     {
-        $this->plugin = $plugin;
-    }
-
-    /**
-     * @param ConfigEvent $event
-     */
-    public function handleConfigEvent(ConfigEvent $event)
-    {
-        $plugin = $this->plugin;
-
-        $event->getConfig()
+        $config
             ->beginCommand('web')
                 ->setDescription('Manage web resources')
                 ->setHandler(function () use ($plugin) {
@@ -127,5 +112,9 @@ class ConsoleListener
                 ->end()
             ->end()
         ;
+    }
+
+    private function __construct()
+    {
     }
 }
