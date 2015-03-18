@@ -13,13 +13,17 @@ namespace Puli\WebResourcePlugin\Console;
 
 use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
+use Puli\WebResourcePlugin\Api\Target\InstallTarget;
+use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
+use RuntimeException;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\IO\IO;
 use Webmozart\Console\UI\Component\Table;
 use Webmozart\Console\UI\Style\TableStyle;
 use Webmozart\Expression\Expr;
+use Webmozart\PathUtil\Path;
 
 /**
  * @since  1.0
@@ -37,29 +41,79 @@ class WebCommandHandler
      */
     private $installationManager;
 
-    public function __construct(WebPathManager $webPathManager, InstallationManager $installationManager)
+    /**
+     * @var InstallTargetManager
+     */
+    private $targetManager;
+
+    public function __construct(WebPathManager $webPathManager, InstallationManager $installationManager, InstallTargetManager $targetManager)
     {
         $this->webPathManager = $webPathManager;
         $this->installationManager = $installationManager;
+        $this->targetManager = $targetManager;
     }
 
     public function handleList(Args $args, IO $io)
     {
-        $table = new Table(TableStyle::borderless());
+        /** @var WebPathMapping[][] $mappingsByTarget */
+        $mappingsByTarget = array();
 
+        /** @var InstallTarget[] $targets */
+        $targets = array();
+
+        // Assemble mappings and validate targets
         foreach ($this->webPathManager->getWebPathMappings() as $mapping) {
-            $glob = $mapping->getGlob();
-            $webPath = $mapping->getWebPath();
+            $targetName = $mapping->getTargetName();
 
-            $table->addRow(array(
-                substr($mapping->getUuid()->toString(), 0, 6),
-                '<em>'.$glob.'</em>',
-                '<u>'.$mapping->getTargetName().'</u>',
-                '<real-path>'.$webPath.'</real-path>'
-            ));
+            if (!isset($mappingsByTarget[$targetName])) {
+                $mappingsByTarget[$targetName] = array();
+                $targets[$targetName] = $this->targetManager->getTarget($targetName);
+            }
+
+            $mappingsByTarget[$targetName][] = $mapping;
         }
 
-        $table->render($io);
+        if (!$mappingsByTarget) {
+            $io->writeLine('No web resources. Use "puli web add <path> <web-path>" to map web resources.');
+
+            return 0;
+        }
+
+        $io->writeLine('The following web resources are currently enabled:');
+        $io->writeLine('');
+
+        foreach ($mappingsByTarget as $targetName => $mappings) {
+            $targetTitle = 'Target "'.$targetName.'"';
+
+            if ($targetName === InstallTarget::DEFAULT_TARGET) {
+                $targetTitle .= ' (current: '.$targets[$targetName]->getName().')';
+            }
+
+            $io->writeLine("    <b>$targetTitle</b>");
+            $io->writeLine("    Location:   {$targets[$targetName]->getLocation()}");
+            $io->writeLine("    Installer:  {$targets[$targetName]->getInstallerName()}");
+            $io->writeLine("    URL Format: {$targets[$targetName]->getUrlFormat()}");
+            $io->writeLine('');
+
+            $table = new Table(TableStyle::borderless());
+
+            foreach ($mappings as $mapping) {
+                $glob = $mapping->getGlob();
+                $webPath = $mapping->getWebPath();
+
+                $table->addRow(array(
+                    substr($mapping->getUuid()->toString(), 0, 6),
+                    '<em>'.$glob.'</em>',
+                    '<real-path>'.$webPath.'</real-path>'
+                ));
+            }
+
+            $table->render($io, 8);
+
+            $io->writeLine('');
+        }
+
+        $io->writeLine('Use "puli web install" to install the resources in their targets.');
 
         return 0;
     }
@@ -81,6 +135,13 @@ class WebCommandHandler
 
         $mappings = $this->webPathManager->findWebPathMappings($expr);
 
+        if (!$mappings) {
+            throw new RuntimeException(sprintf(
+                'The mapping with the UUID (prefix) "%s" does not exist.',
+                $args->getArgument('uuid')
+            ));
+        }
+
         foreach ($mappings as $mapping) {
             $this->webPathManager->removeWebPathMapping($mapping->getUuid());
         }
@@ -97,6 +158,12 @@ class WebCommandHandler
             $mappings = $this->webPathManager->getWebPathMappings();
         }
 
+        if (!$mappings) {
+            $io->writeLine('Nothing to install.');
+
+            return 0;
+        }
+
         /** @var InstallationParams[] $paramsToInstall */
         $paramsToInstall = array();
 
@@ -107,10 +174,12 @@ class WebCommandHandler
 
         foreach ($paramsToInstall as $params) {
             foreach ($params->getResources() as $resource) {
-                $webPath = rtrim($params->getTargetLocation(), '/').$params->getWebPath();
+                $webPath = rtrim($params->getTargetLocation(), '/').
+                    $params->getWebPath().'/'.
+                    Path::makeRelative($resource->getRepositoryPath(), $params->getBasePath());;
 
                 $io->writeLine(sprintf(
-                    'Installing <em>%s</em> in <real-path>%s</real-path> via <u>%s</u>...',
+                    'Installing <em>%s</em> into <real-path>%s</real-path> via <u>%s</u>...',
                     $resource->getRepositoryPath(),
                     trim($webPath, '/'),
                     $params->getInstallerDescriptor()->getName()

@@ -41,7 +41,14 @@ class TargetCommandHandler
     {
         $table = new Table(TableStyle::borderless());
         $targets = $this->targetManager->getTargets();
-        $defaultTarget = $targets->isEmpty() ? null : $targets->getDefaultTarget();
+
+        if ($targets->isEmpty()) {
+            $io->writeLine('No install targets. Use "puli target add <name> <directory>" to add a target.');
+
+            return 0;
+        }
+
+        $defaultTarget = $targets->getDefaultTarget();
 
         foreach ($targets as $target) {
             $parameters = '';

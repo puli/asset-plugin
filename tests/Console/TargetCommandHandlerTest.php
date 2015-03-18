@@ -110,6 +110,26 @@ EOF;
         $this->assertEmpty($this->io->fetchErrors());
     }
 
+    public function testListEmpty()
+    {
+        $targets = new InstallTargetCollection(array());
+
+        $this->targetManager->expects($this->any())
+            ->method('getTargets')
+            ->willReturn($targets);
+
+        $args = self::$listCommand->parseArgs(new StringArgs(''));
+
+        $expected = <<<EOF
+No install targets. Use "puli target add <name> <directory>" to add a target.
+
+EOF;
+
+        $this->assertSame(0, $this->handler->handleList($args, $this->io));
+        $this->assertSame($expected, $this->io->fetchOutput());
+        $this->assertEmpty($this->io->fetchErrors());
+    }
+
     public function testAddTarget()
     {
         $target = new InstallTarget('local', 'symlink', 'public_html');

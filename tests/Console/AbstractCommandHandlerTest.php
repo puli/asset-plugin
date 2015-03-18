@@ -15,7 +15,6 @@ use PHPUnit_Framework_TestCase;
 use Puli\Cli\PuliApplicationConfig;
 use Puli\Manager\Api\Puli;
 use Puli\WebResourcePlugin\Api\WebResourcePlugin;
-use Puli\WebResourcePlugin\Console\WebConsoleConfig;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Console\Api\Application\Application;
 use Webmozart\Console\Api\Formatter\Formatter;
@@ -27,7 +26,7 @@ use Webmozart\Console\IO\BufferedIO;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class AbstractCommandHandlerTest extends PHPUnit_Framework_TestCase
+abstract class AbstractCommandHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var string

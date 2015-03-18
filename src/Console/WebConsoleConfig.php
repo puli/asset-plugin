@@ -29,7 +29,11 @@ final class WebConsoleConfig
             ->beginCommand('web')
                 ->setDescription('Manage web resources')
                 ->setHandler(function () use ($plugin) {
-                    return new WebCommandHandler($plugin->getWebPathManager(), $plugin->getInstallationManager());
+                    return new WebCommandHandler(
+                        $plugin->getWebPathManager(),
+                        $plugin->getInstallationManager(),
+                        $plugin->getInstallTargetManager()
+                    );
                 })
 
                 ->beginSubCommand('add')
