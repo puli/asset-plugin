@@ -16,7 +16,8 @@
         "puli/manager": "~1.0"
     },
     "require-dev": {
-        "puli/cli": "~1.0"
+        "puli/cli": "~1.0",
+        "symfony/filesystem": "~2.3"
     },
     "minimum-stability": "dev",
     "autoload": {

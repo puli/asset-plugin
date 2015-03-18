@@ -101,7 +101,7 @@ final class WebConsoleConfig
                 ->beginSubCommand('add')
                     ->addArgument('name', Argument::REQUIRED, 'The name of the installer')
                     ->addArgument('class', Argument::REQUIRED, 'The fully-qualified class name of the installer')
-                    ->addOption('description', null, Option::REQUIRED_VALUE, 'The description of the installer')
+                    ->addOption('description', null, Option::REQUIRED_VALUE | Option::MULTI_VALUED, 'The description of the installer')
                     ->addOption('param', null, Option::REQUIRED_VALUE | Option::MULTI_VALUED, 'Additional installer parameters')
                     ->setHandlerMethod('handleAdd')
                 ->end()

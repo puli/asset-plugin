@@ -14,6 +14,7 @@ namespace Puli\WebResourcePlugin\Console;
 use Puli\Cli\Util\StringUtil;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
+use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
 use RuntimeException;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\IO\IO;
@@ -47,10 +48,27 @@ class InstallerCommandHandler
                 $className = StringUtil::getShortClassName($className);
             }
 
+            $parameters = array();
+
+            foreach ($descriptor->getParameters() as $parameterName => $parameter) {
+                if (!$parameter->isRequired()) {
+                    $parameterName .= '='.StringUtil::formatValue($parameter->getDefaultValue());
+                }
+
+                $parameters[] = $parameterName;
+            }
+
+            $description = $descriptor->getDescription();
+
+            if ($parameters) {
+                // non-breaking space
+                $description .= ' <em>('.implode(",\xc2\xa0", $parameters).')</em>';
+            }
+
             $table->addRow(array(
                 '<u>'.$descriptor->getName().'</u>',
                 '<em>'.$className.'</em>',
-                $descriptor->getDescription()
+                $description
             ));
         }
 
@@ -61,10 +79,42 @@ class InstallerCommandHandler
 
     public function handleAdd(Args $args)
     {
+        $descriptions = $args->getOption('description');
+        $parameters = array();
+
+        // The first description is for the installer
+        $description = $descriptions ? array_shift($descriptions) : null;
+
+        foreach ($args->getOption('param') as $parameter) {
+            // Subsequent descriptions are for the parameters
+            $paramDescription = $descriptions ? array_shift($descriptions) : null;
+
+            // Optional parameter with default value
+            if (false !== ($pos = strpos($parameter, '='))) {
+                $parameters[] = new InstallerParameter(
+                    substr($parameter, 0, $pos),
+                    InstallerParameter::OPTIONAL,
+                    StringUtil::parseValue(substr($parameter, $pos + 1)),
+                    $paramDescription
+                );
+
+                continue;
+            }
+
+            // Required parameter
+            $parameters[] = new InstallerParameter(
+                $parameter,
+                InstallerParameter::REQUIRED,
+                null,
+                $paramDescription
+            );
+        }
+
         $this->installerManager->addInstallerDescriptor(new InstallerDescriptor(
             $args->getArgument('name'),
             $args->getArgument('class'),
-            $args->getOption('description')
+            $description,
+            $parameters
         ));
 
         return 0;
