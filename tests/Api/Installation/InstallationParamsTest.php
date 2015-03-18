@@ -160,4 +160,48 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
         $this->assertSame('/blog/css', $params->getWebPathForResource($resource1));
         $this->assertSame('/blog/js', $params->getWebPathForResource($resource2));
     }
+
+    public function testGetWebPathForResourceSamePathAsBasePath()
+    {
+        $installer = new TestInstaller();
+        $descriptor = new InstallerDescriptor('test', get_class($installer));
+        $resources = new ArrayResourceCollection(array(
+            $resource1 = new GenericResource('/acme/blog/public'),
+        ));
+        $mapping = new WebPathMapping('/acme/blog/public', 'target', '/blog');
+        $target = new InstallTarget('target', 'symlink', 'public_html');
+
+        $params = new InstallationParams(
+            $installer,
+            $descriptor,
+            $resources,
+            $mapping,
+            $target,
+            '/root'
+        );
+
+        $this->assertSame('/blog', $params->getWebPathForResource($resource1));
+    }
+
+    public function testGetWebPathForResourceInRoot()
+    {
+        $installer = new TestInstaller();
+        $descriptor = new InstallerDescriptor('test', get_class($installer));
+        $resources = new ArrayResourceCollection(array(
+            $resource1 = new GenericResource('/acme/blog/public'),
+        ));
+        $mapping = new WebPathMapping('/acme/blog/public', 'target', '/');
+        $target = new InstallTarget('target', 'symlink', 'public_html');
+
+        $params = new InstallationParams(
+            $installer,
+            $descriptor,
+            $resources,
+            $mapping,
+            $target,
+            '/root'
+        );
+
+        $this->assertSame('/', $params->getWebPathForResource($resource1));
+    }
 }

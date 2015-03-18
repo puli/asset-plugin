@@ -47,13 +47,12 @@ class CopyInstaller implements ResourceInstaller
     public function installResource(Resource $resource, InstallationParams $params)
     {
         $targetPath = Path::makeAbsolute($params->getTargetLocation(), $params->getRootDirectory());
-        
+
         if (!file_exists($targetPath)) {
             mkdir($targetPath, 0777, true);
         }
 
-        $repoPath = '/'.trim($params->getWebPathForResource($resource), '/');
-
+        $repoPath = $params->getWebPathForResource($resource);
         $filesystemRepo = new FilesystemRepository($targetPath, $this->symlinks);
 
         if ('/' !== $repoPath) {

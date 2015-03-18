@@ -203,7 +203,9 @@ class InstallationParams
      */
     public function getWebPathForResource(Resource $resource)
     {
-        return $this->mapping->getWebPath().'/'.Path::makeRelative($resource->getRepositoryPath(), $this->basePath);
+        $relPath = Path::makeRelative($resource->getRepositoryPath(), $this->basePath);
+
+        return '/'.trim($this->mapping->getWebPath().'/'.$relPath, '/');
     }
 
     /**
