@@ -12,13 +12,15 @@
 namespace Puli\WebResourcePlugin\Installer;
 
 /**
+ * Installs resources via symbolic links on the local filesystem.
+ *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class SymlinkInstaller extends CopyInstaller
 {
-    public function __construct()
-    {
-        parent::__construct(true);
-    }
+    /**
+     * @var bool
+     */
+    protected $symlinks = true;
 }

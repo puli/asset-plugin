@@ -14,11 +14,12 @@ namespace Puli\WebResourcePlugin\Installer;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\FilesystemRepository;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installation\InvalidMappingException;
 use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
 use Webmozart\PathUtil\Path;
 
 /**
+ * Installs resources via a local filesystem copy.
+ *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
@@ -27,12 +28,7 @@ class CopyInstaller implements ResourceInstaller
     /**
      * @var bool
      */
-    private $symlinks;
-
-    public function __construct($symlinks = false)
-    {
-        $this->symlinks = $symlinks;
-    }
+    protected $symlinks = false;
 
     /**
      * {@inheritdoc}
