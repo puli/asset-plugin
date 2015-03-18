@@ -84,6 +84,10 @@ final class WebConsoleConfig
                     ->addArgument('name', Argument::REQUIRED, 'The name of the default target')
                     ->setHandlerMethod('handleSetDefault')
                 ->end()
+
+                ->beginSubCommand('get-default')
+                    ->setHandlerMethod('handleGetDefault')
+                ->end()
             ->end()
 
             ->beginCommand('installer')

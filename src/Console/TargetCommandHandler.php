@@ -11,9 +11,11 @@
 
 namespace Puli\WebResourcePlugin\Console;
 
+use Puli\Cli\Util\StringUtil;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 use Puli\WebResourcePlugin\Api\Target\NoSuchTargetException;
+use RuntimeException;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\IO\IO;
 use Webmozart\Console\UI\Component\Table;
@@ -38,17 +40,21 @@ class TargetCommandHandler
     public function handleList(Args $args, IO $io)
     {
         $table = new Table(TableStyle::borderless());
+        $targets = $this->targetManager->getTargets();
+        $defaultTarget = $targets->isEmpty() ? null : $targets->getDefaultTarget();
 
-        $defaultTarget = $this->targetManager->hasTargets()
-            ? $this->targetManager->getDefaultTarget()
-            : null;
+        foreach ($targets as $target) {
+            $parameters = '';
 
-        foreach ($this->targetManager->getTargets() as $target) {
+            foreach ($target->getParameterValues() as $name => $value) {
+                $parameters .= "\n<em>".$name.'='.StringUtil::formatValue($value).'</em>';
+            }
+
             $table->addRow(array(
                 $defaultTarget === $target ? '*' : '',
                 '<u>'.$target->getName().'</u>',
                 $target->getInstallerName(),
-                '<real-path>'.$target->getLocation().'</real-path>',
+                '<real-path>'.$target->getLocation().'</real-path>'.$parameters,
                 '<em>'.$target->getUrlFormat().'</em>'
             ));
         }
@@ -60,12 +66,27 @@ class TargetCommandHandler
 
     public function handleAdd(Args $args)
     {
+        $parameters = array();
+
+        foreach ($args->getOption('param') as $parameter) {
+            $pos = strpos($parameter, '=');
+
+            if (false === $pos) {
+                throw new RuntimeException(sprintf(
+                    'Invalid parameter "%s". Expected "<name>=<value>".',
+                    $parameter
+                ));
+            }
+
+            $parameters[substr($parameter, 0, $pos)] = StringUtil::parseValue(substr($parameter, $pos + 1));
+        }
+
         $this->targetManager->addTarget(new InstallTarget(
             $args->getArgument('name'),
             $args->getOption('installer'),
             $args->getArgument('location'),
-            $args->getOption('url-format')
-            // TODO parameters
+            $args->getOption('url-format'),
+            $parameters
         ));
 
         return 0;
@@ -87,6 +108,13 @@ class TargetCommandHandler
     public function handleSetDefault(Args $args)
     {
         $this->targetManager->setDefaultTarget($args->getArgument('name'));
+
+        return 0;
+    }
+
+    public function handleGetDefault(Args $args, IO $io)
+    {
+        $io->writeLine($this->targetManager->getDefaultTarget()->getName());
 
         return 0;
     }
