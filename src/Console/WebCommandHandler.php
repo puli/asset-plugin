@@ -174,9 +174,7 @@ class WebCommandHandler
 
         foreach ($paramsToInstall as $params) {
             foreach ($params->getResources() as $resource) {
-                $webPath = rtrim($params->getTargetLocation(), '/').
-                    $params->getWebPath().'/'.
-                    Path::makeRelative($resource->getRepositoryPath(), $params->getBasePath());;
+                $webPath = rtrim($params->getTargetLocation(), '/').$params->getWebPathForResource($resource);
 
                 $io->writeLine(sprintf(
                     'Installing <em>%s</em> into <real-path>%s</real-path> via <u>%s</u>...',

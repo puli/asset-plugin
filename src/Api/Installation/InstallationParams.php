@@ -11,6 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Api\Installation;
 
+use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\Api\ResourceCollection;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
@@ -19,6 +20,7 @@ use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use Webmozart\Glob\Glob;
+use Webmozart\PathUtil\Path;
 
 /**
  * Contains all the necessary information to install resources on a target.
@@ -188,6 +190,20 @@ class InstallationParams
     public function getWebPath()
     {
         return $this->mapping->getWebPath();
+    }
+
+    /**
+     * Returns the install path of a resource in the target location.
+     *
+     * This is a path relative to the root of the target location.
+     *
+     * @param Resource $resource The resource.
+     *
+     * @return string The web path.
+     */
+    public function getWebPathForResource(Resource $resource)
+    {
+        return $this->mapping->getWebPath().'/'.Path::makeRelative($resource->getRepositoryPath(), $this->basePath);
     }
 
     /**

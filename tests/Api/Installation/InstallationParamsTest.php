@@ -13,6 +13,7 @@ namespace Puli\WebResourcePlugin\Tests\Api\Installation;
 
 use PHPUnit_Framework_TestCase;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
+use Puli\Repository\Resource\GenericResource;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
 use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
@@ -134,5 +135,29 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
             $target,
             '/root'
         );
+    }
+
+    public function testGetWebPathForResource()
+    {
+        $installer = new TestInstaller();
+        $descriptor = new InstallerDescriptor('test', get_class($installer));
+        $resources = new ArrayResourceCollection(array(
+            $resource1 = new GenericResource('/acme/blog/public/css'),
+            $resource2 = new GenericResource('/acme/blog/public/js'),
+        ));
+        $mapping = new WebPathMapping('/acme/blog/public/{css,js}', 'target', '/blog');
+        $target = new InstallTarget('target', 'symlink', 'public_html');
+
+        $params = new InstallationParams(
+            $installer,
+            $descriptor,
+            $resources,
+            $mapping,
+            $target,
+            '/root'
+        );
+
+        $this->assertSame('/blog/css', $params->getWebPathForResource($resource1));
+        $this->assertSame('/blog/js', $params->getWebPathForResource($resource2));
     }
 }
