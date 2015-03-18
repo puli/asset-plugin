@@ -145,7 +145,7 @@ The following web resources are currently enabled:
 
         33dbec /acme/blog/public /blog
 
-    Target "default" (current: remote)
+    Target "default" (current: "remote")
     Location:   ssh://example.com
     Installer:  rsync
     URL Format: http://example.com/%s

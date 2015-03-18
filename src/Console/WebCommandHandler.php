@@ -86,13 +86,13 @@ class WebCommandHandler
             $targetTitle = 'Target "'.$targetName.'"';
 
             if ($targetName === InstallTarget::DEFAULT_TARGET) {
-                $targetTitle .= ' (current: '.$targets[$targetName]->getName().')';
+                $targetTitle .= ' (current: "'.$targets[$targetName]->getName().'")';
             }
 
             $io->writeLine("    <b>$targetTitle</b>");
-            $io->writeLine("    Location:   {$targets[$targetName]->getLocation()}");
-            $io->writeLine("    Installer:  {$targets[$targetName]->getInstallerName()}");
-            $io->writeLine("    URL Format: {$targets[$targetName]->getUrlFormat()}");
+            $io->writeLine("    Location:   <real-path>{$targets[$targetName]->getLocation()}</real-path>");
+            $io->writeLine("    Installer:  <u>{$targets[$targetName]->getInstallerName()}</u>");
+            $io->writeLine("    URL Format: <em>{$targets[$targetName]->getUrlFormat()}</em>");
             $io->writeLine('');
 
             $table = new Table(TableStyle::borderless());
