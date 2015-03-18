@@ -91,7 +91,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         );
 
         $this->discovery->expects($this->once())
-            ->method('getBindings')
+            ->method('findByPath')
             ->with('/path/css/style.css', WebResourcePlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
@@ -113,7 +113,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         );
 
         $this->discovery->expects($this->once())
-            ->method('getBindings')
+            ->method('findByPath')
             ->with('/path/css/style.css', WebResourcePlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
@@ -135,7 +135,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         );
 
         $this->discovery->expects($this->once())
-            ->method('getBindings')
+            ->method('findByPath')
             ->with('/path/css/style.css', WebResourcePlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
@@ -157,7 +157,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         );
 
         $this->discovery->expects($this->once())
-            ->method('getBindings')
+            ->method('findByPath')
             ->with('/path/path/style.css', WebResourcePlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
@@ -171,7 +171,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
     public function testFailIfResourceNotMapped()
     {
         $this->discovery->expects($this->once())
-            ->method('getBindings')
+            ->method('findByPath')
             ->with('/path/path/style.css', WebResourcePlugin::BINDING_TYPE)
             ->willReturn(array());
 
@@ -195,7 +195,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         );
 
         $this->discovery->expects($this->once())
-            ->method('getBindings')
+            ->method('findByPath')
             ->with('/path/path/style.css', WebResourcePlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 

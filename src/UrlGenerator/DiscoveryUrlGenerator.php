@@ -54,7 +54,7 @@ class DiscoveryUrlGenerator implements ResourceUrlGenerator
      */
     public function generateUrl($repositoryPath, $currentUrl = null)
     {
-        $bindings = $this->discovery->getBindings($repositoryPath, WebResourcePlugin::BINDING_TYPE);
+        $bindings = $this->discovery->findByPath($repositoryPath, WebResourcePlugin::BINDING_TYPE);
         $count = count($bindings);
 
         if (0 === $count) {
