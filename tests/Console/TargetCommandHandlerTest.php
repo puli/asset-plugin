@@ -84,9 +84,9 @@ class TargetCommandHandlerTest extends AbstractCommandHandlerTest
         $targets = new InstallTargetCollection(array(
             new InstallTarget('local', 'symlink', 'public_html', '/%s'),
             new InstallTarget('remote', 'rsync', 'ssh://example.com', 'http://example.com/%s', array(
-                    'user' => 'webmozart',
-                    'password' => 'password',
-                )),
+                'user' => 'webmozart',
+                'password' => 'password',
+            )),
         ));
 
         $targets->setDefaultTarget('remote');
