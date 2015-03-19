@@ -83,10 +83,10 @@ class WebCommandHandler
         $io->writeLine('');
 
         foreach ($mappingsByTarget as $targetName => $mappings) {
-            $targetTitle = 'Target <u>'.$targetName.'</u>';
+            $targetTitle = 'Target <bu>'.$targetName.'</bu>';
 
             if ($targetName === InstallTarget::DEFAULT_TARGET) {
-                $targetTitle .= ' (alias of: <u>'.$targets[$targetName]->getName().'</u>)';
+                $targetTitle .= ' (alias of: <bu>'.$targets[$targetName]->getName().'</bu>)';
             }
 
             $io->writeLine("    <b>$targetTitle</b>");
