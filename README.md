@@ -1,14 +1,14 @@
 The Puli Web Resource Plugin
 ============================
 
-[![Build Status](https://travis-ci.org/puli/web-resource-plugin.svg?branch=master)](https://travis-ci.org/puli/web-resource-plugin)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/puli/web-resource-plugin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/puli/web-resource-plugin/?branch=master)
+[![Build Status](https://travis-ci.org/puli/web-resource-plugin.svg?branch=1.0.0-beta)](https://travis-ci.org/puli/web-resource-plugin)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/puli/web-resource-plugin/badges/quality-score.png?b=1.0.0-beta)](https://scrutinizer-ci.com/g/puli/web-resource-plugin/?branch=1.0.0-beta)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2197ba95-f3a5-4434-a11f-0ea4e37a74de/mini.png)](https://insight.sensiolabs.com/projects/2197ba95-f3a5-4434-a11f-0ea4e37a74de)
 [![Latest Stable Version](https://poser.pugx.org/puli/web-resource-plugin/v/stable.svg)](https://packagist.org/packages/puli/web-resource-plugin)
 [![Total Downloads](https://poser.pugx.org/puli/web-resource-plugin/downloads.svg)](https://packagist.org/packages/puli/web-resource-plugin)
 [![Dependency Status](https://www.versioneye.com/php/puli:web-resource-plugin/1.0.0/badge.svg)](https://www.versioneye.com/php/puli:web-resource-plugin/1.0.0)
 
-Latest release: none
+Latest release: [1.0.0-beta](https://packagist.org/packages/puli/web-resource-plugin#1.0.0-beta)
 
 PHP >= 5.3.9
 

@@ -12,14 +12,14 @@
     ],
     "require": {
         "php": ">=5.3.9",
-        "puli/repository": "1.0.*",
+        "puli/repository": "~1.0",
         "puli/manager": "~1.0"
     },
     "require-dev": {
         "puli/cli": "~1.0",
         "symfony/filesystem": "~2.3"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
             "Puli\\WebResourcePlugin\\": "src/"
