@@ -27,7 +27,13 @@
             },
             "symlink": {
                 "class": "Puli\\WebResourcePlugin\\Installer\\SymlinkInstaller",
-                "description": "Creates resource symlinks in a target directory"
+                "description": "Creates resource symlinks in a target directory",
+                "parameters": {
+                    "relative": {
+                        "default": true,
+                        "description": "Whether to create relative or absolute links"
+                    }
+                }
             }
         }
     },

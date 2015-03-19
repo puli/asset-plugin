@@ -19,6 +19,7 @@ use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
 use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use Puli\WebResourcePlugin\Installer\CopyInstaller;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @since  1.0
@@ -47,6 +48,12 @@ class CopyInstallerTest extends PHPUnit_Framework_TestCase
 
         $this->installer = new CopyInstaller();
         $this->installerDescriptor = new InstallerDescriptor('copy', get_class($this->installer));
+    }
+
+    protected function tearDown()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove($this->tempDir);
     }
 
     public function testInstallResource()

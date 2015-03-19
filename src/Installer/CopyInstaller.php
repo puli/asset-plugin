@@ -49,7 +49,9 @@ class CopyInstaller implements ResourceInstaller
         }
 
         $repoPath = $params->getWebPathForResource($resource);
-        $filesystemRepo = new FilesystemRepository($targetPath, $this->symlinks);
+        $parameterValues = $params->getParameterValues();
+        $relative = !isset($parameterValues['relative']) || $parameterValues['relative'];
+        $filesystemRepo = new FilesystemRepository($targetPath, $this->symlinks, $relative);
 
         if ('/' !== $repoPath) {
             $filesystemRepo->remove($repoPath);
