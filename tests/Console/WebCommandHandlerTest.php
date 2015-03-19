@@ -130,7 +130,7 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
         $expected = <<<EOF
 The following web resources are currently enabled:
 
-    Target "local"
+    Target local
     Location:   web
     Installer:  symlink
     URL Format: /%s
@@ -138,14 +138,14 @@ The following web resources are currently enabled:
         e81b32 /app/public           /
         49cfdf /acme/profiler/public /profiler
 
-    Target "remote"
+    Target remote
     Location:   ssh://example.com
     Installer:  rsync
     URL Format: http://example.com/%s
 
         33dbec /acme/blog/public /blog
 
-    Target "default" (current: "remote")
+    Target default (alias of: remote)
     Location:   ssh://example.com
     Installer:  rsync
     URL Format: http://example.com/%s

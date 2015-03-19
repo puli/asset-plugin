@@ -83,15 +83,15 @@ class WebCommandHandler
         $io->writeLine('');
 
         foreach ($mappingsByTarget as $targetName => $mappings) {
-            $targetTitle = 'Target "'.$targetName.'"';
+            $targetTitle = 'Target <u>'.$targetName.'</u>';
 
             if ($targetName === InstallTarget::DEFAULT_TARGET) {
-                $targetTitle .= ' (current: "'.$targets[$targetName]->getName().'")';
+                $targetTitle .= ' (alias of: <u>'.$targets[$targetName]->getName().'</u>)';
             }
 
             $io->writeLine("    <b>$targetTitle</b>");
             $io->writeLine("    Location:   <c2>{$targets[$targetName]->getLocation()}</c2>");
-            $io->writeLine("    Installer:  <u>{$targets[$targetName]->getInstallerName()}</u>");
+            $io->writeLine("    Installer:  {$targets[$targetName]->getInstallerName()}");
             $io->writeLine("    URL Format: <c1>{$targets[$targetName]->getUrlFormat()}</c1>");
             $io->writeLine('');
 
