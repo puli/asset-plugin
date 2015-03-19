@@ -90,9 +90,9 @@ class WebCommandHandler
             }
 
             $io->writeLine("    <b>$targetTitle</b>");
-            $io->writeLine("    Location:   <real-path>{$targets[$targetName]->getLocation()}</real-path>");
+            $io->writeLine("    Location:   <c2>{$targets[$targetName]->getLocation()}</c2>");
             $io->writeLine("    Installer:  <u>{$targets[$targetName]->getInstallerName()}</u>");
-            $io->writeLine("    URL Format: <em>{$targets[$targetName]->getUrlFormat()}</em>");
+            $io->writeLine("    URL Format: <c1>{$targets[$targetName]->getUrlFormat()}</c1>");
             $io->writeLine('');
 
             $table = new Table(TableStyle::borderless());
@@ -103,8 +103,8 @@ class WebCommandHandler
 
                 $table->addRow(array(
                     substr($mapping->getUuid()->toString(), 0, 6),
-                    '<em>'.$glob.'</em>',
-                    '<real-path>'.$webPath.'</real-path>'
+                    '<c1>'.$glob.'</c1>',
+                    '<c2>'.$webPath.'</c2>'
                 ));
             }
 
@@ -177,7 +177,7 @@ class WebCommandHandler
                 $webPath = rtrim($params->getTargetLocation(), '/').$params->getWebPathForResource($resource);
 
                 $io->writeLine(sprintf(
-                    'Installing <em>%s</em> into <real-path>%s</real-path> via <u>%s</u>...',
+                    'Installing <c1>%s</c1> into <c2>%s</c2> via <u>%s</u>...',
                     $resource->getRepositoryPath(),
                     trim($webPath, '/'),
                     $params->getInstallerDescriptor()->getName()

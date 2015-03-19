@@ -54,15 +54,15 @@ class TargetCommandHandler
             $parameters = '';
 
             foreach ($target->getParameterValues() as $name => $value) {
-                $parameters .= "\n<em>".$name.'='.StringUtil::formatValue($value).'</em>';
+                $parameters .= "\n<c1>".$name.'='.StringUtil::formatValue($value).'</c1>';
             }
 
             $table->addRow(array(
                 $defaultTarget === $target ? '*' : '',
                 '<u>'.$target->getName().'</u>',
                 $target->getInstallerName(),
-                '<real-path>'.$target->getLocation().'</real-path>'.$parameters,
-                '<em>'.$target->getUrlFormat().'</em>'
+                '<c2>'.$target->getLocation().'</c2>'.$parameters,
+                '<c1>'.$target->getUrlFormat().'</c1>'
             ));
         }
 

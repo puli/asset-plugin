@@ -62,12 +62,12 @@ class InstallerCommandHandler
 
             if ($parameters) {
                 // non-breaking space
-                $description .= ' <em>('.implode(",\xc2\xa0", $parameters).')</em>';
+                $description .= ' <c1>('.implode(",\xc2\xa0", $parameters).')</c1>';
             }
 
             $table->addRow(array(
                 '<u>'.$descriptor->getName().'</u>',
-                '<em>'.$className.'</em>',
+                '<c1>'.$className.'</c1>',
                 $description
             ));
         }
