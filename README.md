@@ -14,6 +14,9 @@ PHP >= 5.3.9
 
 The Web Resource Plugin adds web asset management capabilities to [Puli].
 
+Read the [Web Resources] guide in the Puli documentation to learn more about
+using the plugin.
+
 Authors
 -------
 
@@ -23,7 +26,7 @@ Authors
 Installation
 ------------
 
-Follow the [Getting Started] guide to install Puli in your project.
+Follow the [Web Resources] guide to install the plugin in your project.
 
 Documentation
 -------------
@@ -53,6 +56,7 @@ All contents of this package are licensed under the [MIT license].
 [Bernhard Schussek]: http://webmozarts.com
 [The Community Contributors]: https://github.com/puli/web-resource-plugin/graphs/contributors
 [Getting Started]: http://docs.puli.io/en/latest/getting-started.html
+[Web Resources]: http://docs.puli.io/en/latest/web-resources.html
 [Puli Documentation]: http://docs.puli.io/en/latest/index.html
 [issue tracker]: https://github.com/puli/issues/issues
 [Git repository]: https://github.com/puli/web-resource-plugin
