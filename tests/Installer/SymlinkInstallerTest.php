@@ -179,4 +179,56 @@ class SymlinkInstallerTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame('../../fixtures/css', readlink($this->tempDir.'/public_html/css'));
     }
+
+    public function testInstallResourceTwiceToRoot()
+    {
+        $mapping = new WebPathMapping('/app/public', 'local', '/');
+        $target = new InstallTarget('local', 'symlink', 'public_html');
+
+        $resource = new DirectoryResource($this->fixturesDir, '/app/public');
+
+        $params = new InstallationParams(
+            $this->installer,
+            $this->installerDescriptor,
+            new ArrayResourceCollection(array($resource)),
+            $mapping,
+            $target,
+            $this->tempDir
+        );
+
+        $this->installer->installResource($resource, $params);
+        $this->installer->installResource($resource, $params);
+
+        // The links are correct even after calling the method twice
+        $this->assertTrue(is_link($this->tempDir.'/public_html/css'));
+        $this->assertTrue(is_link($this->tempDir.'/public_html/js'));
+
+        $this->assertSame('../../fixtures/css', readlink($this->tempDir.'/public_html/css'));
+        $this->assertSame('../../fixtures/js', readlink($this->tempDir.'/public_html/js'));
+    }
+
+    public function testInstallResourceTwiceToSubPath()
+    {
+        $mapping = new WebPathMapping('/app/public', 'local', '/path');
+        $target = new InstallTarget('local', 'symlink', 'public_html');
+
+        $resource = new DirectoryResource($this->fixturesDir, '/app/public');
+
+        $params = new InstallationParams(
+            $this->installer,
+            $this->installerDescriptor,
+            new ArrayResourceCollection(array($resource)),
+            $mapping,
+            $target,
+            $this->tempDir
+        );
+
+        $this->installer->installResource($resource, $params);
+        $this->installer->installResource($resource, $params);
+
+        // The links are correct even after calling the method twice
+        $this->assertTrue(is_link($this->tempDir.'/public_html/path'));
+
+        $this->assertSame('../../fixtures', readlink($this->tempDir.'/public_html/path'));
+    }
 }

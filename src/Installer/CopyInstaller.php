@@ -11,6 +11,7 @@
 
 namespace Puli\WebResourcePlugin\Installer;
 
+use Puli\Repository\Api\Resource\FilesystemResource;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\FilesystemRepository;
 use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
@@ -53,7 +54,20 @@ class CopyInstaller implements ResourceInstaller
         $relative = !isset($parameterValues['relative']) || $parameterValues['relative'];
         $filesystemRepo = new FilesystemRepository($targetPath, $this->symlinks, $relative);
 
-        if ('/' !== $repoPath) {
+        if ('/' === $repoPath) {
+            foreach ($resource->listChildren() as $child) {
+                $name = $child->getName();
+
+                // If the resource is not attached, the name is empty
+                if (!$name && $child instanceof FilesystemResource) {
+                    $name = Path::getFilename($child->getFilesystemPath());
+                }
+
+                if ($name) {
+                    $filesystemRepo->remove($repoPath.'/'.$name);
+                }
+            }
+        } else {
             $filesystemRepo->remove($repoPath);
         }
 
