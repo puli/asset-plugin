@@ -81,7 +81,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
-            '/path/css{,/**}',
+            '/path/css{,/**/*}',
             $this->resources,
             $this->bindingType,
             array(
@@ -103,7 +103,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
-            '/path/css{,/**}',
+            '/path/css{,/**/*}',
             $this->resources,
             $this->bindingType,
             array(
@@ -125,7 +125,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
-            '/path/css{,/**}',
+            '/path/css{,/**/*}',
             $this->resources,
             $this->bindingType,
             array(
@@ -147,7 +147,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         $this->targets->add(new InstallTarget('local', 'symlink', 'public_html'));
 
         $binding = new EagerBinding(
-            '/path{,/**}',
+            '/path{,/**/*}',
             $this->resources,
             $this->bindingType,
             array(
@@ -185,7 +185,7 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
     public function testFailIfTargetNotFound()
     {
         $binding = new EagerBinding(
-            '/path{,/**}',
+            '/path{,/**/*}',
             $this->resources,
             $this->bindingType,
             array(

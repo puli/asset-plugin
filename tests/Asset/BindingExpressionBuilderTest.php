@@ -39,7 +39,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
     {
         $expr = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}');
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}');
 
         $this->assertEquals($expr, $this->builder->buildExpression());
     }
@@ -55,12 +55,12 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}')
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
             ->andX(
                 Expr::startsWith(BindingDescriptor::UUID, 'abcd')
                     ->orKeySame(BindingDescriptor::PARAMETER_VALUES, AssetPlugin::TARGET_PARAMETER, 'local')
                     ->orX(
-                        Expr::same(BindingDescriptor::QUERY, '/path{,/**}')
+                        Expr::same(BindingDescriptor::QUERY, '/path{,/**/*}')
                             ->andKeySame(BindingDescriptor::PARAMETER_VALUES, AssetPlugin::PATH_PARAMETER, 'css')
                     )
             );
@@ -74,8 +74,8 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}')
-            ->andSame(BindingDescriptor::QUERY, '/path{,/**}');
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
+            ->andSame(BindingDescriptor::QUERY, '/path{,/**/*}');
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
@@ -86,8 +86,8 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}')
-            ->andEquals(BindingDescriptor::QUERY, '/path{,/**}');
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
+            ->andEquals(BindingDescriptor::QUERY, '/path{,/**/*}');
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
@@ -98,8 +98,8 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}')
-            ->andNotSame(BindingDescriptor::QUERY, '/path{,/**}');
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
+            ->andNotSame(BindingDescriptor::QUERY, '/path{,/**/*}');
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
@@ -110,8 +110,8 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}')
-            ->andNotEquals(BindingDescriptor::QUERY, '/path{,/**}');
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
+            ->andNotEquals(BindingDescriptor::QUERY, '/path{,/**/*}');
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
@@ -122,8 +122,8 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}')
-            ->andEndsWith(BindingDescriptor::QUERY, '.css{,/**}');
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
+            ->andEndsWith(BindingDescriptor::QUERY, '.css{,/**/*}');
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }

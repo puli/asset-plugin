@@ -33,7 +33,7 @@ use Webmozart\Expression\Expr;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
+class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|DiscoveryManager
@@ -96,7 +96,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $this->rootPackage = new RootPackage(new RootPackageFile('vendor/root'), '/path');
         $this->bindingType = new BindingTypeDescriptor(AssetPlugin::BINDING_TYPE);
         $this->binding1 = new BindingDescriptor(
-            '/path{,/**}',
+            '/path{,/**/*}',
             AssetPlugin::BINDING_TYPE,
             array(
                 AssetPlugin::TARGET_PARAMETER => 'target1',
@@ -104,7 +104,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             )
         );
         $this->binding2 = new BindingDescriptor(
-            '/other/path{,/**}',
+            '/other/path{,/**/*}',
             AssetPlugin::BINDING_TYPE,
             array(
                 AssetPlugin::TARGET_PARAMETER => 'target2',
@@ -118,7 +118,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $uuid = Uuid::uuid4();
 
         $expectedBinding = new BindingDescriptor(
-            '/path{,/**}',
+            '/path{,/**/*}',
             AssetPlugin::BINDING_TYPE,
             array(
                 AssetPlugin::TARGET_PARAMETER => 'target1',
@@ -345,7 +345,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
     {
         return Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**}');
+            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}');
     }
 
     private function uuid(Uuid $uuid)

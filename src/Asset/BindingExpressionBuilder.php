@@ -56,7 +56,7 @@ class BindingExpressionBuilder implements ExpressionVisitor
         if (!$this->defaultExpression) {
             $this->defaultExpression = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
                 ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-                ->andEndsWith(BindingDescriptor::QUERY, '{,/**}');
+                ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}');
         }
 
         if (!$expr) {
@@ -91,15 +91,15 @@ class BindingExpressionBuilder implements ExpressionVisitor
                     $queryExpr = $expr->getExpression();
 
                     if ($queryExpr instanceof Same) {
-                        $queryExpr = new Same($queryExpr->getComparedValue().'{,/**}');
+                        $queryExpr = new Same($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof Equals) {
-                        $queryExpr = new Equals($queryExpr->getComparedValue().'{,/**}');
+                        $queryExpr = new Equals($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof NotSame) {
-                        $queryExpr = new NotSame($queryExpr->getComparedValue().'{,/**}');
+                        $queryExpr = new NotSame($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof NotEquals) {
-                        $queryExpr = new NotEquals($queryExpr->getComparedValue().'{,/**}');
+                        $queryExpr = new NotEquals($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof EndsWith) {
-                        $queryExpr = new EndsWith($queryExpr->getAcceptedSuffix().'{,/**}');
+                        $queryExpr = new EndsWith($queryExpr->getAcceptedSuffix().'{,/**/*}');
                     }
 
                     return new Key(BindingDescriptor::QUERY, $queryExpr);

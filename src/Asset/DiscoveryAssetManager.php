@@ -65,7 +65,7 @@ class DiscoveryAssetManager implements AssetManager
 
         $this->discoveryManager->addBinding(new BindingDescriptor(
             // Match directories as well as all of their contents
-            $mapping->getGlob().'{,/**}',
+            $mapping->getGlob().'{,/**/*}',
             AssetPlugin::BINDING_TYPE,
             array(
                 AssetPlugin::TARGET_PARAMETER => $mapping->getTargetName(),
@@ -171,8 +171,8 @@ class DiscoveryAssetManager implements AssetManager
     private function bindingToMapping(BindingDescriptor $binding)
     {
         return new AssetMapping(
-            // Remove "{,/**}" suffix
-            substr($binding->getQuery(), 0, -6),
+            // Remove "{,/**/*}" suffix
+            substr($binding->getQuery(), 0, -8),
             $binding->getParameterValue(AssetPlugin::TARGET_PARAMETER),
             $binding->getParameterValue(AssetPlugin::PATH_PARAMETER),
             $binding->getUuid()
