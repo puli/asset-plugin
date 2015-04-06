@@ -233,7 +233,7 @@ class AssetPluginTest extends PHPUnit_Framework_TestCase
 
         $manager = $this->plugin->getUrlGenerator();
 
-        $this->assertInstanceOf('Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator', $manager);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\UrlGenerator\AssetUrlGenerator', $manager);
 
         $this->assertSame($manager, $this->plugin->getUrlGenerator());
     }

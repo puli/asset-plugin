@@ -14,7 +14,7 @@ namespace Puli\AssetPlugin\Api\UrlGenerator;
 use Exception;
 
 /**
- * Thrown when a resource URL cannot be generated.
+ * Thrown when an asset URL cannot be generated.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>

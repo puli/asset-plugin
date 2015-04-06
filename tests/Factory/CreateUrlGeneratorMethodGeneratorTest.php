@@ -83,7 +83,7 @@ namespace Puli;
 use Puli\AssetPlugin\Api\Factory\UrlGeneratorFactory;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
-use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
+use Puli\AssetPlugin\Api\UrlGenerator\AssetUrlGenerator;
 use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Factory\PuliFactory;
@@ -95,7 +95,7 @@ class MyFactory implements PuliFactory, UrlGeneratorFactory
      *
      * @param ResourceDiscovery \$discovery The resource discovery to read from.
      *
-     * @return ResourceUrlGenerator The created URL generator.
+     * @return AssetUrlGenerator The created URL generator.
      */
     public function createUrlGenerator(ResourceDiscovery \$discovery)
     {
@@ -144,7 +144,7 @@ namespace Puli;
 
 use Puli\AssetPlugin\Api\Factory\UrlGeneratorFactory;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
-use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
+use Puli\AssetPlugin\Api\UrlGenerator\AssetUrlGenerator;
 use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Factory\PuliFactory;
@@ -156,7 +156,7 @@ class MyFactory implements PuliFactory, UrlGeneratorFactory
      *
      * @param ResourceDiscovery \$discovery The resource discovery to read from.
      *
-     * @return ResourceUrlGenerator The created URL generator.
+     * @return AssetUrlGenerator The created URL generator.
      */
     public function createUrlGenerator(ResourceDiscovery \$discovery)
     {

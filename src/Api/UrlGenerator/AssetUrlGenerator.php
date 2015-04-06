@@ -12,15 +12,15 @@
 namespace Puli\AssetPlugin\Api\UrlGenerator;
 
 /**
- * Generates URLs for Puli resources.
+ * Generates URLs for Puli assets.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-interface ResourceUrlGenerator
+interface AssetUrlGenerator
 {
     /**
-     * Generates a URL for a Puli resource.
+     * Generates a URL for a Puli asset.
      *
      * Depending on the configuration of the resource, the returned URL is
      * either relative to the current domain or absolute.

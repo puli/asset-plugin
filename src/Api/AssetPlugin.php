@@ -15,7 +15,7 @@ use Puli\AssetPlugin\Api\Asset\AssetManager;
 use Puli\AssetPlugin\Api\Installation\InstallationManager;
 use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
-use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
+use Puli\AssetPlugin\Api\UrlGenerator\AssetUrlGenerator;
 use Puli\AssetPlugin\Asset\DiscoveryAssetManager;
 use Puli\AssetPlugin\Console\WebConsoleConfig;
 use Puli\AssetPlugin\Factory\CreateUrlGeneratorMethodGenerator;
@@ -93,7 +93,7 @@ class AssetPlugin implements PuliPlugin
     private $installTargetManager;
 
     /**
-     * @var ResourceUrlGenerator
+     * @var AssetUrlGenerator
      */
     private $urlGenerator;
 
@@ -197,7 +197,7 @@ class AssetPlugin implements PuliPlugin
     /**
      * Returns the resource URL generator.
      *
-     * @return ResourceUrlGenerator The resource URL generator.
+     * @return AssetUrlGenerator The resource URL generator.
      */
     public function getUrlGenerator()
     {

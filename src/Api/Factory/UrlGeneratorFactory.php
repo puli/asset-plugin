@@ -11,7 +11,7 @@
 
 namespace Puli\AssetPlugin\Api\Factory;
 
-use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
+use Puli\AssetPlugin\Api\UrlGenerator\AssetUrlGenerator;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Factory\PuliFactory;
 
@@ -28,7 +28,7 @@ interface UrlGeneratorFactory
      *
      * @param ResourceDiscovery $discovery The resource discovery to read from.
      *
-     * @return ResourceUrlGenerator The created URL generator.
+     * @return AssetUrlGenerator The created URL generator.
      */
     public function createUrlGenerator(ResourceDiscovery $discovery);
 }

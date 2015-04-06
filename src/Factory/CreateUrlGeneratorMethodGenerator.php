@@ -41,7 +41,7 @@ class CreateUrlGeneratorMethodGenerator
         $class->addImport(new Import('Puli\Discovery\Api\ResourceDiscovery'));
         $class->addImport(new Import('Puli\AssetPlugin\Api\Factory\UrlGeneratorFactory'));
         $class->addImport(new Import('Puli\AssetPlugin\Api\Target\InstallTargetCollection'));
-        $class->addImport(new Import('Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator'));
+        $class->addImport(new Import('Puli\AssetPlugin\Api\UrlGenerator\AssetUrlGenerator'));
         $class->addImport(new Import('Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator'));
 
         $class->addImplementedInterface('UrlGeneratorFactory');
@@ -55,7 +55,7 @@ class CreateUrlGeneratorMethodGenerator
         $arg->setDescription('The resource discovery to read from.');
         $method->addArgument($arg);
 
-        $method->setReturnValue(new ReturnValue('$generator', 'ResourceUrlGenerator', 'The created URL generator.'));
+        $method->setReturnValue(new ReturnValue('$generator', 'AssetUrlGenerator', 'The created URL generator.'));
 
         $targets = $this->targetManager->getTargets();
         $targetsString = '';

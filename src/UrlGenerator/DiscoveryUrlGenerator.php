@@ -14,7 +14,7 @@ namespace Puli\AssetPlugin\UrlGenerator;
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 use Puli\AssetPlugin\Api\UrlGenerator\CannotGenerateUrlException;
-use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
+use Puli\AssetPlugin\Api\UrlGenerator\AssetUrlGenerator;
 use Puli\Discovery\Api\Binding\ResourceBinding;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Webmozart\Glob\Glob;
@@ -25,7 +25,7 @@ use Webmozart\Glob\Glob;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class DiscoveryUrlGenerator implements ResourceUrlGenerator
+class DiscoveryUrlGenerator implements AssetUrlGenerator
 {
     /**
      * @var ResourceDiscovery

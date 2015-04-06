@@ -13,6 +13,7 @@ Changelog
  * renamed `PuliWebFactory` to `UrlGeneratorFactory` and removed the parent
    interface `PuliFactory`
  * renamed binding type "puli/web-resource" to "puli/asset-mapping"
+ * renamed `ResourceUrlGenerator` to `AssetUrlGenerator`
  
 * 1.0.0-beta (2015-03-19)
 
