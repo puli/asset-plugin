@@ -3,10 +3,10 @@
     "name": "puli/asset-plugin",
     "binding-types": {
         "puli/asset-mapping": {
-            "description": "A resource accessible in the web directory",
+            "description": "A mapping of Puli resources to a public directory path",
             "parameters": {
                 "path": {
-                    "description": "The path in the web directory",
+                    "description": "The path in the install target",
                     "required": true
                 },
                 "target": {
