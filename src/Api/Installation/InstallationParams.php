@@ -11,12 +11,12 @@
 
 namespace Puli\AssetPlugin\Api\Installation;
 
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Installer\ResourceInstaller;
 use Puli\AssetPlugin\Api\Installer\Validation\ConstraintViolation;
 use Puli\AssetPlugin\Api\Installer\Validation\InstallerParameterValidator;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
-use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\Api\ResourceCollection;
 use Webmozart\Glob\Glob;

@@ -12,8 +12,8 @@
 namespace Puli\AssetPlugin\Tests\Asset;
 
 use PHPUnit_Framework_TestCase;
-use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Asset\AssetMapping;
+use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Asset\BindingExpressionBuilder;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;

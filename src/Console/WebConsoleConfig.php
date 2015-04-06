@@ -26,21 +26,21 @@ final class WebConsoleConfig
     public static function addConfiguration(ApplicationConfig $config, AssetPlugin $plugin)
     {
         $config
-            ->beginCommand('web')
-                ->setDescription('Manage web resources')
+            ->beginCommand('asset')
+                ->setDescription('Manage web assets')
                 ->setHandler(function () use ($plugin) {
-                    return new WebCommandHandler(
+                    return new AssetCommandHandler(
                         $plugin->getAssetManager(),
                         $plugin->getInstallationManager(),
                         $plugin->getInstallTargetManager()
                     );
                 })
 
-                ->beginSubCommand('add')
+                ->beginSubCommand('map')
                     ->addArgument('path', Argument::REQUIRED, 'The resource path')
                     ->addArgument('web-path', Argument::REQUIRED, 'The path in the web directory')
                     ->addOption('target', 't', Option::REQUIRED_VALUE | Option::PREFER_LONG_NAME, 'The name of the installation target', InstallTarget::DEFAULT_TARGET)
-                    ->setHandlerMethod('handleAdd')
+                    ->setHandlerMethod('handleMap')
                 ->end()
 
                 ->beginSubCommand('remove')

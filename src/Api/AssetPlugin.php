@@ -11,18 +11,18 @@
 
 namespace Puli\AssetPlugin\Api;
 
+use Puli\AssetPlugin\Api\Asset\AssetManager;
 use Puli\AssetPlugin\Api\Installation\InstallationManager;
 use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
 use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
-use Puli\AssetPlugin\Api\Asset\AssetManager;
+use Puli\AssetPlugin\Asset\DiscoveryAssetManager;
 use Puli\AssetPlugin\Console\WebConsoleConfig;
 use Puli\AssetPlugin\Factory\CreateUrlGeneratorMethodGenerator;
 use Puli\AssetPlugin\Installation\InstallationManagerImpl;
 use Puli\AssetPlugin\Installer\PackageFileInstallerManager;
 use Puli\AssetPlugin\Target\PackageFileInstallTargetManager;
 use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
-use \Puli\AssetPlugin\Asset\DiscoveryAssetManager;
 use Puli\Manager\Api\Event\GenerateFactoryEvent;
 use Puli\Manager\Api\Event\PuliEvents;
 use Puli\Manager\Api\Puli;

@@ -13,10 +13,10 @@ namespace Puli\AssetPlugin\Tests\Asset;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
-use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Asset\DiscoveryAssetManager;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;

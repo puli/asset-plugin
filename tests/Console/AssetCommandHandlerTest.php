@@ -13,14 +13,14 @@ namespace Puli\AssetPlugin\Tests\Console;
 
 use PHPUnit_Framework_Assert;
 use PHPUnit_Framework_MockObject_MockObject;
+use Puli\AssetPlugin\Api\Asset\AssetManager;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Api\Installation\InstallationManager;
 use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
-use Puli\AssetPlugin\Api\Asset\AssetManager;
-use Puli\AssetPlugin\Api\Asset\AssetMapping;
-use Puli\AssetPlugin\Console\WebCommandHandler;
+use Puli\AssetPlugin\Console\AssetCommandHandler;
 use Puli\Manager\Tests\TestException;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
@@ -33,7 +33,7 @@ use Webmozart\Expression\Expr;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class WebCommandHandlerTest extends AbstractCommandHandlerTest
+class AssetCommandHandlerTest extends AbstractCommandHandlerTest
 {
     const UUID1 = 'e81b32f4-5851-4955-bea7-c90382112cba';
 
@@ -51,7 +51,7 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
     /**
      * @var Command
      */
-    private static $addCommand;
+    private static $mapCommand;
 
     /**
      * @var Command
@@ -79,7 +79,7 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
     private $targetManager;
 
     /**
-     * @var WebCommandHandler
+     * @var AssetCommandHandler
      */
     private $handler;
 
@@ -87,10 +87,10 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
     {
         parent::setUpBeforeClass();
 
-        self::$listCommand = self::$application->getCommand('web')->getSubCommand('list');
-        self::$addCommand = self::$application->getCommand('web')->getSubCommand('add');
-        self::$removeCommand = self::$application->getCommand('web')->getSubCommand('remove');
-        self::$installCommand = self::$application->getCommand('web')->getSubCommand('install');
+        self::$listCommand = self::$application->getCommand('asset')->getSubCommand('list');
+        self::$mapCommand = self::$application->getCommand('asset')->getSubCommand('map');
+        self::$removeCommand = self::$application->getCommand('asset')->getSubCommand('remove');
+        self::$installCommand = self::$application->getCommand('asset')->getSubCommand('install');
     }
 
     protected function setUp()
@@ -100,7 +100,7 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
         $this->assetManager = $this->getMock('Puli\AssetPlugin\Api\Asset\AssetManager');
         $this->installationManager = $this->getMock('Puli\AssetPlugin\Api\Installation\InstallationManager');
         $this->targetManager = $this->getMock('Puli\AssetPlugin\Api\Target\InstallTargetManager');
-        $this->handler = new WebCommandHandler($this->assetManager, $this->installationManager, $this->targetManager);
+        $this->handler = new AssetCommandHandler($this->assetManager, $this->installationManager, $this->targetManager);
     }
 
     public function testListMappings()
@@ -128,7 +128,7 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
         $args = self::$listCommand->parseArgs(new StringArgs(''));
 
         $expected = <<<EOF
-The following web resources are currently enabled:
+The following web assets are currently enabled:
 
     Target local
     Location:   web
@@ -152,7 +152,7 @@ The following web resources are currently enabled:
 
         8c64be /acme/admin/public /admin
 
-Use "puli web install" to install the resources in their targets.
+Use "puli asset install" to install the assets in their targets.
 
 EOF;
 
@@ -170,7 +170,7 @@ EOF;
         $args = self::$listCommand->parseArgs(new StringArgs(''));
 
         $expected = <<<EOF
-No web resources. Use "puli web add <path> <web-path>" to map web resources.
+No assets are mapped. Use "puli asset map <path> <web-path>" to map assets.
 
 EOF;
 
@@ -179,7 +179,7 @@ EOF;
         $this->assertEmpty($this->io->fetchErrors());
     }
 
-    public function testAddMapping()
+    public function testMap()
     {
         $this->assetManager->expects($this->once())
             ->method('addAssetMapping')
@@ -189,12 +189,12 @@ EOF;
                 PHPUnit_Framework_Assert::assertSame(InstallTarget::DEFAULT_TARGET, $mapping->getTargetName());
             });
 
-        $args = self::$addCommand->parseArgs(new StringArgs('/app/public /'));
+        $args = self::$mapCommand->parseArgs(new StringArgs('/app/public /'));
 
-        $this->assertSame(0, $this->handler->handleAdd($args));
+        $this->assertSame(0, $this->handler->handleMap($args));
     }
 
-    public function testAddMappingWithTarget()
+    public function testMapWithTarget()
     {
         $this->assetManager->expects($this->once())
             ->method('addAssetMapping')
@@ -204,9 +204,9 @@ EOF;
                 PHPUnit_Framework_Assert::assertSame('remote', $mapping->getTargetName());
             });
 
-        $args = self::$addCommand->parseArgs(new StringArgs('/app/public / --target remote'));
+        $args = self::$mapCommand->parseArgs(new StringArgs('/app/public / --target remote'));
 
-        $this->assertSame(0, $this->handler->handleAdd($args));
+        $this->assertSame(0, $this->handler->handleMap($args));
     }
 
     public function testRemoveMapping()

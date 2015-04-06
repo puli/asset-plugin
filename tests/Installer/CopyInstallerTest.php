@@ -12,10 +12,10 @@
 namespace Puli\AssetPlugin\Tests\Installer;
 
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
-use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Installer\CopyInstaller;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\DirectoryResource;

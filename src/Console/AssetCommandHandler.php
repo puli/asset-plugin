@@ -11,12 +11,12 @@
 
 namespace Puli\AssetPlugin\Console;
 
+use Puli\AssetPlugin\Api\Asset\AssetManager;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Api\Installation\InstallationManager;
 use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
-use Puli\AssetPlugin\Api\Asset\AssetManager;
-use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use RuntimeException;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\IO\IO;
@@ -28,7 +28,7 @@ use Webmozart\Expression\Expr;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class WebCommandHandler
+class AssetCommandHandler
 {
     /**
      * @var AssetManager
@@ -73,12 +73,12 @@ class WebCommandHandler
         }
 
         if (!$mappingsByTarget) {
-            $io->writeLine('No web resources. Use "puli web add <path> <web-path>" to map web resources.');
+            $io->writeLine('No assets are mapped. Use "puli asset map <path> <web-path>" to map assets.');
 
             return 0;
         }
 
-        $io->writeLine('The following web resources are currently enabled:');
+        $io->writeLine('The following web assets are currently enabled:');
         $io->writeLine('');
 
         foreach ($mappingsByTarget as $targetName => $mappings) {
@@ -112,12 +112,12 @@ class WebCommandHandler
             $io->writeLine('');
         }
 
-        $io->writeLine('Use "puli web install" to install the resources in their targets.');
+        $io->writeLine('Use "puli asset install" to install the assets in their targets.');
 
         return 0;
     }
 
-    public function handleAdd(Args $args)
+    public function handleMap(Args $args)
     {
         $this->assetManager->addAssetMapping(new AssetMapping(
             $args->getArgument('path'),

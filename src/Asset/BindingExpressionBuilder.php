@@ -11,8 +11,8 @@
 
 namespace Puli\AssetPlugin\Asset;
 
-use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Asset\AssetMapping;
+use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;
 use Webmozart\Expression\Comparison\EndsWith;

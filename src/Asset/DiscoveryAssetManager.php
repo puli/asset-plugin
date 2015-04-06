@@ -11,12 +11,12 @@
 
 namespace Puli\AssetPlugin\Asset;
 
+use Puli\AssetPlugin\Api\Asset\AssetManager;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
+use Puli\AssetPlugin\Api\Asset\NoSuchAssetMappingException;
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 use Puli\AssetPlugin\Api\Target\NoSuchTargetException;
-use Puli\AssetPlugin\Api\Asset\NoSuchAssetMappingException;
-use Puli\AssetPlugin\Api\Asset\AssetManager;
-use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\DiscoveryManager;
 use Puli\Manager\Api\Package\RootPackage;

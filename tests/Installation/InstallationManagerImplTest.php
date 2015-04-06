@@ -12,13 +12,13 @@
 namespace Puli\AssetPlugin\Tests\Installation;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Installer\InstallerParameter;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
-use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Installation\InstallationManagerImpl;
 use Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstaller;
 use Puli\Manager\Tests\ManagerTestCase;
