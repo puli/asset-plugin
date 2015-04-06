@@ -11,7 +11,7 @@
 
 namespace Puli\AssetPlugin\Api\Installation;
 
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\Repository\Api\Resource\Resource;
 
 /**
@@ -29,13 +29,13 @@ interface InstallationManager
      * {@link InstallationParams} instance which can be passed to
      * {@link executeInstallation()}.
      *
-     * @param WebPathMapping $mapping The web path mapping.
+     * @param AssetMapping $mapping The web path mapping.
      *
      * @return InstallationParams The installation parameters.
      *
      * @throws NotInstallableException If the installation is not possible.
      */
-    public function prepareInstallation(WebPathMapping $mapping);
+    public function prepareInstallation(AssetMapping $mapping);
 
     /**
      * Installs a resource on its target.

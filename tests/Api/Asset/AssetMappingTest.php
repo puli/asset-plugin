@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\Tests\Api\WebPath;
+namespace Puli\AssetPlugin\Tests\Api\Asset;
 
 use PHPUnit_Framework_TestCase;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Rhumsaa\Uuid\Uuid;
 
 /**
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class WebPathMappingTest extends PHPUnit_Framework_TestCase
+class AssetMappingTest extends PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $mapping = new WebPathMapping('/blog/public', 'local', '/blog');
+        $mapping = new AssetMapping('/blog/public', 'local', '/blog');
 
         $this->assertSame('/blog/public', $mapping->getGlob());
         $this->assertSame('local', $mapping->getTargetName());
@@ -34,7 +34,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
     function testCreateWithUuid()
     {
         $uuid = Uuid::uuid4();
-        $mapping = new WebPathMapping('/blog/public', 'local', '/blog', $uuid);
+        $mapping = new AssetMapping('/blog/public', 'local', '/blog', $uuid);
 
         $this->assertSame('/blog/public', $mapping->getGlob());
         $this->assertSame('local', $mapping->getTargetName());
@@ -44,14 +44,14 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
 
     public function testCreateNormalizesWebPath()
     {
-        $mapping = new WebPathMapping('/blog/public', 'local', 'blog/');
+        $mapping = new AssetMapping('/blog/public', 'local', 'blog/');
 
         $this->assertSame('/blog', $mapping->getWebPath());
     }
 
     public function testCreateWithEmptyWebPath()
     {
-        $mapping = new WebPathMapping('/blog/public', 'local', '');
+        $mapping = new AssetMapping('/blog/public', 'local', '');
 
         $this->assertSame('/', $mapping->getWebPath());
     }
@@ -61,7 +61,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfRepositoryPathNull()
     {
-        new WebPathMapping(null, 'local', 'blog');
+        new AssetMapping(null, 'local', 'blog');
     }
 
     /**
@@ -69,7 +69,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfRepositoryPathEmpty()
     {
-        new WebPathMapping('', 'local', 'blog');
+        new AssetMapping('', 'local', 'blog');
     }
 
     /**
@@ -77,7 +77,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfRepositoryPathNoString()
     {
-        new WebPathMapping(1234, 'local', 'blog');
+        new AssetMapping(1234, 'local', 'blog');
     }
 
     /**
@@ -85,7 +85,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfTargetNameNull()
     {
-        new WebPathMapping('/blog/public', null, 'blog');
+        new AssetMapping('/blog/public', null, 'blog');
     }
 
     /**
@@ -93,7 +93,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfTargetNameEmpty()
     {
-        new WebPathMapping('/blog/public', '', 'blog');
+        new AssetMapping('/blog/public', '', 'blog');
     }
 
     /**
@@ -101,7 +101,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfTargetNameNoString()
     {
-        new WebPathMapping('/blog/public', 1234, 'blog');
+        new AssetMapping('/blog/public', 1234, 'blog');
     }
 
     /**
@@ -109,7 +109,7 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfWebPathNull()
     {
-        new WebPathMapping('/blog/public', 'local', null);
+        new AssetMapping('/blog/public', 'local', null);
     }
 
     /**
@@ -117,6 +117,6 @@ class WebPathMappingTest extends PHPUnit_Framework_TestCase
      */
     public function testFailIfWebPathNoString()
     {
-        new WebPathMapping('/blog/public', 'local', 1234);
+        new AssetMapping('/blog/public', 'local', 1234);
     }
 }

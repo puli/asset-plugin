@@ -15,8 +15,8 @@ use Puli\AssetPlugin\Api\Installation\InstallationManager;
 use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
-use Puli\AssetPlugin\Api\WebPath\WebPathManager;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetManager;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use RuntimeException;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\IO\IO;
@@ -31,9 +31,9 @@ use Webmozart\Expression\Expr;
 class WebCommandHandler
 {
     /**
-     * @var WebPathManager
+     * @var AssetManager
      */
-    private $webPathManager;
+    private $assetManager;
 
     /**
      * @var InstallationManager
@@ -45,23 +45,23 @@ class WebCommandHandler
      */
     private $targetManager;
 
-    public function __construct(WebPathManager $webPathManager, InstallationManager $installationManager, InstallTargetManager $targetManager)
+    public function __construct(AssetManager $assetManager, InstallationManager $installationManager, InstallTargetManager $targetManager)
     {
-        $this->webPathManager = $webPathManager;
+        $this->assetManager = $assetManager;
         $this->installationManager = $installationManager;
         $this->targetManager = $targetManager;
     }
 
     public function handleList(Args $args, IO $io)
     {
-        /** @var WebPathMapping[][] $mappingsByTarget */
+        /** @var AssetMapping[][] $mappingsByTarget */
         $mappingsByTarget = array();
 
         /** @var InstallTarget[] $targets */
         $targets = array();
 
         // Assemble mappings and validate targets
-        foreach ($this->webPathManager->getWebPathMappings() as $mapping) {
+        foreach ($this->assetManager->getAssetMappings() as $mapping) {
             $targetName = $mapping->getTargetName();
 
             if (!isset($mappingsByTarget[$targetName])) {
@@ -119,7 +119,7 @@ class WebCommandHandler
 
     public function handleAdd(Args $args)
     {
-        $this->webPathManager->addWebPathMapping(new WebPathMapping(
+        $this->assetManager->addAssetMapping(new AssetMapping(
             $args->getArgument('path'),
             $args->getOption('target'),
             $args->getArgument('web-path')
@@ -130,9 +130,9 @@ class WebCommandHandler
 
     public function handleRemove(Args $args)
     {
-        $expr = Expr::startsWith(WebPathMapping::UUID, $args->getArgument('uuid'));
+        $expr = Expr::startsWith(AssetMapping::UUID, $args->getArgument('uuid'));
 
-        $mappings = $this->webPathManager->findWebPathMappings($expr);
+        $mappings = $this->assetManager->findAssetMappings($expr);
 
         if (!$mappings) {
             throw new RuntimeException(sprintf(
@@ -142,7 +142,7 @@ class WebCommandHandler
         }
 
         foreach ($mappings as $mapping) {
-            $this->webPathManager->removeWebPathMapping($mapping->getUuid());
+            $this->assetManager->removeAssetMapping($mapping->getUuid());
         }
 
         return 0;
@@ -151,10 +151,10 @@ class WebCommandHandler
     public function handleInstall(Args $args, IO $io)
     {
         if ($args->isArgumentSet('target')) {
-            $expr = Expr::same(WebPathMapping::TARGET_NAME, $args->getArgument('target'));
-            $mappings = $this->webPathManager->findWebPathMappings($expr);
+            $expr = Expr::same(AssetMapping::TARGET_NAME, $args->getArgument('target'));
+            $mappings = $this->assetManager->findAssetMappings($expr);
         } else {
-            $mappings = $this->webPathManager->getWebPathMappings();
+            $mappings = $this->assetManager->getAssetMappings();
         }
 
         if (!$mappings) {

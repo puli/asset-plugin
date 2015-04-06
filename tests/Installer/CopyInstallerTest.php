@@ -15,7 +15,7 @@ use PHPUnit_Framework_TestCase;
 use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Installer\CopyInstaller;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\DirectoryResource;
@@ -58,7 +58,7 @@ class CopyInstallerTest extends PHPUnit_Framework_TestCase
 
     public function testInstallResource()
     {
-        $mapping = new WebPathMapping('/app/public', 'local', '/');
+        $mapping = new AssetMapping('/app/public', 'local', '/');
         $target = new InstallTarget('local', 'copy', 'public_html');
 
         $resource = new DirectoryResource(__DIR__.'/Fixtures', '/app/public');
@@ -89,7 +89,7 @@ class CopyInstallerTest extends PHPUnit_Framework_TestCase
 
     public function testInstallResourceWithBasePath()
     {
-        $mapping = new WebPathMapping('/app/public/{css,js}', 'local', '/');
+        $mapping = new AssetMapping('/app/public/{css,js}', 'local', '/');
         $target = new InstallTarget('local', 'symlink', 'public_html');
 
         $resource = new DirectoryResource(__DIR__.'/Fixtures/css', '/app/public/css');

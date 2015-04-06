@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\Tests\WebPath;
+namespace Puli\AssetPlugin\Tests\Asset;
 
 use PHPUnit_Framework_TestCase;
 use Puli\AssetPlugin\Api\AssetPlugin;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
-use Puli\AssetPlugin\WebPath\BindingExpressionBuilder;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
+use Puli\AssetPlugin\Asset\BindingExpressionBuilder;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;
 use Webmozart\Expression\Expr;
@@ -46,11 +46,11 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testBuildExpressionWithCustomCriteria()
     {
-        $expr1 = Expr::startsWith(WebPathMapping::UUID, 'abcd')
-            ->orSame(WebPathMapping::TARGET_NAME, 'local')
+        $expr1 = Expr::startsWith(AssetMapping::UUID, 'abcd')
+            ->orSame(AssetMapping::TARGET_NAME, 'local')
             ->orX(
-                Expr::same(WebPathMapping::GLOB, '/path')
-                    ->andSame(WebPathMapping::WEB_PATH, 'css')
+                Expr::same(AssetMapping::GLOB, '/path')
+                    ->andSame(AssetMapping::WEB_PATH, 'css')
             );
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
@@ -70,7 +70,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForSame()
     {
-        $expr1 = Expr::same(WebPathMapping::GLOB, '/path');
+        $expr1 = Expr::same(AssetMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
@@ -82,7 +82,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForEquals()
     {
-        $expr1 = Expr::equals(WebPathMapping::GLOB, '/path');
+        $expr1 = Expr::equals(AssetMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
@@ -94,7 +94,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForNotSame()
     {
-        $expr1 = Expr::notSame(WebPathMapping::GLOB, '/path');
+        $expr1 = Expr::notSame(AssetMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
@@ -106,7 +106,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForNotEquals()
     {
-        $expr1 = Expr::notEquals(WebPathMapping::GLOB, '/path');
+        $expr1 = Expr::notEquals(AssetMapping::GLOB, '/path');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
@@ -118,7 +118,7 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForEndsWith()
     {
-        $expr1 = Expr::endsWith(WebPathMapping::GLOB, '.css');
+        $expr1 = Expr::endsWith(AssetMapping::GLOB, '.css');
 
         $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
             ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)

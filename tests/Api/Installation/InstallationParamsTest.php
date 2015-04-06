@@ -16,7 +16,7 @@ use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Installer\InstallerParameter;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstaller;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
@@ -35,7 +35,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
             new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default2'),
         ));
         $resources = new ArrayResourceCollection();
-        $mapping = new WebPathMapping('/path/to/{css,js}', 'target', '/demo');
+        $mapping = new AssetMapping('/path/to/{css,js}', 'target', '/demo');
         $target = new InstallTarget('target', 'symlink', 'public_html', '/%s', array(
             'param2' => 'custom',
         ));
@@ -70,7 +70,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
             new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default2'),
         ));
         $resources = new ArrayResourceCollection();
-        $mapping = new WebPathMapping('/path/to/css', 'target', '/demo');
+        $mapping = new AssetMapping('/path/to/css', 'target', '/demo');
         $target = new InstallTarget('target', 'symlink', 'public_html', '/%s', array(
             'param2' => 'custom',
         ));
@@ -99,7 +99,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
             new InstallerParameter('foobar', InstallerParameter::REQUIRED),
         ));
         $resources = new ArrayResourceCollection();
-        $mapping = new WebPathMapping('/path/to/{css,js}', 'target', '/demo');
+        $mapping = new AssetMapping('/path/to/{css,js}', 'target', '/demo');
         $target = new InstallTarget('target', 'symlink', 'public_html');
 
         new InstallationParams(
@@ -122,7 +122,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
         $installer = new TestInstaller();
         $descriptor = new InstallerDescriptor('test', get_class($installer));
         $resources = new ArrayResourceCollection();
-        $mapping = new WebPathMapping('/path/to/{css,js}', 'target', '/demo');
+        $mapping = new AssetMapping('/path/to/{css,js}', 'target', '/demo');
         $target = new InstallTarget('target', 'symlink', 'public_html', '/%s', array(
             'foobar' => 'value',
         ));
@@ -145,7 +145,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
             $resource1 = new GenericResource('/acme/blog/public/css'),
             $resource2 = new GenericResource('/acme/blog/public/js'),
         ));
-        $mapping = new WebPathMapping('/acme/blog/public/{css,js}', 'target', '/blog');
+        $mapping = new AssetMapping('/acme/blog/public/{css,js}', 'target', '/blog');
         $target = new InstallTarget('target', 'symlink', 'public_html');
 
         $params = new InstallationParams(
@@ -168,7 +168,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
         $resources = new ArrayResourceCollection(array(
             $resource1 = new GenericResource('/acme/blog/public'),
         ));
-        $mapping = new WebPathMapping('/acme/blog/public', 'target', '/blog');
+        $mapping = new AssetMapping('/acme/blog/public', 'target', '/blog');
         $target = new InstallTarget('target', 'symlink', 'public_html');
 
         $params = new InstallationParams(
@@ -190,7 +190,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
         $resources = new ArrayResourceCollection(array(
             $resource1 = new GenericResource('/acme/blog/public'),
         ));
-        $mapping = new WebPathMapping('/acme/blog/public', 'target', '/');
+        $mapping = new AssetMapping('/acme/blog/public', 'target', '/');
         $target = new InstallTarget('target', 'symlink', 'public_html');
 
         $params = new InstallationParams(

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\Api\WebPath;
+namespace Puli\AssetPlugin\Api\Asset;
 
 use Puli\Manager\Assert\Assert;
 use Rhumsaa\Uuid\Uuid;
@@ -20,7 +20,7 @@ use Rhumsaa\Uuid\Uuid;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class WebPathMapping
+class AssetMapping
 {
     /**
      * The UUID field in {@link Expression} instances.

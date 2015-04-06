@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\WebPath;
+namespace Puli\AssetPlugin\Asset;
 
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 use Puli\AssetPlugin\Api\Target\NoSuchTargetException;
-use Puli\AssetPlugin\Api\WebPath\NoSuchWebPathMappingException;
-use Puli\AssetPlugin\Api\WebPath\WebPathManager;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\NoSuchAssetMappingException;
+use Puli\AssetPlugin\Api\Asset\AssetManager;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\DiscoveryManager;
 use Puli\Manager\Api\Package\RootPackage;
@@ -25,12 +25,12 @@ use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
 
 /**
- * A web path manager that uses a {@link DiscoveryManager} as storage backend.
+ * An asset manager that uses a {@link DiscoveryManager} as storage backend.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class DiscoveryWebPathManager implements WebPathManager
+class DiscoveryAssetManager implements AssetManager
 {
     /**
      * @var DiscoveryManager
@@ -57,7 +57,7 @@ class DiscoveryWebPathManager implements WebPathManager
     /**
      * {@inheritdoc}
      */
-    public function addWebPathMapping(WebPathMapping $mapping)
+    public function addAssetMapping(AssetMapping $mapping)
     {
         if (!$this->installTargets->contains($mapping->getTargetName())) {
             throw NoSuchTargetException::forTargetName($mapping->getTargetName());
@@ -79,7 +79,7 @@ class DiscoveryWebPathManager implements WebPathManager
     /**
      * {@inheritdoc}
      */
-    public function removeWebPathMapping(Uuid $uuid)
+    public function removeAssetMapping(Uuid $uuid)
     {
         $expr = Expr::same(BindingDescriptor::UUID, $uuid->toString())
             ->andX($this->exprBuilder->buildExpression());
@@ -103,7 +103,7 @@ class DiscoveryWebPathManager implements WebPathManager
     /**
      * {@inheritdoc}
      */
-    public function getWebPathMapping(Uuid $uuid)
+    public function getAssetMapping(Uuid $uuid)
     {
         $expr = Expr::same(BindingDescriptor::UUID, $uuid->toString())
             ->andX($this->exprBuilder->buildExpression());
@@ -111,7 +111,7 @@ class DiscoveryWebPathManager implements WebPathManager
         $bindings = $this->discoveryManager->findBindings($expr);
 
         if (!$bindings) {
-            throw NoSuchWebPathMappingException::forUuid($uuid);
+            throw NoSuchAssetMappingException::forUuid($uuid);
         }
 
         // Since we are looking for enabled bindings only, there should only be
@@ -122,7 +122,7 @@ class DiscoveryWebPathManager implements WebPathManager
     /**
      * {@inheritdoc}
      */
-    public function getWebPathMappings()
+    public function getAssetMappings()
     {
         $bindings = $this->discoveryManager->findBindings($this->exprBuilder->buildExpression());
         $mappings = array();
@@ -137,7 +137,7 @@ class DiscoveryWebPathManager implements WebPathManager
     /**
      * {@inheritdoc}
      */
-    public function findWebPathMappings(Expression $expr)
+    public function findAssetMappings(Expression $expr)
     {
         $bindings = $this->discoveryManager->findBindings($this->exprBuilder->buildExpression($expr));
         $mappings = array();
@@ -152,7 +152,7 @@ class DiscoveryWebPathManager implements WebPathManager
     /**
      * {@inheritdoc}
      */
-    public function hasWebPathMapping(Uuid $uuid)
+    public function hasAssetMapping(Uuid $uuid)
     {
         $expr = Expr::same(BindingDescriptor::UUID, $uuid->toString())
             ->andX($this->exprBuilder->buildExpression());
@@ -163,14 +163,14 @@ class DiscoveryWebPathManager implements WebPathManager
     /**
      * {@inheritdoc}
      */
-    public function hasWebPathMappings(Expression $expr = null)
+    public function hasAssetMappings(Expression $expr = null)
     {
         return $this->discoveryManager->hasBindings($this->exprBuilder->buildExpression($expr));
     }
 
     private function bindingToMapping(BindingDescriptor $binding)
     {
-        return new WebPathMapping(
+        return new AssetMapping(
             // Remove "{,/**}" suffix
             substr($binding->getQuery(), 0, -6),
             $binding->getParameterValue(AssetPlugin::TARGET_PARAMETER),

@@ -151,23 +151,23 @@ class AssetPluginTest extends PHPUnit_Framework_TestCase
         $this->plugin->getPuli();
     }
 
-    public function testGetWebPathManager()
+    public function testGetAssetManager()
     {
         $this->plugin->activate($this->puli);
 
-        $manager = $this->plugin->getWebPathManager();
+        $manager = $this->plugin->getAssetManager();
 
-        $this->assertInstanceOf('Puli\AssetPlugin\Api\WebPath\WebPathManager', $manager);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\Asset\AssetManager', $manager);
 
-        $this->assertSame($manager, $this->plugin->getWebPathManager());
+        $this->assertSame($manager, $this->plugin->getAssetManager());
     }
 
     /**
      * @expectedException \RuntimeException
      */
-    public function testGetWebPathManagerFailsIfNotActive()
+    public function testGetAssetManagerFailsIfNotActive()
     {
-        $this->plugin->getWebPathManager();
+        $this->plugin->getAssetManager();
     }
 
     public function testGetInstallationManager()

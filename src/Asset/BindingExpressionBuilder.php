@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\WebPath;
+namespace Puli\AssetPlugin\Asset;
 
 use Puli\AssetPlugin\Api\AssetPlugin;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;
 use Webmozart\Expression\Comparison\EndsWith;
@@ -28,7 +28,7 @@ use Webmozart\Expression\Traversal\ExpressionTraverser;
 use Webmozart\Expression\Traversal\ExpressionVisitor;
 
 /**
- * Transforms a {@link WebPathMapping} expression to a {@link BindingDescriptor}
+ * Transforms an {@link AssetMapping} expression to a {@link BindingDescriptor}
  * expression.
  *
  * @since  1.0
@@ -45,9 +45,9 @@ class BindingExpressionBuilder implements ExpressionVisitor
 
     /**
      * Builds a {@link BindingDescriptor} expression for a given
-     * {@link WebPathMapping} expression.
+     * {@link AssetMapping} expression.
      *
-     * @param Expression $expr The {@link WebPathMapping} expression.
+     * @param Expression $expr The {@link AssetMapping} expression.
      *
      * @return Expression The built expression.
      */
@@ -84,10 +84,10 @@ class BindingExpressionBuilder implements ExpressionVisitor
     {
         if ($expr instanceof Key) {
             switch ($expr->getKey()) {
-                case WebPathMapping::UUID:
+                case AssetMapping::UUID:
                     return new Key(BindingDescriptor::UUID, $expr->getExpression());
 
-                case WebPathMapping::GLOB:
+                case AssetMapping::GLOB:
                     $queryExpr = $expr->getExpression();
 
                     if ($queryExpr instanceof Same) {
@@ -104,13 +104,13 @@ class BindingExpressionBuilder implements ExpressionVisitor
 
                     return new Key(BindingDescriptor::QUERY, $queryExpr);
 
-                case WebPathMapping::TARGET_NAME:
+                case AssetMapping::TARGET_NAME:
                     return new Key(
                         BindingDescriptor::PARAMETER_VALUES,
                         new Key(AssetPlugin::TARGET_PARAMETER, $expr->getExpression())
                     );
 
-                case WebPathMapping::WEB_PATH:
+                case AssetMapping::WEB_PATH:
                     return new Key(
                         BindingDescriptor::PARAMETER_VALUES,
                         new Key(AssetPlugin::PATH_PARAMETER, $expr->getExpression())

@@ -18,7 +18,7 @@ use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Installer\ResourceInstaller;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\Manager\Api\Environment\ProjectEnvironment;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\Api\ResourceRepository;
@@ -66,7 +66,7 @@ class InstallationManagerImpl implements InstallationManager
     /**
      * {@inheritdoc}
      */
-    public function prepareInstallation(WebPathMapping $mapping)
+    public function prepareInstallation(AssetMapping $mapping)
     {
         $glob = $mapping->getGlob();
         $targetName = $mapping->getTargetName();

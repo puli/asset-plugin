@@ -18,8 +18,8 @@ use Puli\AssetPlugin\Api\Installation\InstallationParams;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
-use Puli\AssetPlugin\Api\WebPath\WebPathManager;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetManager;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Console\WebCommandHandler;
 use Puli\Manager\Tests\TestException;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
@@ -64,9 +64,9 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
     private static $installCommand;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|WebPathManager
+     * @var PHPUnit_Framework_MockObject_MockObject|AssetManager
      */
-    private $webPathManager;
+    private $assetManager;
 
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|InstallationManager
@@ -97,10 +97,10 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
     {
         parent::setUp();
 
-        $this->webPathManager = $this->getMock('Puli\AssetPlugin\Api\WebPath\WebPathManager');
+        $this->assetManager = $this->getMock('Puli\AssetPlugin\Api\Asset\AssetManager');
         $this->installationManager = $this->getMock('Puli\AssetPlugin\Api\Installation\InstallationManager');
         $this->targetManager = $this->getMock('Puli\AssetPlugin\Api\Target\InstallTargetManager');
-        $this->handler = new WebCommandHandler($this->webPathManager, $this->installationManager, $this->targetManager);
+        $this->handler = new WebCommandHandler($this->assetManager, $this->installationManager, $this->targetManager);
     }
 
     public function testListMappings()
@@ -116,13 +116,13 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
                 array(InstallTarget::DEFAULT_TARGET, $remoteTarget),
             ));
 
-        $this->webPathManager->expects($this->once())
-            ->method('getWebPathMappings')
+        $this->assetManager->expects($this->once())
+            ->method('getAssetMappings')
             ->willReturn(array(
-                new WebPathMapping('/app/public', 'local', '/', Uuid::fromString(self::UUID1)),
-                new WebPathMapping('/acme/blog/public', 'remote', '/blog', Uuid::fromString(self::UUID2)),
-                new WebPathMapping('/acme/profiler/public', 'local', '/profiler', Uuid::fromString(self::UUID3)),
-                new WebPathMapping('/acme/admin/public', InstallTarget::DEFAULT_TARGET, '/admin', Uuid::fromString(self::UUID4)),
+                new AssetMapping('/app/public', 'local', '/', Uuid::fromString(self::UUID1)),
+                new AssetMapping('/acme/blog/public', 'remote', '/blog', Uuid::fromString(self::UUID2)),
+                new AssetMapping('/acme/profiler/public', 'local', '/profiler', Uuid::fromString(self::UUID3)),
+                new AssetMapping('/acme/admin/public', InstallTarget::DEFAULT_TARGET, '/admin', Uuid::fromString(self::UUID4)),
             ));
 
         $args = self::$listCommand->parseArgs(new StringArgs(''));
@@ -163,8 +163,8 @@ EOF;
 
     public function testListEmpty()
     {
-        $this->webPathManager->expects($this->once())
-            ->method('getWebPathMappings')
+        $this->assetManager->expects($this->once())
+            ->method('getAssetMappings')
             ->willReturn(array());
 
         $args = self::$listCommand->parseArgs(new StringArgs(''));
@@ -181,9 +181,9 @@ EOF;
 
     public function testAddMapping()
     {
-        $this->webPathManager->expects($this->once())
-            ->method('addWebPathMapping')
-            ->willReturnCallback(function (WebPathMapping $mapping) {
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
                 PHPUnit_Framework_Assert::assertSame(InstallTarget::DEFAULT_TARGET, $mapping->getTargetName());
@@ -196,9 +196,9 @@ EOF;
 
     public function testAddMappingWithTarget()
     {
-        $this->webPathManager->expects($this->once())
-            ->method('addWebPathMapping')
-            ->willReturnCallback(function (WebPathMapping $mapping) {
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
                 PHPUnit_Framework_Assert::assertSame('remote', $mapping->getTargetName());
@@ -211,20 +211,20 @@ EOF;
 
     public function testRemoveMapping()
     {
-        $this->webPathManager->expects($this->at(0))
-            ->method('findWebPathMappings')
-            ->with(Expr::startsWith(WebPathMapping::UUID, 'abcd'))
+        $this->assetManager->expects($this->at(0))
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
             ->willReturn(array(
-                $mapping1 = new WebPathMapping('/app/public', 'local', '/'),
-                $mapping2 = new WebPathMapping('/acme/blog/public', 'remote', '/blog'),
+                $mapping1 = new AssetMapping('/app/public', 'local', '/'),
+                $mapping2 = new AssetMapping('/acme/blog/public', 'remote', '/blog'),
             ));
 
-        $this->webPathManager->expects($this->at(1))
-            ->method('removeWebPathMapping')
+        $this->assetManager->expects($this->at(1))
+            ->method('removeAssetMapping')
             ->with($mapping1->getUuid());
 
-        $this->webPathManager->expects($this->at(2))
-            ->method('removeWebPathMapping')
+        $this->assetManager->expects($this->at(2))
+            ->method('removeAssetMapping')
             ->with($mapping2->getUuid());
 
         $args = self::$removeCommand->parseArgs(new StringArgs('abcd'));
@@ -237,13 +237,13 @@ EOF;
      */
     public function testRemoveMappingFailsIfNotFound()
     {
-        $this->webPathManager->expects($this->once())
-            ->method('findWebPathMappings')
-            ->with(Expr::startsWith(WebPathMapping::UUID, 'abcd'))
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
             ->willReturn(array());
 
-        $this->webPathManager->expects($this->never())
-            ->method('removeWebPathMapping');
+        $this->assetManager->expects($this->never())
+            ->method('removeAssetMapping');
 
         $args = self::$removeCommand->parseArgs(new StringArgs('abcd'));
 
@@ -252,8 +252,8 @@ EOF;
 
     public function testInstall()
     {
-        $mapping1 = new WebPathMapping('/app/public', 'local', '/');
-        $mapping2 = new WebPathMapping('/acme/blog/public/{css,js}', 'remote', '/blog');
+        $mapping1 = new AssetMapping('/app/public', 'local', '/');
+        $mapping2 = new AssetMapping('/acme/blog/public/{css,js}', 'remote', '/blog');
 
         $symlinkInstaller = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $symlinkInstallerDescriptor = new InstallerDescriptor('symlink', get_class($symlinkInstaller));
@@ -284,8 +284,8 @@ EOF;
             __DIR__
         );
 
-        $this->webPathManager->expects($this->once())
-            ->method('getWebPathMappings')
+        $this->assetManager->expects($this->once())
+            ->method('getAssetMappings')
             ->willReturn(array($mapping1, $mapping2));
 
         $this->installationManager->expects($this->at(0))
@@ -326,8 +326,8 @@ EOF;
 
     public function testInstallWithTarget()
     {
-        $mapping1 = new WebPathMapping('/app/public', 'local', '/');
-        $mapping2 = new WebPathMapping('/acme/blog/public/{css,js}', 'local', '/blog');
+        $mapping1 = new AssetMapping('/app/public', 'local', '/');
+        $mapping2 = new AssetMapping('/acme/blog/public/{css,js}', 'local', '/blog');
 
         $symlinkInstaller = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $symlinkInstallerDescriptor = new InstallerDescriptor('symlink', get_class($symlinkInstaller));
@@ -355,9 +355,9 @@ EOF;
             __DIR__
         );
 
-        $this->webPathManager->expects($this->once())
-            ->method('findWebPathMappings')
-            ->with(Expr::same(WebPathMapping::TARGET_NAME, 'local'))
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::same(AssetMapping::TARGET_NAME, 'local'))
             ->willReturn(array($mapping1, $mapping2));
 
         $this->installationManager->expects($this->at(0))
@@ -401,8 +401,8 @@ EOF;
      */
     public function testInstallDoesNothingIfPrepareFails()
     {
-        $mapping1 = new WebPathMapping('/app/public', 'local', '/');
-        $mapping2 = new WebPathMapping('/acme/blog/public/{css,js}', 'local', '/blog');
+        $mapping1 = new AssetMapping('/app/public', 'local', '/');
+        $mapping2 = new AssetMapping('/acme/blog/public/{css,js}', 'local', '/blog');
 
         $symlinkInstaller = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $symlinkInstallerDescriptor = new InstallerDescriptor('symlink', get_class($symlinkInstaller));
@@ -420,8 +420,8 @@ EOF;
             __DIR__
         );
 
-        $this->webPathManager->expects($this->once())
-            ->method('getWebPathMappings')
+        $this->assetManager->expects($this->once())
+            ->method('getAssetMappings')
             ->willReturn(array($mapping1, $mapping2));
 
         $this->installationManager->expects($this->at(0))
@@ -444,8 +444,8 @@ EOF;
 
     public function testInstallNothing()
     {
-        $this->webPathManager->expects($this->once())
-            ->method('getWebPathMappings')
+        $this->assetManager->expects($this->once())
+            ->method('getAssetMappings')
             ->willReturn(array());
 
         $this->installationManager->expects($this->never())

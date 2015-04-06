@@ -9,63 +9,63 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\Api\WebPath;
+namespace Puli\AssetPlugin\Api\Asset;
 
 use Puli\AssetPlugin\Api\Target\NoSuchTargetException;
 use Rhumsaa\Uuid\Uuid;
 use Webmozart\Expression\Expression;
 
 /**
- * Manages web path mappings.
+ * Manages asset mappings.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-interface WebPathManager
+interface AssetManager
 {
     /**
-     * Adds a web path mapping to the repository.
+     * Adds an asset mapping to the repository.
      *
-     * @param WebPathMapping $mapping The web path mapping.
+     * @param AssetMapping $mapping The asset mapping.
      *
      * @throws NoSuchTargetException If the target referred to by the mapping
      *                               does not exist.
      */
-    public function addWebPathMapping(WebPathMapping $mapping);
+    public function addAssetMapping(AssetMapping $mapping);
 
     /**
-     * Removes a web path mapping from the repository.
+     * Removes an asset mapping from the repository.
      *
      * @param Uuid $uuid The UUID of the mapping.
      */
-    public function removeWebPathMapping(Uuid $uuid);
+    public function removeAssetMapping(Uuid $uuid);
 
     /**
-     * Returns the web path mapping for a web path.
+     * Returns the asset mapping for a web path.
      *
      * @param Uuid $uuid The UUID of the mapping.
      *
-     * @return WebPathMapping The corresponding web path mapping.
+     * @return AssetMapping The corresponding asset mapping.
      *
-     * @throws NoSuchWebPathMappingException If the web path is not mapped.
+     * @throws NoSuchAssetMappingException If the web path is not mapped.
      */
-    public function getWebPathMapping(Uuid $uuid);
+    public function getAssetMapping(Uuid $uuid);
 
     /**
-     * Returns all web path mappings.
+     * Returns all asset mappings.
      *
-     * @return WebPathMapping[] The web path mappings.
+     * @return AssetMapping[] The asset mappings.
      */
-    public function getWebPathMappings();
+    public function getAssetMappings();
 
     /**
-     * Returns all web path mappings matching the given expression.
+     * Returns all asset mappings matching the given expression.
      *
      * @param Expression $expr The search criteria.
      *
-     * @return WebPathMapping[] The web path mappings matching the expression.
+     * @return AssetMapping[] The asset mappings matching the expression.
      */
-    public function findWebPathMappings(Expression $expr);
+    public function findAssetMappings(Expression $expr);
 
     /**
      * Returns whether a web path is mapped.
@@ -74,7 +74,7 @@ interface WebPathManager
      *
      * @return bool Returns `true` if the web path is mapped.
      */
-    public function hasWebPathMapping(Uuid $uuid);
+    public function hasAssetMapping(Uuid $uuid);
 
     /**
      * Returns whether a web path is mapped.
@@ -86,6 +86,6 @@ interface WebPathManager
      *
      * @return bool Returns `true` if the web path is mapped.
      */
-    public function hasWebPathMappings(Expression $expr = null);
+    public function hasAssetMappings(Expression $expr = null);
 
 }

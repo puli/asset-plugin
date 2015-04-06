@@ -15,14 +15,14 @@ use Puli\AssetPlugin\Api\Installation\InstallationManager;
 use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
 use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
-use Puli\AssetPlugin\Api\WebPath\WebPathManager;
+use Puli\AssetPlugin\Api\Asset\AssetManager;
 use Puli\AssetPlugin\Console\WebConsoleConfig;
 use Puli\AssetPlugin\Factory\CreateUrlGeneratorMethodGenerator;
 use Puli\AssetPlugin\Installation\InstallationManagerImpl;
 use Puli\AssetPlugin\Installer\PackageFileInstallerManager;
 use Puli\AssetPlugin\Target\PackageFileInstallTargetManager;
 use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
-use Puli\AssetPlugin\WebPath\DiscoveryWebPathManager;
+use \Puli\AssetPlugin\Asset\DiscoveryAssetManager;
 use Puli\Manager\Api\Event\GenerateFactoryEvent;
 use Puli\Manager\Api\Event\PuliEvents;
 use Puli\Manager\Api\Puli;
@@ -43,9 +43,9 @@ use Webmozart\Console\Api\Event\ConsoleEvents;
 class AssetPlugin implements PuliPlugin
 {
     /**
-     * The binding type of web resources.
+     * The binding type of asset mappings.
      */
-    const BINDING_TYPE = 'puli/web-resource';
+    const BINDING_TYPE = 'puli/asset-mapping';
 
     /**
      * The binding parameter used for the web path.
@@ -73,9 +73,9 @@ class AssetPlugin implements PuliPlugin
     private $puli;
 
     /**
-     * @var WebPathManager
+     * @var AssetManager
      */
-    private $webPathManager;
+    private $assetManager;
 
     /**
      * @var InstallationManager
@@ -125,20 +125,20 @@ class AssetPlugin implements PuliPlugin
     }
 
     /**
-     * Returns the web path manager.
+     * Returns the asset manager.
      *
-     * @return WebPathManager The web path manager.
+     * @return AssetManager The web path manager.
      */
-    public function getWebPathManager()
+    public function getAssetManager()
     {
-        if (!$this->webPathManager) {
-            $this->webPathManager = new DiscoveryWebPathManager(
+        if (!$this->assetManager) {
+            $this->assetManager = new DiscoveryAssetManager(
                 $this->getPuli()->getDiscoveryManager(),
                 $this->getInstallTargetManager()->getTargets()
             );
         }
 
-        return $this->webPathManager;
+        return $this->assetManager;
     }
 
     /**

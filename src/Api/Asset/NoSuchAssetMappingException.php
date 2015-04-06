@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\Api\WebPath;
+namespace Puli\AssetPlugin\Api\Asset;
 
 use Exception;
 use Rhumsaa\Uuid\Uuid;
 
 /**
- * Thrown when a web path mapping was not found.
+ * Thrown when an asset mapping was not found.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class NoSuchWebPathMappingException extends Exception
+class NoSuchAssetMappingException extends Exception
 {
     /**
      * Creates an exception for a UUID that was not found.
@@ -34,7 +34,7 @@ class NoSuchWebPathMappingException extends Exception
     public static function forUuid(Uuid $uuid, $code = 0, Exception $cause = null)
     {
         return new static(sprintf(
-            'The web path mapping "%s" does not exist.',
+            'The asset mapping "%s" does not exist.',
             $uuid->toString()
         ), $code, $cause);
     }

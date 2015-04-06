@@ -30,7 +30,7 @@ final class WebConsoleConfig
                 ->setDescription('Manage web resources')
                 ->setHandler(function () use ($plugin) {
                     return new WebCommandHandler(
-                        $plugin->getWebPathManager(),
+                        $plugin->getAssetManager(),
                         $plugin->getInstallationManager(),
                         $plugin->getInstallTargetManager()
                     );

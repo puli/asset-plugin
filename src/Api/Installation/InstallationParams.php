@@ -16,7 +16,7 @@ use Puli\AssetPlugin\Api\Installer\ResourceInstaller;
 use Puli\AssetPlugin\Api\Installer\Validation\ConstraintViolation;
 use Puli\AssetPlugin\Api\Installer\Validation\InstallerParameterValidator;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\Api\ResourceCollection;
 use Webmozart\Glob\Glob;
@@ -46,7 +46,7 @@ class InstallationParams
     private $resources;
 
     /**
-     * @var WebPathMapping
+     * @var AssetMapping
      */
     private $mapping;
 
@@ -72,11 +72,11 @@ class InstallationParams
      * @param InstallerDescriptor $installerDescriptor The descriptor of the
      *                                                 resource installer.
      * @param ResourceCollection  $resources           The resources to install.
-     * @param WebPathMapping      $mapping             The web path mapping.
+     * @param AssetMapping      $mapping             The web path mapping.
      * @param InstallTarget       $installTarget       The install target.
      * @param string              $rootDir             The project's root directory.
      */
-    public function __construct(ResourceInstaller $installer, InstallerDescriptor $installerDescriptor, ResourceCollection $resources, WebPathMapping $mapping, InstallTarget $installTarget, $rootDir)
+    public function __construct(ResourceInstaller $installer, InstallerDescriptor $installerDescriptor, ResourceCollection $resources, AssetMapping $mapping, InstallTarget $installTarget, $rootDir)
     {
         $glob = $mapping->getGlob();
         $parameterValues = $installTarget->getParameterValues();
@@ -130,7 +130,7 @@ class InstallationParams
     /**
      * Returns the web path mapping.
      *
-     * @return WebPathMapping The web path mapping.
+     * @return AssetMapping The web path mapping.
      */
     public function getMapping()
     {

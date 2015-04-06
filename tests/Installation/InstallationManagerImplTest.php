@@ -18,7 +18,7 @@ use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Installer\InstallerParameter;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Installation\InstallationManagerImpl;
 use Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstaller;
 use Puli\Manager\Tests\ManagerTestCase;
@@ -83,7 +83,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             'param1' => 'custom1',
             'param3' => 'custom2',
         ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'server', 'assets');
 
         $this->targets->add($target);
 
@@ -127,7 +127,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             new GenericResource('/path/js'),
         ));
         $target = new InstallTarget('server', 'foobar', 'ssh://server/public_html');
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'server', 'assets');
 
         $this->targets->add($target);
 
@@ -164,7 +164,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             'param1' => 'custom1',
             'param3' => 'custom2',
         ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'server', 'assets');
 
         $this->targets->add($target);
 
@@ -202,7 +202,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             new InstallerParameter('param2', InstallerParameter::OPTIONAL, 'default1'),
             new InstallerParameter('param3', InstallerParameter::OPTIONAL, 'default2'),
         ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'foobar', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'foobar', 'assets');
 
         $this->repo->expects($this->any())
             ->method('find')
@@ -242,7 +242,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             'param1' => 'custom1',
             'param3' => 'custom2',
         ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'server', 'assets');
 
         $this->targets->add($target);
 
@@ -284,7 +284,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             'param1' => 'custom1',
             'param3' => 'custom2',
         ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'server', 'assets');
 
         $this->targets->add($target);
 
@@ -326,7 +326,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             'param1' => 'custom1',
             'param3' => 'custom2',
         ));
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'server', 'assets');
 
         $this->targets->add($target);
 
@@ -358,7 +358,7 @@ class InstallationManagerImplTest extends ManagerTestCase
         $installer = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $installerDescriptor = new InstallerDescriptor('symlink', get_class($installer));
         $target = new InstallTarget('server', 'rsync', 'ssh://server/public_html');
-        $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');
+        $mapping = new AssetMapping('/path/{css,js}', 'server', 'assets');
 
         $params = new InstallationParams(
             $installer,

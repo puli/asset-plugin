@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\AssetPlugin\Tests\WebPath;
+namespace Puli\AssetPlugin\Tests\Asset;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
-use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
-use Puli\AssetPlugin\WebPath\DiscoveryWebPathManager;
+use Puli\AssetPlugin\Api\Asset\AssetMapping;
+use Puli\AssetPlugin\Asset\DiscoveryAssetManager;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;
 use Puli\Manager\Api\Discovery\BindingTypeDescriptor;
@@ -81,7 +81,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
     private $binding2;
 
     /**
-     * @var DiscoveryWebPathManager
+     * @var DiscoveryAssetManager
      */
     private $manager;
 
@@ -91,7 +91,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $this->target1 = new InstallTarget('target1', 'symlink', 'public_html');
         $this->target2 = new InstallTarget('target2', 'rsync', 'ssh://server');
         $this->targets = new InstallTargetCollection(array($this->target1, $this->target2));
-        $this->manager = new DiscoveryWebPathManager($this->discoveryManager, $this->targets);
+        $this->manager = new DiscoveryAssetManager($this->discoveryManager, $this->targets);
         $this->package = new Package(new PackageFile('vendor/package'), '/path');
         $this->rootPackage = new RootPackage(new RootPackageFile('vendor/root'), '/path');
         $this->bindingType = new BindingTypeDescriptor(AssetPlugin::BINDING_TYPE);
@@ -132,7 +132,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->method('addBinding')
             ->with($expectedBinding);
 
-        $this->manager->addWebPathMapping(new WebPathMapping('/path', 'target1', '/css', $uuid));
+        $this->manager->addAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid));
     }
 
     /**
@@ -144,7 +144,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $this->discoveryManager->expects($this->never())
             ->method('addBinding');
 
-        $this->manager->addWebPathMapping(new WebPathMapping('/path', 'foobar', '/css'));
+        $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css'));
     }
 
     public function testRemoveRootWebPathMapping()
@@ -165,7 +165,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $this->discoveryManager->expects($this->never())
             ->method('disableBinding');
 
-        $this->manager->removeWebPathMapping($uuid);
+        $this->manager->removeAssetMapping($uuid);
     }
 
     public function testDisablePackageWebPathMapping()
@@ -186,7 +186,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->method('disableBinding')
             ->with($uuid, 'vendor/package');
 
-        $this->manager->removeWebPathMapping($uuid);
+        $this->manager->removeAssetMapping($uuid);
     }
 
     public function testRemoveIgnoresNonExistingWebPathMapping()
@@ -203,7 +203,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $this->discoveryManager->expects($this->never())
             ->method('disableBinding');
 
-        $this->manager->removeWebPathMapping($uuid);
+        $this->manager->removeAssetMapping($uuid);
     }
 
     public function testGetWebPathMapping()
@@ -215,13 +215,13 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->uuid($uuid))
             ->willReturn(array($this->binding1));
 
-        $expected = new WebPathMapping('/path', 'target1', '/css', $uuid);
+        $expected = new AssetMapping('/path', 'target1', '/css', $uuid);
 
-        $this->assertEquals($expected, $this->manager->getWebPathMapping($uuid));
+        $this->assertEquals($expected, $this->manager->getAssetMapping($uuid));
     }
 
     /**
-     * @expectedException \Puli\AssetPlugin\Api\WebPath\NoSuchWebPathMappingException
+     * @expectedException \Puli\AssetPlugin\Api\Asset\NoSuchAssetMappingException
      */
     public function testGetWebPathMappingFailsIfNotFound()
     {
@@ -232,7 +232,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->uuid($uuid))
             ->willReturn(array());
 
-        $this->manager->getWebPathMapping($uuid);
+        $this->manager->getAssetMapping($uuid);
     }
 
     public function testGetWebPathMappings()
@@ -243,11 +243,11 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->willReturn(array($this->binding1, $this->binding2));
 
         $expected = array(
-            new WebPathMapping('/path', 'target1', '/css', $this->binding1->getUuid()),
-            new WebPathMapping('/other/path', 'target2', '/js', $this->binding2->getUuid()),
+            new AssetMapping('/path', 'target1', '/css', $this->binding1->getUuid()),
+            new AssetMapping('/other/path', 'target2', '/js', $this->binding2->getUuid()),
         );
 
-        $this->assertEquals($expected, $this->manager->getWebPathMappings());
+        $this->assertEquals($expected, $this->manager->getAssetMappings());
     }
 
     public function testGetNoWebPathMappings()
@@ -257,7 +257,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->all())
             ->willReturn(array());
 
-        $this->assertEquals(array(), $this->manager->getWebPathMappings());
+        $this->assertEquals(array(), $this->manager->getAssetMappings());
     }
 
     public function testFindWebPathMappings()
@@ -267,10 +267,10 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->webPath('/other/path'))
             ->willReturn(array($this->binding2));
 
-        $expr = Expr::same(WebPathMapping::WEB_PATH, '/other/path');
-        $expected = new WebPathMapping('/other/path', 'target2', '/js', $this->binding2->getUuid());
+        $expr = Expr::same(AssetMapping::WEB_PATH, '/other/path');
+        $expected = new AssetMapping('/other/path', 'target2', '/js', $this->binding2->getUuid());
 
-        $this->assertEquals(array($expected), $this->manager->findWebPathMappings($expr));
+        $this->assertEquals(array($expected), $this->manager->findAssetMappings($expr));
     }
 
     public function testFindNoWebPathMappings()
@@ -280,9 +280,9 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->webPath('/foobar'))
             ->willReturn(array());
 
-        $expr = Expr::same(WebPathMapping::WEB_PATH, '/foobar');
+        $expr = Expr::same(AssetMapping::WEB_PATH, '/foobar');
 
-        $this->assertEquals(array(), $this->manager->findWebPathMappings($expr));
+        $this->assertEquals(array(), $this->manager->findAssetMappings($expr));
     }
 
     public function testHasWebPathMapping()
@@ -294,7 +294,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->uuid($uuid))
             ->willReturn(true);
 
-        $this->assertTrue($this->manager->hasWebPathMapping($uuid));
+        $this->assertTrue($this->manager->hasAssetMapping($uuid));
     }
 
     public function testNotHasWebPathMapping()
@@ -306,7 +306,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->uuid($uuid))
             ->willReturn(false);
 
-        $this->assertFalse($this->manager->hasWebPathMapping($uuid));
+        $this->assertFalse($this->manager->hasAssetMapping($uuid));
     }
 
     public function testHasWebPathMappings()
@@ -316,7 +316,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->all())
             ->willReturn(true);
 
-        $this->assertTrue($this->manager->hasWebPathMappings());
+        $this->assertTrue($this->manager->hasAssetMappings());
     }
 
     public function testHasNoWebPathMappings()
@@ -326,7 +326,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->all())
             ->willReturn(false);
 
-        $this->assertFalse($this->manager->hasWebPathMappings());
+        $this->assertFalse($this->manager->hasAssetMappings());
     }
 
     public function testHasWebPathMappingsWithExpression()
@@ -336,9 +336,9 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->webPath('/path'))
             ->willReturn(true);
 
-        $expr = Expr::same(WebPathMapping::WEB_PATH, '/path');
+        $expr = Expr::same(AssetMapping::WEB_PATH, '/path');
 
-        $this->assertTrue($this->manager->hasWebPathMappings($expr));
+        $this->assertTrue($this->manager->hasAssetMappings($expr));
     }
 
     private function all()
