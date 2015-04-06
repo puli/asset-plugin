@@ -12,6 +12,7 @@ Changelog
  * renamed "web" command to "asset" and "web add" to "asset map"
  * renamed `PuliWebFactory` to `UrlGeneratorFactory` and removed the parent
    interface `PuliFactory`
+ * renamed binding type "puli/web-resource" to "puli/asset-mapping"
  
 * 1.0.0-beta (2015-03-19)
 

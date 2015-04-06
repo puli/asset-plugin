@@ -2,7 +2,7 @@
     "version": "1.0",
     "name": "puli/asset-plugin",
     "binding-types": {
-        "puli/web-resource": {
+        "puli/asset-mapping": {
             "description": "A resource accessible in the web directory",
             "parameters": {
                 "path": {
