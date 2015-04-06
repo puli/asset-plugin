@@ -23,11 +23,11 @@
         "installers": {
             "copy": {
                 "class": "Puli\\AssetPlugin\\Installer\\CopyInstaller",
-                "description": "Copies resources to a target directory"
+                "description": "Copies assets to a target directory"
             },
             "symlink": {
                 "class": "Puli\\AssetPlugin\\Installer\\SymlinkInstaller",
-                "description": "Creates resource symlinks in a target directory",
+                "description": "Creates asset symlinks in a target directory",
                 "parameters": {
                     "relative": {
                         "default": true,
