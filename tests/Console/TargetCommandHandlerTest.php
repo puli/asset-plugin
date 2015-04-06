@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Console;
+namespace Puli\AssetPlugin\Tests\Console;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
-use Puli\WebResourcePlugin\Console\TargetCommandHandler;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\Target\InstallTargetManager;
+use Puli\AssetPlugin\Console\TargetCommandHandler;
 use Webmozart\Console\Api\Command\Command;
 use Webmozart\Console\Args\StringArgs;
 
@@ -75,7 +75,7 @@ class TargetCommandHandlerTest extends AbstractCommandHandlerTest
     {
         parent::setUp();
 
-        $this->targetManager = $this->getMock('Puli\WebResourcePlugin\Api\Target\InstallTargetManager');
+        $this->targetManager = $this->getMock('Puli\AssetPlugin\Api\Target\InstallTargetManager');
         $this->handler = new TargetCommandHandler($this->targetManager);
     }
 
@@ -215,7 +215,7 @@ EOF;
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Target\NoSuchTargetException
+     * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      */
     public function testRemoveTargetFailsIfNotFound()
     {

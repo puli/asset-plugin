@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,10 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\WebPath;
+namespace Puli\AssetPlugin\Tests\WebPath;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\WebPath\DiscoveryWebPathManager;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;
 use Puli\Manager\Api\Discovery\BindingTypeDescriptor;
@@ -21,11 +26,6 @@ use Puli\Manager\Api\Package\Package;
 use Puli\Manager\Api\Package\PackageFile;
 use Puli\Manager\Api\Package\RootPackage;
 use Puli\Manager\Api\Package\RootPackageFile;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
-use Puli\WebResourcePlugin\WebPath\DiscoveryWebPathManager;
 use Rhumsaa\Uuid\Uuid;
 use Webmozart\Expression\Expr;
 
@@ -94,21 +94,21 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
         $this->manager = new DiscoveryWebPathManager($this->discoveryManager, $this->targets);
         $this->package = new Package(new PackageFile('vendor/package'), '/path');
         $this->rootPackage = new RootPackage(new RootPackageFile('vendor/root'), '/path');
-        $this->bindingType = new BindingTypeDescriptor(WebResourcePlugin::BINDING_TYPE);
+        $this->bindingType = new BindingTypeDescriptor(AssetPlugin::BINDING_TYPE);
         $this->binding1 = new BindingDescriptor(
             '/path{,/**}',
-            WebResourcePlugin::BINDING_TYPE,
+            AssetPlugin::BINDING_TYPE,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'target1',
-                WebResourcePlugin::PATH_PARAMETER => '/css',
+                AssetPlugin::TARGET_PARAMETER => 'target1',
+                AssetPlugin::PATH_PARAMETER => '/css',
             )
         );
         $this->binding2 = new BindingDescriptor(
             '/other/path{,/**}',
-            WebResourcePlugin::BINDING_TYPE,
+            AssetPlugin::BINDING_TYPE,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'target2',
-                WebResourcePlugin::PATH_PARAMETER => '/js',
+                AssetPlugin::TARGET_PARAMETER => 'target2',
+                AssetPlugin::PATH_PARAMETER => '/js',
             )
         );
     }
@@ -119,10 +119,10 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
 
         $expectedBinding = new BindingDescriptor(
             '/path{,/**}',
-            WebResourcePlugin::BINDING_TYPE,
+            AssetPlugin::BINDING_TYPE,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'target1',
-                WebResourcePlugin::PATH_PARAMETER => '/css',
+                AssetPlugin::TARGET_PARAMETER => 'target1',
+                AssetPlugin::PATH_PARAMETER => '/css',
             ),
             'glob',
             $uuid
@@ -136,7 +136,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Target\NoSuchTargetException
+     * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      * @expectedExceptionMessage foobar
      */
     public function testAddWebPathMappingFailsIfTargetNotFound()
@@ -221,7 +221,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\WebPath\NoSuchWebPathMappingException
+     * @expectedException \Puli\AssetPlugin\Api\WebPath\NoSuchWebPathMappingException
      */
     public function testGetWebPathMappingFailsIfNotFound()
     {
@@ -344,7 +344,7 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
     private function all()
     {
         return Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, WebResourcePlugin::BINDING_TYPE)
+            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
             ->andEndsWith(BindingDescriptor::QUERY, '{,/**}');
     }
 
@@ -355,6 +355,6 @@ class DiscoveryWebPathManagerTest extends PHPUnit_Framework_TestCase
 
     private function webPath($path)
     {
-        return $this->all()->andKeySame(BindingDescriptor::PARAMETER_VALUES, WebResourcePlugin::PATH_PARAMETER, $path);
+        return $this->all()->andKeySame(BindingDescriptor::PARAMETER_VALUES, AssetPlugin::PATH_PARAMETER, $path);
     }
 }

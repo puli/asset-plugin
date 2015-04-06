@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Target;
+namespace Puli\AssetPlugin\Tests\Api\Target;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 
 /**
  * @since  1.0
@@ -152,7 +152,7 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Target\NoSuchTargetException
+     * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      * @expectedExceptionMessage foobar
      */
     public function testGetFailsIfNotFound()
@@ -277,7 +277,7 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Target\NoSuchTargetException
+     * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      * @expectedExceptionMessage foobar
      */
     public function testSetDefaultTargetFailsIfNotFound()
@@ -286,7 +286,7 @@ class InstallTargetCollectionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Target\NoSuchTargetException
+     * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      */
     public function testGetDefaultTargetFailsIfEmpty()
     {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Installer\Validation;
+namespace Puli\AssetPlugin\Tests\Api\Installer\Validation;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
-use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Api\Installer\Validation\ConstraintViolation;
+use Puli\AssetPlugin\Api\Installer\Validation\InstallerParameterValidator;
 
 /**
  * @since  1.0

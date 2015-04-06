@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Target;
+namespace Puli\AssetPlugin\Target;
 
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Installer\NoSuchInstallerException;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\Target\InstallTargetManager;
 use Puli\Manager\Api\Package\RootPackageFileManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use stdClass;
 use Webmozart\Json\JsonValidator;
 use Webmozart\Json\ValidationFailedException;
@@ -158,7 +158,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
             return;
         }
 
-        $targetsData = $this->rootPackageFileManager->getExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY);
+        $targetsData = $this->rootPackageFileManager->getExtraKey(AssetPlugin::INSTALL_TARGETS_KEY);
 
         if ($targetsData) {
             $jsonValidator = new JsonValidator();
@@ -167,7 +167,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
             if (count($errors) > 0) {
                 throw new ValidationFailedException(sprintf(
                     "The extra key \"%s\" is invalid:\n%s",
-                    WebResourcePlugin::INSTALL_TARGETS_KEY,
+                    AssetPlugin::INSTALL_TARGETS_KEY,
                     implode("\n", $errors)
                 ));
             }
@@ -190,9 +190,9 @@ class PackageFileInstallTargetManager implements InstallTargetManager
         if ($this->targetsData) {
             $this->updateDefaultTargetData();
 
-            $this->rootPackageFileManager->setExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) $this->targetsData);
+            $this->rootPackageFileManager->setExtraKey(AssetPlugin::INSTALL_TARGETS_KEY, (object) $this->targetsData);
         } else {
-            $this->rootPackageFileManager->removeExtraKey(WebResourcePlugin::INSTALL_TARGETS_KEY);
+            $this->rootPackageFileManager->removeExtraKey(AssetPlugin::INSTALL_TARGETS_KEY);
         }
     }
 

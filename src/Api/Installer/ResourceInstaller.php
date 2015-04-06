@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Installer;
+namespace Puli\AssetPlugin\Api\Installer;
 
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Installation\NotInstallableException;
 use Puli\Repository\Api\Resource\Resource;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
 
 /**
  * Installs resources to a target location.

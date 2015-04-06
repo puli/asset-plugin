@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,10 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Installer;
+namespace Puli\AssetPlugin\Tests\Installer;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Installer\PackageFileInstallerManager;
 use Puli\Manager\Api\Package\Package;
 use Puli\Manager\Api\Package\PackageCollection;
 use Puli\Manager\Api\Package\PackageFile;
@@ -20,10 +24,6 @@ use Puli\Manager\Api\Package\RootPackage;
 use Puli\Manager\Api\Package\RootPackageFile;
 use Puli\Manager\Api\Package\RootPackageFileManager;
 use Puli\Manager\Tests\TestException;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
-use Puli\WebResourcePlugin\Installer\PackageFileInstallerManager;
 
 /**
  * @since  1.0
@@ -103,7 +103,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException
+     * @expectedException \Puli\AssetPlugin\Api\Installer\NoSuchInstallerException
      * @expectedExceptionMessage foobar
      */
     public function testGetInstallerDescriptorFailsIfNotFound()
@@ -116,7 +116,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
      */
     public function testGetInstallerDescriptorFailsIfJsonIsInvalid()
     {
-        $this->packageFile1->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, array(
+        $this->packageFile1->setExtraKey(AssetPlugin::INSTALLERS_KEY, array(
             (object) array(
                 'name' => 'symlink',
                 'class' => 'Package1SymlinkInstaller',
@@ -128,7 +128,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     public function testGetInstallerDescriptorLoadsFullyConfiguredInstaller()
     {
-        $this->rootPackageFile->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'SymlinkInstaller',
                 'description' => 'The description',
@@ -198,7 +198,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALLERS_KEY, (object) array(
                 'symlink' => (object) array(
                     'class' => 'SymlinkInstaller',
                 ),
@@ -220,7 +220,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALLERS_KEY, (object) array(
                 'symlink' => (object) array(
                     'class' => 'SymlinkInstaller',
                 ),
@@ -257,7 +257,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     public function testAddInstallerDescriptorOverridesPreviousRootInstaller()
     {
-        $this->rootPackageFile->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'PreviousInstaller',
             )
@@ -265,7 +265,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALLERS_KEY, (object) array(
                 'symlink' => (object) array(
                     'class' => 'NewInstaller',
                 ),
@@ -283,7 +283,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
      */
     public function testAddInstallerDescriptorFailsIfInstallerExistsInOtherPackage()
     {
-        $this->packageFile1->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->packageFile1->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'PreviousInstaller',
             )
@@ -299,7 +299,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     public function testAddInstallerDescriptorRestoresPreviousInstallerIfSavingFails()
     {
-        $this->rootPackageFile->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'PreviousInstaller',
             )
@@ -308,7 +308,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
         // The new installer should be saved in the root package
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY)
+            ->with(AssetPlugin::INSTALLERS_KEY)
             ->willThrowException(new TestException());
 
         $previousDescriptor = new InstallerDescriptor('symlink', 'PreviousInstaller');
@@ -328,7 +328,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
         // The new installer should be saved in the root package
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY)
+            ->with(AssetPlugin::INSTALLERS_KEY)
             ->willThrowException(new TestException());
 
         $newDescriptor = new InstallerDescriptor('symlink', 'NewInstaller');
@@ -344,7 +344,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     public function testRemoveInstallerDescriptor()
     {
-        $this->rootPackageFile->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'SymlinkInstaller',
             ),
@@ -355,7 +355,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALLERS_KEY, (object) array(
                 'cdn' => (object) array(
                     'class' => 'CdnInstaller',
                 ),
@@ -369,7 +369,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     public function testRemoveInstallerDescriptorRemovesExtraKeyAfterLastInstaller()
     {
-        $this->rootPackageFile->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'SymlinkInstaller',
             ),
@@ -377,7 +377,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
         $this->packageFileManager->expects($this->once())
             ->method('removeExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY);
+            ->with(AssetPlugin::INSTALLERS_KEY);
 
         $this->manager->removeInstallerDescriptor('symlink');
 
@@ -386,7 +386,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     public function testRemoveInstallerDescriptorRestoresPreviousInstallerIfSavingFails()
     {
-        $this->rootPackageFile->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'PreviousInstaller',
             )
@@ -395,7 +395,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
         // The new installer should be saved in the root package
         $this->packageFileManager->expects($this->once())
             ->method('removeExtraKey')
-            ->with(WebResourcePlugin::INSTALLERS_KEY)
+            ->with(AssetPlugin::INSTALLERS_KEY)
             ->willThrowException(new TestException());
 
         $previousDescriptor = new InstallerDescriptor('symlink', 'PreviousInstaller');
@@ -414,7 +414,7 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
      */
     public function testRemoveInstallerDescriptorFailsIfInstallerNotInRoot()
     {
-        $this->packageFile1->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->packageFile1->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'SymlinkInstaller',
             ),
@@ -438,12 +438,12 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
 
     protected function populateDefaultManager()
     {
-        $this->rootPackageFile->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'symlink' => (object) array(
                 'class' => 'SymlinkInstaller',
             )
         ));
-        $this->packageFile1->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) array(
+        $this->packageFile1->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
             'rsync' => (object) array(
                 'class' => 'RsyncInstaller',
             )

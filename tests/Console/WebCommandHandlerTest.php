@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Console;
+namespace Puli\AssetPlugin\Tests\Console;
 
 use PHPUnit_Framework_Assert;
 use PHPUnit_Framework_MockObject_MockObject;
+use Puli\AssetPlugin\Api\Installation\InstallationManager;
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetManager;
+use Puli\AssetPlugin\Api\WebPath\WebPathManager;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Console\WebCommandHandler;
 use Puli\Manager\Tests\TestException;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
-use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
-use Puli\WebResourcePlugin\Console\WebCommandHandler;
 use Rhumsaa\Uuid\Uuid;
 use Webmozart\Console\Api\Command\Command;
 use Webmozart\Console\Args\StringArgs;
@@ -97,9 +97,9 @@ class WebCommandHandlerTest extends AbstractCommandHandlerTest
     {
         parent::setUp();
 
-        $this->webPathManager = $this->getMock('Puli\WebResourcePlugin\Api\WebPath\WebPathManager');
-        $this->installationManager = $this->getMock('Puli\WebResourcePlugin\Api\Installation\InstallationManager');
-        $this->targetManager = $this->getMock('Puli\WebResourcePlugin\Api\Target\InstallTargetManager');
+        $this->webPathManager = $this->getMock('Puli\AssetPlugin\Api\WebPath\WebPathManager');
+        $this->installationManager = $this->getMock('Puli\AssetPlugin\Api\Installation\InstallationManager');
+        $this->targetManager = $this->getMock('Puli\AssetPlugin\Api\Target\InstallTargetManager');
         $this->handler = new WebCommandHandler($this->webPathManager, $this->installationManager, $this->targetManager);
     }
 
@@ -255,9 +255,9 @@ EOF;
         $mapping1 = new WebPathMapping('/app/public', 'local', '/');
         $mapping2 = new WebPathMapping('/acme/blog/public/{css,js}', 'remote', '/blog');
 
-        $symlinkInstaller = $this->getMock('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller');
+        $symlinkInstaller = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $symlinkInstallerDescriptor = new InstallerDescriptor('symlink', get_class($symlinkInstaller));
-        $rsyncInstaller = $this->getMock('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller');
+        $rsyncInstaller = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $rsyncInstallerDescriptor = new InstallerDescriptor('rsync', get_class($rsyncInstaller));
 
         $localTarget = new InstallTarget('local', 'symlink', 'public_html');
@@ -329,7 +329,7 @@ EOF;
         $mapping1 = new WebPathMapping('/app/public', 'local', '/');
         $mapping2 = new WebPathMapping('/acme/blog/public/{css,js}', 'local', '/blog');
 
-        $symlinkInstaller = $this->getMock('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller');
+        $symlinkInstaller = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $symlinkInstallerDescriptor = new InstallerDescriptor('symlink', get_class($symlinkInstaller));
 
         $localTarget = new InstallTarget('local', 'symlink', 'public_html');
@@ -404,7 +404,7 @@ EOF;
         $mapping1 = new WebPathMapping('/app/public', 'local', '/');
         $mapping2 = new WebPathMapping('/acme/blog/public/{css,js}', 'local', '/blog');
 
-        $symlinkInstaller = $this->getMock('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller');
+        $symlinkInstaller = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $symlinkInstallerDescriptor = new InstallerDescriptor('symlink', get_class($symlinkInstaller));
 
         $localTarget = new InstallTarget('local', 'symlink', 'public_html');

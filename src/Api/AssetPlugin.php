@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,34 +9,30 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api;
+namespace Puli\AssetPlugin\Api;
 
+use Puli\AssetPlugin\Api\Installation\InstallationManager;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Target\InstallTargetManager;
+use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
+use Puli\AssetPlugin\Api\WebPath\WebPathManager;
+use Puli\AssetPlugin\Console\WebConsoleConfig;
+use Puli\AssetPlugin\Factory\CreateUrlGeneratorMethodGenerator;
+use Puli\AssetPlugin\Installation\InstallationManagerImpl;
+use Puli\AssetPlugin\Installer\PackageFileInstallerManager;
+use Puli\AssetPlugin\Target\PackageFileInstallTargetManager;
+use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
+use Puli\AssetPlugin\WebPath\DiscoveryWebPathManager;
 use Puli\Manager\Api\Event\GenerateFactoryEvent;
 use Puli\Manager\Api\Event\PuliEvents;
-use Puli\Manager\Api\Php\Argument;
-use Puli\Manager\Api\Php\Import;
-use Puli\Manager\Api\Php\Method;
-use Puli\Manager\Api\Php\ReturnValue;
 use Puli\Manager\Api\Puli;
 use Puli\Manager\Api\PuliPlugin;
-use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
-use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
-use Puli\WebResourcePlugin\Console\WebConsoleConfig;
-use Puli\WebResourcePlugin\Factory\CreateUrlGeneratorMethodGenerator;
-use Puli\WebResourcePlugin\Installation\InstallationManagerImpl;
-use Puli\WebResourcePlugin\Installer\PackageFileInstallerManager;
-use Puli\WebResourcePlugin\Target\PackageFileInstallTargetManager;
-use Puli\WebResourcePlugin\UrlGenerator\DiscoveryUrlGenerator;
-use Puli\WebResourcePlugin\WebPath\DiscoveryWebPathManager;
 use RuntimeException;
 use Webmozart\Console\Api\Event\ConfigEvent;
 use Webmozart\Console\Api\Event\ConsoleEvents;
 
 /**
- * Adds web resource management capabilities to Puli.
+ * Adds web asset management capabilities to Puli.
  *
  * This class is the service container for all the services required by this
  * plugin.
@@ -44,7 +40,7 @@ use Webmozart\Console\Api\Event\ConsoleEvents;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class WebResourcePlugin implements PuliPlugin
+class AssetPlugin implements PuliPlugin
 {
     /**
      * The binding type of web resources.

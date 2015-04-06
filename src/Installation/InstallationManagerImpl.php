@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,19 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Installation;
+namespace Puli\AssetPlugin\Installation;
 
+use Puli\AssetPlugin\Api\Installation\InstallationManager;
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Installation\NotInstallableException;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Installer\ResourceInstaller;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
 use Puli\Manager\Api\Environment\ProjectEnvironment;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\Api\ResourceRepository;
-use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installation\NotInstallableException;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use ReflectionClass;
 
 /**
@@ -138,7 +138,7 @@ class InstallationManagerImpl implements InstallationManager
             throw NotInstallableException::installerClassNoDefaultConstructor($installerClass);
         }
 
-        if (!$reflClass->implementsInterface('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller')) {
+        if (!$reflClass->implementsInterface('Puli\AssetPlugin\Api\Installer\ResourceInstaller')) {
             throw NotInstallableException::installerClassInvalid($installerClass);
         }
     }

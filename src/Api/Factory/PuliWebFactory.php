@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Factory;
+namespace Puli\AssetPlugin\Api\Factory;
 
+use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Factory\PuliFactory;
-use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
 
 /**
  * A Puli factory that is able to create resource URL generators.

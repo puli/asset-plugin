@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Installation;
+namespace Puli\AssetPlugin\Tests\Installation;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Installation\InstallationManagerImpl;
+use Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstaller;
 use Puli\Manager\Tests\ManagerTestCase;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
-use Puli\WebResourcePlugin\Installation\InstallationManagerImpl;
-use Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstaller;
 
 /**
  * @since  1.0
@@ -31,11 +31,11 @@ use Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstaller;
  */
 class InstallationManagerImplTest extends ManagerTestCase
 {
-    const INSTALLER_CLASS = 'Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstaller';
+    const INSTALLER_CLASS = 'Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstaller';
 
-    const INSTALLER_CLASS_NO_DEFAULT_CONSTRUCTOR = 'Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstallerWithoutDefaultConstructor';
+    const INSTALLER_CLASS_NO_DEFAULT_CONSTRUCTOR = 'Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstallerWithoutDefaultConstructor';
 
-    const INSTALLER_CLASS_INVALID = 'Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstallerInvalid';
+    const INSTALLER_CLASS_INVALID = 'Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstallerInvalid';
 
     /**
      * @var InstallTargetCollection
@@ -57,7 +57,7 @@ class InstallationManagerImplTest extends ManagerTestCase
         $this->initEnvironment(__DIR__.'/Fixtures/home', __DIR__.'/Fixtures/root');
 
         $this->targets = new InstallTargetCollection();
-        $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
+        $this->installerManager = $this->getMock('Puli\AssetPlugin\Api\Installer\InstallerManager');
         $this->manager = new InstallationManagerImpl(
             $this->environment,
             $this->repo,
@@ -116,7 +116,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage foobar
      * @expectedExceptionCode 3
      */
@@ -148,7 +148,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage /path/{css,js}
      * @expectedExceptionCode 4
      */
@@ -187,7 +187,7 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage foobar
      * @expectedExceptionCode 5
      */
@@ -223,8 +223,8 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
-     * @expectedExceptionMessage Puli\WebResourcePlugin\Tests\Installation\Foobar
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
+     * @expectedExceptionMessage Puli\AssetPlugin\Tests\Installation\Foobar
      * @expectedExceptionCode 6
      */
     public function testFailIfInstallerClassNotFound()
@@ -265,8 +265,8 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
-     * @expectedExceptionMessage Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstallerWithoutDefaultConstructor
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
+     * @expectedExceptionMessage Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstallerWithoutDefaultConstructor
      * @expectedExceptionCode 7
      */
     public function testFailIfInstallerClassNoDefaultConstructor()
@@ -307,8 +307,8 @@ class InstallationManagerImplTest extends ManagerTestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
-     * @expectedExceptionMessage Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstallerInvalid
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
+     * @expectedExceptionMessage Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstallerInvalid
      * @expectedExceptionCode 8
      */
     public function testFailIfInstallerClassInvalid()
@@ -355,7 +355,7 @@ class InstallationManagerImplTest extends ManagerTestCase
             $second = new GenericResource('/path/js'),
         ));
 
-        $installer = $this->getMock('Puli\WebResourcePlugin\Api\Installer\ResourceInstaller');
+        $installer = $this->getMock('Puli\AssetPlugin\Api\Installer\ResourceInstaller');
         $installerDescriptor = new InstallerDescriptor('symlink', get_class($installer));
         $target = new InstallTarget('server', 'rsync', 'ssh://server/public_html');
         $mapping = new WebPathMapping('/path/{css,js}', 'server', 'assets');

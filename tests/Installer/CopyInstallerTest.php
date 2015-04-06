@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Installer;
+namespace Puli\AssetPlugin\Tests\Installer;
 
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Installer\CopyInstaller;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\DirectoryResource;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
-use Puli\WebResourcePlugin\Installer\CopyInstaller;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**

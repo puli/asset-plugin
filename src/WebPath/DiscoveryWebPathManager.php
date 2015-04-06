@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\WebPath;
+namespace Puli\AssetPlugin\WebPath;
 
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\Target\NoSuchTargetException;
+use Puli\AssetPlugin\Api\WebPath\NoSuchWebPathMappingException;
+use Puli\AssetPlugin\Api\WebPath\WebPathManager;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\DiscoveryManager;
 use Puli\Manager\Api\Package\RootPackage;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\Target\NoSuchTargetException;
-use Puli\WebResourcePlugin\Api\WebPath\NoSuchWebPathMappingException;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Rhumsaa\Uuid\Uuid;
 use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
@@ -66,10 +66,10 @@ class DiscoveryWebPathManager implements WebPathManager
         $this->discoveryManager->addBinding(new BindingDescriptor(
             // Match directories as well as all of their contents
             $mapping->getGlob().'{,/**}',
-            WebResourcePlugin::BINDING_TYPE,
+            AssetPlugin::BINDING_TYPE,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => $mapping->getTargetName(),
-                WebResourcePlugin::PATH_PARAMETER => $mapping->getWebPath(),
+                AssetPlugin::TARGET_PARAMETER => $mapping->getTargetName(),
+                AssetPlugin::PATH_PARAMETER => $mapping->getWebPath(),
             ),
             'glob',
             $mapping->getUuid()
@@ -173,8 +173,8 @@ class DiscoveryWebPathManager implements WebPathManager
         return new WebPathMapping(
             // Remove "{,/**}" suffix
             substr($binding->getQuery(), 0, -6),
-            $binding->getParameterValue(WebResourcePlugin::TARGET_PARAMETER),
-            $binding->getParameterValue(WebResourcePlugin::PATH_PARAMETER),
+            $binding->getParameterValue(AssetPlugin::TARGET_PARAMETER),
+            $binding->getParameterValue(AssetPlugin::PATH_PARAMETER),
             $binding->getUuid()
         );
     }

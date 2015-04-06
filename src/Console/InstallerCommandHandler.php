@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Console;
+namespace Puli\AssetPlugin\Console;
 
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
 use Puli\Cli\Util\StringUtil;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
 use RuntimeException;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\IO\IO;

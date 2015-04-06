@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Target;
+namespace Puli\AssetPlugin\Tests\Target;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Target\PackageFileInstallTargetManager;
 use Puli\Manager\Api\Package\RootPackageFileManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
-use Puli\WebResourcePlugin\Target\PackageFileInstallTargetManager;
 
 /**
  * @since  1.0
@@ -43,7 +43,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     protected function setUp()
     {
         $this->packageFileManager = $this->getMock('Puli\Manager\Api\Package\RootPackageFileManager');
-        $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
+        $this->installerManager = $this->getMock('Puli\AssetPlugin\Api\Installer\InstallerManager');
         $this->targetManager = new PackageFileInstallTargetManager($this->packageFileManager, $this->installerManager);
 
         $this->installerManager->expects($this->any())
@@ -64,7 +64,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Target\NoSuchTargetException
+     * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      * @expectedExceptionMessage foobar
      */
     public function testGetTargetFailsIfNotFound()
@@ -78,7 +78,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
             ->willReturn((object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
@@ -99,7 +99,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
             ->willReturn((object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
@@ -119,7 +119,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
             ->willReturn('foobar');
 
         $this->targetManager->getTarget('local');
@@ -133,7 +133,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $collection = $this->targetManager->getTargets();
 
-        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\Target\InstallTargetCollection', $collection);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\Target\InstallTargetCollection', $collection);
         $this->assertEquals(array('local' => $target), $collection->toArray());
     }
 
@@ -156,7 +156,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
             ->willReturn(null);
 
         $this->assertFalse($this->targetManager->hasTargets());
@@ -168,7 +168,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY, (object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -194,7 +194,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY, (object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -221,7 +221,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY, (object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -245,7 +245,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException
+     * @expectedException \Puli\AssetPlugin\Api\Installer\NoSuchInstallerException
      */
     public function testAddTargetFailsIfInstallerNotFound()
     {
@@ -263,7 +263,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
             ->willReturn((object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
@@ -280,7 +280,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY, (object) array(
                 'cdn' => (object) array(
                     'installer' => 'rsync',
                     'location' => 'ssh://my.cdn.com',
@@ -301,7 +301,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->once())
             ->method('removeExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY);
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY);
 
         $this->targetManager->removeTarget('local');
 
@@ -333,7 +333,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
             ->willReturn((object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
@@ -350,7 +350,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
 
         $this->packageFileManager->expects($this->any())
             ->method('setExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY, (object) array(
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY, (object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',
                     'location' => 'web',
@@ -373,7 +373,7 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
     {
         $this->packageFileManager->expects($this->any())
             ->method('getExtraKey')
-            ->with(WebResourcePlugin::INSTALL_TARGETS_KEY)
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
             ->willReturn((object) array(
                 'local' => (object) array(
                     'installer' => 'symlink',

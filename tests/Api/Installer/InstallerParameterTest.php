@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Installer;
+namespace Puli\AssetPlugin\Tests\Api\Installer;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
 use stdClass;
 
 /**

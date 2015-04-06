@@ -1,5 +1,5 @@
 {
-    "name": "puli/web-resource-plugin",
+    "name": "puli/asset-plugin",
     "description": "A Puli plugin for managing web assets.",
     "keywords": ["puli", "web", "asset", "resource"],
     "homepage": "http://puli.io",
@@ -22,12 +22,12 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Puli\\WebResourcePlugin\\": "src/"
+            "Puli\\AssetPlugin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Puli\\WebResourcePlugin\\Tests\\": "tests/",
+            "Puli\\AssetPlugin\\Tests\\": "tests/",
             "Puli\\Manager\\Tests\\": "vendor/puli/manager/tests/"
         }
     },

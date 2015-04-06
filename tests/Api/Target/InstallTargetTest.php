@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Target;
+namespace Puli\AssetPlugin\Tests\Api\Target;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
 
 /**
  * @since  1.0
@@ -161,7 +161,7 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException
+     * @expectedException \Puli\AssetPlugin\Api\Installer\NoSuchParameterException
      * @expectedExceptionMessage foobar
      */
     public function testGetParameterValueFailsIfNotFound()

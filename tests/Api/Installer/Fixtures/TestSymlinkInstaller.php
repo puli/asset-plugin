@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Installer\Fixtures;
+namespace Puli\AssetPlugin\Tests\Api\Installer\Fixtures;
 
+use Puli\AssetPlugin\Api\Installer\ResourceInstaller;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\Repository\Api\Resource\Resource;
-use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
 
 /**
  * @since  1.0

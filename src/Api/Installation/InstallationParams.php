@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Installation;
+namespace Puli\AssetPlugin\Api\Installation;
 
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\ResourceInstaller;
+use Puli\AssetPlugin\Api\Installer\Validation\ConstraintViolation;
+use Puli\AssetPlugin\Api\Installer\Validation\InstallerParameterValidator;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\Api\ResourceCollection;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
-use Puli\WebResourcePlugin\Api\Installer\Validation\ConstraintViolation;
-use Puli\WebResourcePlugin\Api\Installer\Validation\InstallerParameterValidator;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
 use Webmozart\Glob\Glob;
 use Webmozart\PathUtil\Path;
 

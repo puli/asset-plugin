@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Installer;
+namespace Puli\AssetPlugin\Installer;
 
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Installer\ResourceInstaller;
 use Puli\Repository\Api\Resource\FilesystemResource;
 use Puli\Repository\Api\Resource\Resource;
 use Puli\Repository\FilesystemRepository;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installer\ResourceInstaller;
 use Webmozart\PathUtil\Path;
 
 /**

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Installer;
+namespace Puli\AssetPlugin\Tests\Api\Installer;
 
 use PHPUnit_Framework_TestCase;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
 use stdClass;
 
 /**
@@ -22,7 +22,7 @@ use stdClass;
  */
 class InstallerDescriptorTest extends PHPUnit_Framework_TestCase
 {
-    const SYMLINK_CLASS = 'Puli\WebResourcePlugin\Tests\Api\Installer\Fixtures\TestSymlinkInstaller';
+    const SYMLINK_CLASS = 'Puli\AssetPlugin\Tests\Api\Installer\Fixtures\TestSymlinkInstaller';
 
     public function testCreate()
     {
@@ -142,7 +142,7 @@ class InstallerDescriptorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException
+     * @expectedException \Puli\AssetPlugin\Api\Installer\NoSuchParameterException
      * @expectedExceptionMessage foobar
      */
     public function testGetParameterFailsIfNotFound()
@@ -252,7 +252,7 @@ class InstallerDescriptorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installer\NoSuchParameterException
+     * @expectedException \Puli\AssetPlugin\Api\Installer\NoSuchParameterException
      * @expectedExceptionMessage foobar
      */
     public function testGetParameterValueFailsIfNotFound()

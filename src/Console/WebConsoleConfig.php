@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Console;
+namespace Puli\AssetPlugin\Console;
 
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Webmozart\Console\Api\Args\Format\Argument;
 use Webmozart\Console\Api\Args\Format\Option;
 use Webmozart\Console\Api\Config\ApplicationConfig;
@@ -23,7 +23,7 @@ use Webmozart\Console\Api\Config\ApplicationConfig;
  */
 final class WebConsoleConfig
 {
-    public static function addConfiguration(ApplicationConfig $config, WebResourcePlugin $plugin)
+    public static function addConfiguration(ApplicationConfig $config, AssetPlugin $plugin)
     {
         $config
             ->beginCommand('web')

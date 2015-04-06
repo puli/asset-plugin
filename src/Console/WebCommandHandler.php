@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,21 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Console;
+namespace Puli\AssetPlugin\Console;
 
-use Puli\WebResourcePlugin\Api\Installation\InstallationManager;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathManager;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Api\Installation\InstallationManager;
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetManager;
+use Puli\AssetPlugin\Api\WebPath\WebPathManager;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
 use RuntimeException;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\IO\IO;
 use Webmozart\Console\UI\Component\Table;
 use Webmozart\Console\UI\Style\TableStyle;
 use Webmozart\Expression\Expr;
-use Webmozart\PathUtil\Path;
 
 /**
  * @since  1.0

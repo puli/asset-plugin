@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Installer;
+namespace Puli\AssetPlugin\Installer;
 
 use Exception;
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Api\Installer\NoSuchInstallerException;
 use Puli\Manager\Api\Package\Package;
 use Puli\Manager\Api\Package\PackageCollection;
 use Puli\Manager\Api\Package\RootPackage;
 use Puli\Manager\Api\Package\RootPackageFileManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use RuntimeException;
 use stdClass;
 use Webmozart\Json\JsonValidator;
@@ -205,9 +205,9 @@ class PackageFileInstallerManager implements InstallerManager
         }
 
         if ($data) {
-            $this->rootPackageFileManager->setExtraKey(WebResourcePlugin::INSTALLERS_KEY, (object) $data);
+            $this->rootPackageFileManager->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) $data);
         } else {
-            $this->rootPackageFileManager->removeExtraKey(WebResourcePlugin::INSTALLERS_KEY);
+            $this->rootPackageFileManager->removeExtraKey(AssetPlugin::INSTALLERS_KEY);
         }
     }
 
@@ -215,7 +215,7 @@ class PackageFileInstallerManager implements InstallerManager
     {
         $packageFile = $package->getPackageFile();
         $packageName = $package->getName();
-        $installersData = $packageFile->getExtraKey(WebResourcePlugin::INSTALLERS_KEY);
+        $installersData = $packageFile->getExtraKey(AssetPlugin::INSTALLERS_KEY);
 
         if (!$installersData) {
             return;
@@ -227,7 +227,7 @@ class PackageFileInstallerManager implements InstallerManager
         if (count($errors) > 0) {
             throw new ValidationFailedException(sprintf(
                 "The extra key \"%s\" of package \"%s\" is invalid:\n%s",
-                WebResourcePlugin::INSTALLERS_KEY,
+                AssetPlugin::INSTALLERS_KEY,
                 $packageName,
                 implode("\n", $errors)
             ));

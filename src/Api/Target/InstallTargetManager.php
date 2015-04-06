@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Api\Target;
+namespace Puli\AssetPlugin\Api\Target;
 
-use Puli\WebResourcePlugin\Api\Installer\NoSuchInstallerException;
+use Puli\AssetPlugin\Api\Installer\NoSuchInstallerException;
 
 /**
  * Manages the targets where resources can be installed.

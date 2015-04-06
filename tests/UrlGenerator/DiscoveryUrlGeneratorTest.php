@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,10 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\UrlGenerator;
+namespace Puli\AssetPlugin\Tests\UrlGenerator;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
 use Puli\Discovery\Api\Binding\BindingParameter;
 use Puli\Discovery\Api\Binding\BindingType;
 use Puli\Discovery\Api\ResourceDiscovery;
@@ -22,10 +26,6 @@ use Puli\Manager\Api\Package\PackageFile;
 use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
-use Puli\WebResourcePlugin\UrlGenerator\DiscoveryUrlGenerator;
 
 /**
  * @since  1.0
@@ -69,9 +69,9 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
         $this->targets = new InstallTargetCollection();
         $this->generator = new DiscoveryUrlGenerator($this->discovery, $this->targets);
         $this->package = new Package(new PackageFile('vendor/package'), '/path');
-        $this->bindingType = new BindingType(WebResourcePlugin::BINDING_TYPE, array(
-            new BindingParameter(WebResourcePlugin::TARGET_PARAMETER),
-            new BindingParameter(WebResourcePlugin::PATH_PARAMETER),
+        $this->bindingType = new BindingType(AssetPlugin::BINDING_TYPE, array(
+            new BindingParameter(AssetPlugin::TARGET_PARAMETER),
+            new BindingParameter(AssetPlugin::PATH_PARAMETER),
         ));
         $this->resources = new ArrayResourceCollection(array(new GenericResource('/path')));
     }
@@ -85,14 +85,14 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
             $this->resources,
             $this->bindingType,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'local',
-                WebResourcePlugin::PATH_PARAMETER => 'css',
+                AssetPlugin::TARGET_PARAMETER => 'local',
+                AssetPlugin::PATH_PARAMETER => 'css',
             )
         );
 
         $this->discovery->expects($this->once())
             ->method('findByPath')
-            ->with('/path/css/style.css', WebResourcePlugin::BINDING_TYPE)
+            ->with('/path/css/style.css', AssetPlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
         $this->assertSame('/css/style.css', $this->generator->generateUrl('/path/css/style.css'));
@@ -107,14 +107,14 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
             $this->resources,
             $this->bindingType,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'local',
-                WebResourcePlugin::PATH_PARAMETER => '/css',
+                AssetPlugin::TARGET_PARAMETER => 'local',
+                AssetPlugin::PATH_PARAMETER => '/css',
             )
         );
 
         $this->discovery->expects($this->once())
             ->method('findByPath')
-            ->with('/path/css/style.css', WebResourcePlugin::BINDING_TYPE)
+            ->with('/path/css/style.css', AssetPlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
         $this->assertSame('/css/style.css', $this->generator->generateUrl('/path/css/style.css'));
@@ -129,14 +129,14 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
             $this->resources,
             $this->bindingType,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'local',
-                WebResourcePlugin::PATH_PARAMETER => 'css/',
+                AssetPlugin::TARGET_PARAMETER => 'local',
+                AssetPlugin::PATH_PARAMETER => 'css/',
             )
         );
 
         $this->discovery->expects($this->once())
             ->method('findByPath')
-            ->with('/path/css/style.css', WebResourcePlugin::BINDING_TYPE)
+            ->with('/path/css/style.css', AssetPlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
         $this->assertSame('/css/style.css', $this->generator->generateUrl('/path/css/style.css'));
@@ -151,35 +151,35 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
             $this->resources,
             $this->bindingType,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'local',
-                WebResourcePlugin::PATH_PARAMETER => '/css',
+                AssetPlugin::TARGET_PARAMETER => 'local',
+                AssetPlugin::PATH_PARAMETER => '/css',
             )
         );
 
         $this->discovery->expects($this->once())
             ->method('findByPath')
-            ->with('/path/path/style.css', WebResourcePlugin::BINDING_TYPE)
+            ->with('/path/path/style.css', AssetPlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
         $this->assertSame('/css/path/style.css', $this->generator->generateUrl('/path/path/style.css'));
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\UrlGenerator\CannotGenerateUrlException
+     * @expectedException \Puli\AssetPlugin\Api\UrlGenerator\CannotGenerateUrlException
      * @expectedExceptionMessage /path/path/style.css
      */
     public function testFailIfResourceNotMapped()
     {
         $this->discovery->expects($this->once())
             ->method('findByPath')
-            ->with('/path/path/style.css', WebResourcePlugin::BINDING_TYPE)
+            ->with('/path/path/style.css', AssetPlugin::BINDING_TYPE)
             ->willReturn(array());
 
         $this->generator->generateUrl('/path/path/style.css');
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\UrlGenerator\CannotGenerateUrlException
+     * @expectedException \Puli\AssetPlugin\Api\UrlGenerator\CannotGenerateUrlException
      * @expectedExceptionMessage foobar
      */
     public function testFailIfTargetNotFound()
@@ -189,14 +189,14 @@ class DiscoveryUrlGeneratorTest extends PHPUnit_Framework_TestCase
             $this->resources,
             $this->bindingType,
             array(
-                WebResourcePlugin::TARGET_PARAMETER => 'foobar',
-                WebResourcePlugin::PATH_PARAMETER => '/css',
+                AssetPlugin::TARGET_PARAMETER => 'foobar',
+                AssetPlugin::PATH_PARAMETER => '/css',
             )
         );
 
         $this->discovery->expects($this->once())
             ->method('findByPath')
-            ->with('/path/path/style.css', WebResourcePlugin::BINDING_TYPE)
+            ->with('/path/path/style.css', AssetPlugin::BINDING_TYPE)
             ->willReturn(array($binding));
 
         $this->generator->generateUrl('/path/path/style.css');

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api\Installation;
+namespace Puli\AssetPlugin\Tests\Api\Installation;
 
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\Installation\InstallationParams;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
+use Puli\AssetPlugin\Tests\Installation\Fixtures\TestInstaller;
 use Puli\Repository\Resource\Collection\ArrayResourceCollection;
 use Puli\Repository\Resource\GenericResource;
-use Puli\WebResourcePlugin\Api\Installation\InstallationParams;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Api\Target\InstallTarget;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
-use Puli\WebResourcePlugin\Tests\Installation\Fixtures\TestInstaller;
 
 /**
  * @since  1.0
@@ -88,7 +88,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage foobar
      * @expectedExceptionCode 1
      */
@@ -113,7 +113,7 @@ class InstallationParamsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\WebResourcePlugin\Api\Installation\NotInstallableException
+     * @expectedException \Puli\AssetPlugin\Api\Installation\NotInstallableException
      * @expectedExceptionMessage foobar
      * @expectedExceptionCode 2
      */

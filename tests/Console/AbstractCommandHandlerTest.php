@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Console;
+namespace Puli\AssetPlugin\Tests\Console;
 
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\Cli\PuliApplicationConfig;
 use Puli\Manager\Api\Puli;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Console\Api\Application\Application;
 use Webmozart\Console\Api\Formatter\Formatter;
@@ -54,7 +54,7 @@ abstract class AbstractCommandHandlerTest extends PHPUnit_Framework_TestCase
 
         $puli = new Puli(self::$tempDir);
         $config = new PuliApplicationConfig($puli);
-        $plugin = new WebResourcePlugin();
+        $plugin = new AssetPlugin();
         $plugin->activate($puli);
 
         self::$application = new ConsoleApplication($config);

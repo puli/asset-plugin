@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Factory;
+namespace Puli\AssetPlugin\Factory;
 
+use Puli\AssetPlugin\Api\Target\InstallTargetManager;
 use Puli\Manager\Api\Php\Argument;
 use Puli\Manager\Api\Php\Clazz;
 use Puli\Manager\Api\Php\Import;
 use Puli\Manager\Api\Php\Method;
 use Puli\Manager\Api\Php\ReturnValue;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetManager;
 
 /**
  * Generates the `createUrlGenerator()` method of the Puli factory.
@@ -40,10 +40,10 @@ class CreateUrlGeneratorMethodGenerator
     {
         $class->removeImport('Puli\Factory\PuliFactory');
         $class->addImport(new Import('Puli\Discovery\Api\ResourceDiscovery'));
-        $class->addImport(new Import('Puli\WebResourcePlugin\Api\Factory\PuliWebFactory'));
-        $class->addImport(new Import('Puli\WebResourcePlugin\Api\Target\InstallTargetCollection'));
-        $class->addImport(new Import('Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator'));
-        $class->addImport(new Import('Puli\WebResourcePlugin\UrlGenerator\DiscoveryUrlGenerator'));
+        $class->addImport(new Import('Puli\AssetPlugin\Api\Factory\PuliWebFactory'));
+        $class->addImport(new Import('Puli\AssetPlugin\Api\Target\InstallTargetCollection'));
+        $class->addImport(new Import('Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator'));
+        $class->addImport(new Import('Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator'));
 
         $class->removeImplementedInterface('PuliFactory');
         $class->addImplementedInterface('PuliWebFactory');
@@ -88,7 +88,7 @@ class CreateUrlGeneratorMethodGenerator
         }
 
         if ($targetsString) {
-            $class->addImport(new Import('Puli\WebResourcePlugin\Api\Target\InstallTarget'));
+            $class->addImport(new Import('Puli\AssetPlugin\Api\Target\InstallTarget'));
             $targetsString = "array($targetsString\n)";
         }
 

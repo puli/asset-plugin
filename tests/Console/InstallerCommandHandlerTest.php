@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Console;
+namespace Puli\AssetPlugin\Tests\Console;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Puli\WebResourcePlugin\Api\Installer\InstallerDescriptor;
-use Puli\WebResourcePlugin\Api\Installer\InstallerManager;
-use Puli\WebResourcePlugin\Api\Installer\InstallerParameter;
-use Puli\WebResourcePlugin\Console\InstallerCommandHandler;
+use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
+use Puli\AssetPlugin\Api\Installer\InstallerManager;
+use Puli\AssetPlugin\Api\Installer\InstallerParameter;
+use Puli\AssetPlugin\Console\InstallerCommandHandler;
 use Webmozart\Console\Api\Command\Command;
 use Webmozart\Console\Args\StringArgs;
 
@@ -63,7 +63,7 @@ class InstallerCommandHandlerTest extends AbstractCommandHandlerTest
     {
         parent::setUp();
 
-        $this->installerManager = $this->getMock('Puli\WebResourcePlugin\Api\Installer\InstallerManager');
+        $this->installerManager = $this->getMock('Puli\AssetPlugin\Api\Installer\InstallerManager');
         $this->handler = new InstallerCommandHandler($this->installerManager);
     }
 

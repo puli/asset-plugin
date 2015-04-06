@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\Tests\Api;
+namespace Puli\AssetPlugin\Tests\Api;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Manager\Api\Discovery\DiscoveryManager;
 use Puli\Manager\Api\Environment\ProjectEnvironment;
@@ -22,7 +23,6 @@ use Puli\Manager\Api\Package\PackageManager;
 use Puli\Manager\Api\Package\RootPackageFileManager;
 use Puli\Manager\Api\Puli;
 use Puli\Repository\Api\ResourceRepository;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webmozart\Console\Api\Event\ConsoleEvents;
 
@@ -30,7 +30,7 @@ use Webmozart\Console\Api\Event\ConsoleEvents;
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class WebResourcePluginTest extends PHPUnit_Framework_TestCase
+class AssetPluginTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|ProjectEnvironment
@@ -73,7 +73,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
     private $packageManager;
 
     /**
-     * @var WebResourcePlugin
+     * @var AssetPlugin
      */
     private $plugin;
 
@@ -89,7 +89,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
         $this->discovery = $this->getMock('Puli\Discovery\Api\ResourceDiscovery');
         $this->discoveryManager = $this->getMock('Puli\Manager\Api\Discovery\DiscoveryManager');
         $this->packageManager = $this->getMock('Puli\Manager\Api\Package\PackageManager');
-        $this->plugin = new WebResourcePlugin();
+        $this->plugin = new AssetPlugin();
 
         $this->puli->expects($this->any())
             ->method('getEnvironment')
@@ -157,7 +157,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
 
         $manager = $this->plugin->getWebPathManager();
 
-        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\WebPath\WebPathManager', $manager);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\WebPath\WebPathManager', $manager);
 
         $this->assertSame($manager, $this->plugin->getWebPathManager());
     }
@@ -176,7 +176,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
 
         $manager = $this->plugin->getInstallationManager();
 
-        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\Installation\InstallationManager', $manager);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\Installation\InstallationManager', $manager);
 
         $this->assertSame($manager, $this->plugin->getInstallationManager());
     }
@@ -195,7 +195,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
 
         $manager = $this->plugin->getInstallerManager();
 
-        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\Installer\InstallerManager', $manager);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\Installer\InstallerManager', $manager);
 
         $this->assertSame($manager, $this->plugin->getInstallerManager());
     }
@@ -214,7 +214,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
 
         $manager = $this->plugin->getInstallTargetManager();
 
-        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\Target\InstallTargetManager', $manager);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\Target\InstallTargetManager', $manager);
 
         $this->assertSame($manager, $this->plugin->getInstallTargetManager());
     }
@@ -233,7 +233,7 @@ class WebResourcePluginTest extends PHPUnit_Framework_TestCase
 
         $manager = $this->plugin->getUrlGenerator();
 
-        $this->assertInstanceOf('Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator', $manager);
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator', $manager);
 
         $this->assertSame($manager, $this->plugin->getUrlGenerator());
     }

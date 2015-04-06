@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\UrlGenerator;
+namespace Puli\AssetPlugin\UrlGenerator;
 
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
+use Puli\AssetPlugin\Api\UrlGenerator\CannotGenerateUrlException;
+use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\Discovery\Api\Binding\ResourceBinding;
 use Puli\Discovery\Api\ResourceDiscovery;
-use Puli\WebResourcePlugin\Api\Target\InstallTargetCollection;
-use Puli\WebResourcePlugin\Api\UrlGenerator\CannotGenerateUrlException;
-use Puli\WebResourcePlugin\Api\UrlGenerator\ResourceUrlGenerator;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Webmozart\Glob\Glob;
 
 /**
@@ -54,7 +54,7 @@ class DiscoveryUrlGenerator implements ResourceUrlGenerator
      */
     public function generateUrl($repositoryPath, $currentUrl = null)
     {
-        $bindings = $this->discovery->findByPath($repositoryPath, WebResourcePlugin::BINDING_TYPE);
+        $bindings = $this->discovery->findByPath($repositoryPath, AssetPlugin::BINDING_TYPE);
         $count = count($bindings);
 
         if (0 === $count) {
@@ -79,10 +79,10 @@ class DiscoveryUrlGenerator implements ResourceUrlGenerator
     private function generateUrlForBinding(ResourceBinding $binding, $repositoryPath)
     {
         $bindingPath = Glob::getStaticPrefix($binding->getQuery());
-        $webBasePath = trim($binding->getParameterValue(WebResourcePlugin::PATH_PARAMETER), '/');
+        $webBasePath = trim($binding->getParameterValue(AssetPlugin::PATH_PARAMETER), '/');
         $webPath = substr_replace($repositoryPath, $webBasePath, 0, strlen($bindingPath));
 
-        $targetName = $binding->getParameterValue(WebResourcePlugin::TARGET_PARAMETER);
+        $targetName = $binding->getParameterValue(AssetPlugin::TARGET_PARAMETER);
 
         if (!$this->targets->contains($targetName)) {
             throw new CannotGenerateUrlException(sprintf(

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the puli/web-resource-plugin package.
+ * This file is part of the puli/asset-plugin package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\WebResourcePlugin\WebPath;
+namespace Puli\AssetPlugin\WebPath;
 
+use Puli\AssetPlugin\Api\AssetPlugin;
+use Puli\AssetPlugin\Api\WebPath\WebPathMapping;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\BindingState;
-use Puli\WebResourcePlugin\Api\WebPath\WebPathMapping;
-use Puli\WebResourcePlugin\Api\WebResourcePlugin;
 use Webmozart\Expression\Comparison\EndsWith;
 use Webmozart\Expression\Comparison\Equals;
 use Webmozart\Expression\Comparison\NotEquals;
@@ -55,7 +55,7 @@ class BindingExpressionBuilder implements ExpressionVisitor
     {
         if (!$this->defaultExpression) {
             $this->defaultExpression = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-                ->andSame(BindingDescriptor::TYPE_NAME, WebResourcePlugin::BINDING_TYPE)
+                ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
                 ->andEndsWith(BindingDescriptor::QUERY, '{,/**}');
         }
 
@@ -107,13 +107,13 @@ class BindingExpressionBuilder implements ExpressionVisitor
                 case WebPathMapping::TARGET_NAME:
                     return new Key(
                         BindingDescriptor::PARAMETER_VALUES,
-                        new Key(WebResourcePlugin::TARGET_PARAMETER, $expr->getExpression())
+                        new Key(AssetPlugin::TARGET_PARAMETER, $expr->getExpression())
                     );
 
                 case WebPathMapping::WEB_PATH:
                     return new Key(
                         BindingDescriptor::PARAMETER_VALUES,
-                        new Key(WebResourcePlugin::PATH_PARAMETER, $expr->getExpression())
+                        new Key(AssetPlugin::PATH_PARAMETER, $expr->getExpression())
                     );
             }
         }

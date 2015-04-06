@@ -1,6 +1,6 @@
 {
     "version": "1.0",
-    "name": "puli/web-resource-plugin",
+    "name": "puli/asset-plugin",
     "binding-types": {
         "puli/web-resource": {
             "description": "A resource accessible in the web directory",
@@ -17,16 +17,16 @@
         }
     },
     "plugins": [
-        "Puli\\WebResourcePlugin\\Api\\WebResourcePlugin"
+        "Puli\\AssetPlugin\\Api\\AssetPlugin"
     ],
     "extra": {
         "installers": {
             "copy": {
-                "class": "Puli\\WebResourcePlugin\\Installer\\CopyInstaller",
+                "class": "Puli\\AssetPlugin\\Installer\\CopyInstaller",
                 "description": "Copies resources to a target directory"
             },
             "symlink": {
-                "class": "Puli\\WebResourcePlugin\\Installer\\SymlinkInstaller",
+                "class": "Puli\\AssetPlugin\\Installer\\SymlinkInstaller",
                 "description": "Creates resource symlinks in a target directory",
                 "parameters": {
                     "relative": {
