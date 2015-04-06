@@ -16,12 +16,12 @@ use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Factory\PuliFactory;
 
 /**
- * A Puli factory that is able to create resource URL generators.
+ * A factory for resource URL generators.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-interface PuliWebFactory extends PuliFactory
+interface UrlGeneratorFactory
 {
     /**
      * Creates the URL generator.

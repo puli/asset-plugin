@@ -80,14 +80,15 @@ class CreateUrlGeneratorMethodGeneratorTest extends PHPUnit_Framework_TestCase
 
 namespace Puli;
 
-use Puli\AssetPlugin\Api\Factory\PuliWebFactory;
+use Puli\AssetPlugin\Api\Factory\UrlGeneratorFactory;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
 use Puli\Discovery\Api\ResourceDiscovery;
+use Puli\Factory\PuliFactory;
 
-class MyFactory implements PuliWebFactory
+class MyFactory implements PuliFactory, UrlGeneratorFactory
 {
     /**
      * Creates the URL generator.
@@ -141,13 +142,14 @@ EOF;
 
 namespace Puli;
 
-use Puli\AssetPlugin\Api\Factory\PuliWebFactory;
+use Puli\AssetPlugin\Api\Factory\UrlGeneratorFactory;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 use Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator;
 use Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator;
 use Puli\Discovery\Api\ResourceDiscovery;
+use Puli\Factory\PuliFactory;
 
-class MyFactory implements PuliWebFactory
+class MyFactory implements PuliFactory, UrlGeneratorFactory
 {
     /**
      * Creates the URL generator.

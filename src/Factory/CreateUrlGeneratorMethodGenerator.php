@@ -38,15 +38,13 @@ class CreateUrlGeneratorMethodGenerator
 
     public function addCreateUrlGeneratorMethod(Clazz $class)
     {
-        $class->removeImport('Puli\Factory\PuliFactory');
         $class->addImport(new Import('Puli\Discovery\Api\ResourceDiscovery'));
-        $class->addImport(new Import('Puli\AssetPlugin\Api\Factory\PuliWebFactory'));
+        $class->addImport(new Import('Puli\AssetPlugin\Api\Factory\UrlGeneratorFactory'));
         $class->addImport(new Import('Puli\AssetPlugin\Api\Target\InstallTargetCollection'));
         $class->addImport(new Import('Puli\AssetPlugin\Api\UrlGenerator\ResourceUrlGenerator'));
         $class->addImport(new Import('Puli\AssetPlugin\UrlGenerator\DiscoveryUrlGenerator'));
 
-        $class->removeImplementedInterface('PuliFactory');
-        $class->addImplementedInterface('PuliWebFactory');
+        $class->addImplementedInterface('UrlGeneratorFactory');
 
         $method = new Method('createUrlGenerator');
         $method->setDescription('Creates the URL generator.');
