@@ -108,6 +108,7 @@ class AssetCommandHandler
                 $io->writeLine('');
 
                 $this->printMappingTable($io, $mappingsByTarget[$targetName]);
+                $io->writeLine('');
             }
 
             $io->writeLine('Use "puli asset install" to install the assets in their targets.');
@@ -125,7 +126,8 @@ class AssetCommandHandler
                 $io->writeLine("    <b>Target <bu>$targetName</bu></b>");
                 $io->writeLine('');
 
-                $this->printMappingTable($io, $mappingsByTarget[$targetName]);
+                $this->printMappingTable($io, $mappingsByTarget[$targetName], false);
+                $io->writeLine('');
             }
 
             $io->writeLine('Use "puli target add <target> <location>" to add a target.');
@@ -209,23 +211,34 @@ class AssetCommandHandler
         return 0;
     }
 
-    private function printMappingTable(IO $io, $mappings)
+    /**
+     * @param IO             $io
+     * @param AssetMapping[] $mappings
+     * @param bool           $enabled
+     */
+    private function printMappingTable(IO $io, array $mappings, $enabled = true)
     {
         $table = new Table(TableStyle::borderless());
 
+        $globTag = $enabled ? 'c1' : 'bad';
+        $pathTag = $enabled ? 'c2' : 'bad';
+
         foreach ($mappings as $mapping) {
+            $uuid = substr($mapping->getUuid()->toString(), 0, 6);
             $glob = $mapping->getGlob();
             $webPath = $mapping->getWebPath();
 
+            if (!$enabled) {
+                $uuid = "<bad>$uuid</bad>";
+            }
+
             $table->addRow(array(
-                substr($mapping->getUuid()->toString(), 0, 6),
-                '<c1>'.$glob.'</c1>',
-                '<c2>'.$webPath.'</c2>'
+                $uuid,
+                "<$globTag>$glob</$globTag>",
+                "<$pathTag>$webPath</$pathTag>",
             ));
         }
 
         $table->render($io, 8);
-
-        $io->writeLine('');
     }
 }
