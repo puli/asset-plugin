@@ -2,8 +2,8 @@
     "version": "1.0",
     "name": "puli/asset-plugin",
     "binding-types": {
-        "puli/asset-mapping": {
-            "description": "A mapping of Puli resources to a public directory path",
+        "puli/asset": {
+            "description": "A Puli resource that can be accessed in a web browser",
             "parameters": {
                 "path": {
                     "description": "The path in the install target",

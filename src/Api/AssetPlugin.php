@@ -45,7 +45,7 @@ class AssetPlugin implements PuliPlugin
     /**
      * The binding type of asset mappings.
      */
-    const BINDING_TYPE = 'puli/asset-mapping';
+    const BINDING_TYPE = 'puli/asset';
 
     /**
      * The binding parameter used for the web path.

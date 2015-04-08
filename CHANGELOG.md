@@ -17,7 +17,8 @@ Changelog
  * added NO_TARGET_CHECK flag to suppress sanity check in `AssetManager::addAssetMapping()`
  * added --force option to "asset map" command
  * the "asset map" command now supports relative paths
- * fixed "asset" command when asset mappings have a non-existing target  
+ * fixed "asset" command when asset mappings have a non-existing target
+ * renamed binding type "puli/asset-mapping" to "puli/asset"
  
 * 1.0.0-beta (2015-03-19)
 
