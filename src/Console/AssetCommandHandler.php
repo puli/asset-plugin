@@ -65,6 +65,7 @@ class AssetCommandHandler
 
         /** @var InstallTarget[] $targets */
         $targets = array();
+        $nonExistingTargets = array();
 
         // Assemble mappings and validate targets
         foreach ($this->assetManager->getAssetMappings() as $mapping) {
@@ -72,7 +73,12 @@ class AssetCommandHandler
 
             if (!isset($mappingsByTarget[$targetName])) {
                 $mappingsByTarget[$targetName] = array();
-                $targets[$targetName] = $this->targetManager->getTarget($targetName);
+
+                if ($this->targetManager->hasTarget($targetName)) {
+                    $targets[$targetName] = $this->targetManager->getTarget($targetName);
+                } else {
+                    $nonExistingTargets[$targetName] = true;
+                }
             }
 
             $mappingsByTarget[$targetName][] = $mapping;
@@ -84,41 +90,46 @@ class AssetCommandHandler
             return 0;
         }
 
-        $io->writeLine('The following web assets are currently enabled:');
-        $io->writeLine('');
-
-        foreach ($mappingsByTarget as $targetName => $mappings) {
-            $targetTitle = 'Target <bu>'.$targetName.'</bu>';
-
-            if ($targetName === InstallTarget::DEFAULT_TARGET) {
-                $targetTitle .= ' (alias of: <bu>'.$targets[$targetName]->getName().'</bu>)';
-            }
-
-            $io->writeLine("    <b>$targetTitle</b>");
-            $io->writeLine("    Location:   <c2>{$targets[$targetName]->getLocation()}</c2>");
-            $io->writeLine("    Installer:  {$targets[$targetName]->getInstallerName()}");
-            $io->writeLine("    URL Format: <c1>{$targets[$targetName]->getUrlFormat()}</c1>");
+        if (count($targets) > 0) {
+            $io->writeLine('The following web assets are currently enabled:');
             $io->writeLine('');
 
-            $table = new Table(TableStyle::borderless());
+            foreach ($targets as $targetName => $target) {
+                $targetTitle = 'Target <bu>'.$targetName.'</bu>';
 
-            foreach ($mappings as $mapping) {
-                $glob = $mapping->getGlob();
-                $webPath = $mapping->getWebPath();
+                if ($targetName === InstallTarget::DEFAULT_TARGET) {
+                    $targetTitle .= ' (alias of: <bu>'.$target->getName().'</bu>)';
+                }
 
-                $table->addRow(array(
-                    substr($mapping->getUuid()->toString(), 0, 6),
-                    '<c1>'.$glob.'</c1>',
-                    '<c2>'.$webPath.'</c2>'
-                ));
+                $io->writeLine("    <b>$targetTitle</b>");
+                $io->writeLine("    Location:   <c2>{$target->getLocation()}</c2>");
+                $io->writeLine("    Installer:  {$target->getInstallerName()}");
+                $io->writeLine("    URL Format: <c1>{$target->getUrlFormat()}</c1>");
+                $io->writeLine('');
+
+                $this->printMappingTable($io, $mappingsByTarget[$targetName]);
             }
 
-            $table->render($io, 8);
+            $io->writeLine('Use "puli asset install" to install the assets in their targets.');
+        }
 
+        if (count($targets) > 0 && count($nonExistingTargets) > 0) {
             $io->writeLine('');
         }
 
-        $io->writeLine('Use "puli asset install" to install the assets in their targets.');
+        if (count($nonExistingTargets) > 0) {
+            $io->writeLine('The following web assets are disabled since their target does not exist.');
+            $io->writeLine('');
+
+            foreach ($nonExistingTargets as $targetName => $_) {
+                $io->writeLine("    <b>Target <bu>$targetName</bu></b>");
+                $io->writeLine('');
+
+                $this->printMappingTable($io, $mappingsByTarget[$targetName]);
+            }
+
+            $io->writeLine('Use "puli target add <target> <location>" to add a target.');
+        }
 
         return 0;
     }
@@ -196,5 +207,25 @@ class AssetCommandHandler
         }
 
         return 0;
+    }
+
+    private function printMappingTable(IO $io, $mappings)
+    {
+        $table = new Table(TableStyle::borderless());
+
+        foreach ($mappings as $mapping) {
+            $glob = $mapping->getGlob();
+            $webPath = $mapping->getWebPath();
+
+            $table->addRow(array(
+                substr($mapping->getUuid()->toString(), 0, 6),
+                '<c1>'.$glob.'</c1>',
+                '<c2>'.$webPath.'</c2>'
+            ));
+        }
+
+        $table->render($io, 8);
+
+        $io->writeLine('');
     }
 }
