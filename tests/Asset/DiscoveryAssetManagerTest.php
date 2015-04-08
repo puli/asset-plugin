@@ -13,6 +13,7 @@ namespace Puli\AssetPlugin\Tests\Asset;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
+use Puli\AssetPlugin\Api\Asset\AssetManager;
 use Puli\AssetPlugin\Api\Asset\AssetMapping;
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
@@ -113,7 +114,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddWebPathMapping()
+    public function testAddAssetMapping()
     {
         $uuid = Uuid::uuid4();
 
@@ -139,7 +140,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
      * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      * @expectedExceptionMessage foobar
      */
-    public function testAddWebPathMappingFailsIfTargetNotFound()
+    public function testAddAssetMappingFailsIfTargetNotFound()
     {
         $this->discoveryManager->expects($this->never())
             ->method('addBinding');
@@ -147,7 +148,29 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css'));
     }
 
-    public function testRemoveRootWebPathMapping()
+    public function testAddAssetMappingDoesNotFailIfTargetNotFoundAndNoTargetCheck()
+    {
+        $uuid = Uuid::uuid4();
+
+        $expectedBinding = new BindingDescriptor(
+            '/path{,/**/*}',
+            AssetPlugin::BINDING_TYPE,
+            array(
+                AssetPlugin::TARGET_PARAMETER => 'foobar',
+                AssetPlugin::PATH_PARAMETER => '/css',
+            ),
+            'glob',
+            $uuid
+        );
+
+        $this->discoveryManager->expects($this->once())
+            ->method('addBinding')
+            ->with($expectedBinding);
+
+        $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css', $uuid), AssetManager::NO_TARGET_CHECK);
+    }
+
+    public function testRemoveRootAssetMapping()
     {
         $uuid = $this->binding1->getUuid();
 
@@ -168,7 +191,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->removeAssetMapping($uuid);
     }
 
-    public function testDisablePackageWebPathMapping()
+    public function testDisablePackageAssetMapping()
     {
         $uuid = $this->binding1->getUuid();
 
@@ -189,7 +212,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->removeAssetMapping($uuid);
     }
 
-    public function testRemoveIgnoresNonExistingWebPathMapping()
+    public function testRemoveIgnoresNonExistingAssetMapping()
     {
         $uuid = Uuid::uuid4();
 
@@ -206,7 +229,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->removeAssetMapping($uuid);
     }
 
-    public function testGetWebPathMapping()
+    public function testGetAssetMapping()
     {
         $uuid = $this->binding1->getUuid();
 
@@ -223,7 +246,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \Puli\AssetPlugin\Api\Asset\NoSuchAssetMappingException
      */
-    public function testGetWebPathMappingFailsIfNotFound()
+    public function testGetAssetMappingFailsIfNotFound()
     {
         $uuid = Uuid::uuid4();
 
@@ -235,7 +258,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->getAssetMapping($uuid);
     }
 
-    public function testGetWebPathMappings()
+    public function testGetAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('findBindings')
@@ -250,7 +273,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->manager->getAssetMappings());
     }
 
-    public function testGetNoWebPathMappings()
+    public function testGetNoAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('findBindings')
@@ -260,7 +283,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $this->manager->getAssetMappings());
     }
 
-    public function testFindWebPathMappings()
+    public function testFindAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('findBindings')
@@ -273,7 +296,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array($expected), $this->manager->findAssetMappings($expr));
     }
 
-    public function testFindNoWebPathMappings()
+    public function testFindNoAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('findBindings')
@@ -285,7 +308,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $this->manager->findAssetMappings($expr));
     }
 
-    public function testHasWebPathMapping()
+    public function testHasAssetMapping()
     {
         $uuid = Uuid::uuid4();
 
@@ -297,7 +320,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->manager->hasAssetMapping($uuid));
     }
 
-    public function testNotHasWebPathMapping()
+    public function testNotHasAssetMapping()
     {
         $uuid = Uuid::uuid4();
 
@@ -309,7 +332,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->manager->hasAssetMapping($uuid));
     }
 
-    public function testHasWebPathMappings()
+    public function testHasAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('hasBindings')
@@ -319,7 +342,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->manager->hasAssetMappings());
     }
 
-    public function testHasNoWebPathMappings()
+    public function testHasNoAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('hasBindings')
@@ -329,7 +352,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->manager->hasAssetMappings());
     }
 
-    public function testHasWebPathMappingsWithExpression()
+    public function testHasAssetMappingsWithExpression()
     {
         $this->discoveryManager->expects($this->once())
             ->method('hasBindings')

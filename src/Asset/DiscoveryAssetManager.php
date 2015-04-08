@@ -57,9 +57,9 @@ class DiscoveryAssetManager implements AssetManager
     /**
      * {@inheritdoc}
      */
-    public function addAssetMapping(AssetMapping $mapping)
+    public function addAssetMapping(AssetMapping $mapping, $flags = 0)
     {
-        if (!$this->installTargets->contains($mapping->getTargetName())) {
+        if (!($flags & self::NO_TARGET_CHECK) && !$this->installTargets->contains($mapping->getTargetName())) {
             throw NoSuchTargetException::forTargetName($mapping->getTargetName());
         }
 

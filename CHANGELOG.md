@@ -14,6 +14,7 @@ Changelog
    interface `PuliFactory`
  * renamed binding type "puli/web-resource" to "puli/asset-mapping"
  * renamed `ResourceUrlGenerator` to `AssetUrlGenerator`
+ * added NO_TARGET_CHECK flag to suppress sanity check in `AssetManager::addAssetMapping()`
  
 * 1.0.0-beta (2015-03-19)
 
