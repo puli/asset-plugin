@@ -234,6 +234,55 @@ EOF;
         $this->assertEmpty($this->io->fetchErrors());
     }
 
+    public function testListMappingsOfNonExistingDefaultTarget()
+    {
+        $this->targetManager->expects($this->any())
+            ->method('hasTarget')
+            ->willReturnMap(array(
+                array('local', false),
+                array('remote', false),
+                array(InstallTarget::DEFAULT_TARGET, false),
+            ));
+
+        $this->targetManager->expects($this->never())
+            ->method('getTarget');
+
+        $this->assetManager->expects($this->once())
+            ->method('getAssetMappings')
+            ->willReturn(array(
+                new AssetMapping('/app/public', 'local', '/', Uuid::fromString(self::UUID1)),
+                new AssetMapping('/acme/blog/public', 'remote', '/blog', Uuid::fromString(self::UUID2)),
+                new AssetMapping('/acme/profiler/public', 'local', '/profiler', Uuid::fromString(self::UUID3)),
+                new AssetMapping('/acme/admin/public', InstallTarget::DEFAULT_TARGET, '/admin', Uuid::fromString(self::UUID4)),
+            ));
+
+        $args = self::$listCommand->parseArgs(new StringArgs(''));
+
+        $expected = <<<EOF
+The following web assets are disabled since their target does not exist.
+
+    Target local
+
+        e81b32 /app/public           /
+        49cfdf /acme/profiler/public /profiler
+
+    Target remote
+
+        33dbec /acme/blog/public /blog
+
+    Target default
+
+        8c64be /acme/admin/public /admin
+
+Use "puli target add <target> <location>" to add a target.
+
+EOF;
+
+        $this->assertSame(0, $this->handler->handleList($args, $this->io));
+        $this->assertSame($expected, $this->io->fetchOutput());
+        $this->assertEmpty($this->io->fetchErrors());
+    }
+
     public function testListEmpty()
     {
         $this->assetManager->expects($this->once())
