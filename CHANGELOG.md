@@ -16,6 +16,7 @@ Changelog
  * renamed `ResourceUrlGenerator` to `AssetUrlGenerator`
  * added NO_TARGET_CHECK flag to suppress sanity check in `AssetManager::addAssetMapping()`
  * added --force option to "asset map" command
+ * the "asset map" command now supports relative paths
  
 * 1.0.0-beta (2015-03-19)
 

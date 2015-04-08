@@ -225,6 +225,36 @@ EOF;
         $this->assertSame(0, $this->handler->handleMap($args));
     }
 
+    public function testMapWithRelativeRepositoryPath()
+    {
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping) {
+                PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
+                PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
+                PHPUnit_Framework_Assert::assertSame(InstallTarget::DEFAULT_TARGET, $mapping->getTargetName());
+            });
+
+        $args = self::$mapCommand->parseArgs(new StringArgs('app/public /'));
+
+        $this->assertSame(0, $this->handler->handleMap($args));
+    }
+
+    public function testMapWithRelativeWebPath()
+    {
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping) {
+                PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
+                PHPUnit_Framework_Assert::assertSame('/path', $mapping->getWebPath());
+                PHPUnit_Framework_Assert::assertSame(InstallTarget::DEFAULT_TARGET, $mapping->getTargetName());
+            });
+
+        $args = self::$mapCommand->parseArgs(new StringArgs('/app/public path'));
+
+        $this->assertSame(0, $this->handler->handleMap($args));
+    }
+
     public function testRemoveMapping()
     {
         $this->assetManager->expects($this->at(0))

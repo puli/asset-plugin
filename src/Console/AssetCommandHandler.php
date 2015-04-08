@@ -23,6 +23,7 @@ use Webmozart\Console\Api\IO\IO;
 use Webmozart\Console\UI\Component\Table;
 use Webmozart\Console\UI\Style\TableStyle;
 use Webmozart\Expression\Expr;
+use Webmozart\PathUtil\Path;
 
 /**
  * @since  1.0
@@ -44,6 +45,11 @@ class AssetCommandHandler
      * @var InstallTargetManager
      */
     private $targetManager;
+
+    /**
+     * @var string
+     */
+    private $currentPath = '/';
 
     public function __construct(AssetManager $assetManager, InstallationManager $installationManager, InstallTargetManager $targetManager)
     {
@@ -120,9 +126,10 @@ class AssetCommandHandler
     public function handleMap(Args $args)
     {
         $flags = $args->isOptionSet('force') ? AssetManager::NO_TARGET_CHECK : 0;
+        $path = Path::makeAbsolute($args->getArgument('path'), $this->currentPath);
 
         $this->assetManager->addAssetMapping(new AssetMapping(
-            $args->getArgument('path'),
+            $path,
             $args->getOption('target'),
             $args->getArgument('web-path')
         ), $flags);
