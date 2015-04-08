@@ -40,6 +40,7 @@ final class WebConsoleConfig
                     ->addArgument('path', Argument::REQUIRED, 'The resource path')
                     ->addArgument('web-path', Argument::REQUIRED, 'The path in the web directory')
                     ->addOption('target', 't', Option::REQUIRED_VALUE | Option::PREFER_LONG_NAME, 'The name of the installation target', InstallTarget::DEFAULT_TARGET)
+                    ->addOption('force', 'f', Option::NO_VALUE, 'Map even if the target does not exist')
                     ->setHandlerMethod('handleMap')
                 ->end()
 

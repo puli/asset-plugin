@@ -119,11 +119,13 @@ class AssetCommandHandler
 
     public function handleMap(Args $args)
     {
+        $flags = $args->isOptionSet('force') ? AssetManager::NO_TARGET_CHECK : 0;
+
         $this->assetManager->addAssetMapping(new AssetMapping(
             $args->getArgument('path'),
             $args->getOption('target'),
             $args->getArgument('web-path')
-        ));
+        ), $flags);
 
         return 0;
     }
