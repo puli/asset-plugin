@@ -3,7 +3,7 @@
     "name": "puli/asset-plugin",
     "binding-types": {
         "puli/asset": {
-            "description": "A Puli resource that can be accessed in a web browser",
+            "description": "A resource that can be accessed in a web browser",
             "parameters": {
                 "path": {
                     "description": "The path in the install target",
