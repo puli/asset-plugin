@@ -63,7 +63,7 @@ class DiscoveryAssetManager implements AssetManager
             throw NoSuchTargetException::forTargetName($mapping->getTargetName());
         }
 
-        $this->discoveryManager->addBinding(new BindingDescriptor(
+        $this->discoveryManager->addRootBinding(new BindingDescriptor(
             // Match directories as well as all of their contents
             $mapping->getGlob().'{,/**/*}',
             AssetPlugin::BINDING_TYPE,
@@ -93,7 +93,7 @@ class DiscoveryAssetManager implements AssetManager
             $package = $binding->getContainingPackage();
 
             if ($package instanceof RootPackage) {
-                $this->discoveryManager->removeBinding($uuid);
+                $this->discoveryManager->removeRootBinding($uuid);
             } else {
                 $this->discoveryManager->disableBinding($uuid, $package->getName());
             }

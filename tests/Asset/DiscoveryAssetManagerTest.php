@@ -130,7 +130,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         );
 
         $this->discoveryManager->expects($this->once())
-            ->method('addBinding')
+            ->method('addRootBinding')
             ->with($expectedBinding);
 
         $this->manager->addAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid));
@@ -143,7 +143,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
     public function testAddAssetMappingFailsIfTargetNotFound()
     {
         $this->discoveryManager->expects($this->never())
-            ->method('addBinding');
+            ->method('addRootBinding');
 
         $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css'));
     }
@@ -164,7 +164,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         );
 
         $this->discoveryManager->expects($this->once())
-            ->method('addBinding')
+            ->method('addRootBinding')
             ->with($expectedBinding);
 
         $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css', $uuid), AssetManager::NO_TARGET_CHECK);
@@ -183,7 +183,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->willReturn(array($this->binding1));
 
         $this->discoveryManager->expects($this->at(1))
-            ->method('removeBinding')
+            ->method('removeRootBinding')
             ->with($uuid);
         $this->discoveryManager->expects($this->never())
             ->method('disableBinding');
@@ -204,7 +204,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->willReturn(array($this->binding1));
 
         $this->discoveryManager->expects($this->never())
-            ->method('removeBinding');
+            ->method('removeRootBinding');
         $this->discoveryManager->expects($this->at(1))
             ->method('disableBinding')
             ->with($uuid, 'vendor/package');
@@ -222,7 +222,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->willReturn(array());
 
         $this->discoveryManager->expects($this->never())
-            ->method('removeBinding');
+            ->method('removeRootBinding');
         $this->discoveryManager->expects($this->never())
             ->method('disableBinding');
 
