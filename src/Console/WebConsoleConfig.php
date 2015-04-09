@@ -44,6 +44,15 @@ final class WebConsoleConfig
                     ->setHandlerMethod('handleMap')
                 ->end()
 
+                ->beginSubCommand('update')
+                    ->addArgument('uuid', Argument::REQUIRED, 'The UUID (prefix) of the mapping')
+                    ->addOption('path', null, Option::REQUIRED_VALUE, 'The resource path')
+                    ->addOption('web-path', null, Option::REQUIRED_VALUE, 'The path in the web directory')
+                    ->addOption('target', 't', Option::REQUIRED_VALUE | Option::PREFER_LONG_NAME, 'The name of the installation target', InstallTarget::DEFAULT_TARGET)
+                    ->addOption('force', 'f', Option::NO_VALUE, 'Update even if the target does not exist')
+                    ->setHandlerMethod('handleUpdate')
+                ->end()
+
                 ->beginSubCommand('remove')
                     ->addArgument('uuid', Argument::REQUIRED, 'The UUID (prefix) of the mapping')
                     ->setHandlerMethod('handleRemove')

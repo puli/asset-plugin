@@ -150,22 +150,42 @@ class AssetCommandHandler
         return 0;
     }
 
+    public function handleUpdate(Args $args)
+    {
+        $flags = $args->isOptionSet('force') ? AssetManager::IGNORE_TARGET_NOT_FOUND : 0;
+        $mappingToUpdate = $this->getMappingByUuidPrefix($args->getArgument('uuid'));
+        $path = $mappingToUpdate->getGlob();
+        $webPath = $mappingToUpdate->getWebPath();
+        $targetName = $mappingToUpdate->getTargetName();
+
+        if ($args->isOptionSet('path')) {
+            $path = Path::makeAbsolute($args->getOption('path'), $this->currentPath);
+        }
+
+        if ($args->isOptionSet('web-path')) {
+            $webPath = $args->getOption('web-path');
+        }
+
+        if ($args->isOptionSet('target')) {
+            $targetName = $args->getOption('target');
+        }
+
+        $updatedMapping = new AssetMapping($path, $targetName, $webPath, $mappingToUpdate->getUuid());
+
+        if ($this->mappingsEqual($mappingToUpdate, $updatedMapping)) {
+            throw new RuntimeException('Nothing to update.');
+        }
+
+        $this->assetManager->addAssetMapping($updatedMapping, $flags);
+
+        return 0;
+    }
+
     public function handleRemove(Args $args)
     {
-        $expr = Expr::startsWith(AssetMapping::UUID, $args->getArgument('uuid'));
+        $mapping = $this->getMappingByUuidPrefix($args->getArgument('uuid'));
 
-        $mappings = $this->assetManager->findAssetMappings($expr);
-
-        if (!$mappings) {
-            throw new RuntimeException(sprintf(
-                'The mapping with the UUID (prefix) "%s" does not exist.',
-                $args->getArgument('uuid')
-            ));
-        }
-
-        foreach ($mappings as $mapping) {
-            $this->assetManager->removeAssetMapping($mapping->getUuid());
-        }
+        $this->assetManager->removeAssetMapping($mapping->getUuid());
 
         return 0;
     }
@@ -240,5 +260,54 @@ class AssetCommandHandler
         }
 
         $table->render($io, 8);
+    }
+
+    /**
+     * @param string $uuidPrefix
+     *
+     * @return AssetMapping
+     */
+    private function getMappingByUuidPrefix($uuidPrefix)
+    {
+        $expr = Expr::startsWith(AssetMapping::UUID, $uuidPrefix);
+
+        $mappings = $this->assetManager->findAssetMappings($expr);
+
+        if (!$mappings) {
+            throw new RuntimeException(sprintf(
+                'The mapping with the UUID prefix "%s" does not exist.',
+                $uuidPrefix
+            ));
+        }
+
+        if (count($mappings) > 1) {
+            throw new RuntimeException(sprintf(
+                'More than one mapping matches the UUID prefix "%s".',
+                $uuidPrefix
+            ));
+        }
+
+        return reset($mappings);
+    }
+
+    private function mappingsEqual(AssetMapping $mapping1, AssetMapping $mapping2)
+    {
+        if ($mapping1->getUuid() !== $mapping2->getUuid()) {
+            return false;
+        }
+
+        if ($mapping1->getGlob() !== $mapping2->getGlob()) {
+            return false;
+        }
+
+        if ($mapping1->getWebPath() !== $mapping2->getWebPath()) {
+            return false;
+        }
+
+        if ($mapping1->getTargetName() !== $mapping2->getTargetName()) {
+            return false;
+        }
+
+        return true;
     }
 }

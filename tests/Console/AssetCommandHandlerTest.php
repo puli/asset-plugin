@@ -56,6 +56,11 @@ class AssetCommandHandlerTest extends AbstractCommandHandlerTest
     /**
      * @var Command
      */
+    private static $updateCommand;
+
+    /**
+     * @var Command
+     */
     private static $removeCommand;
 
     /**
@@ -89,6 +94,7 @@ class AssetCommandHandlerTest extends AbstractCommandHandlerTest
 
         self::$listCommand = self::$application->getCommand('asset')->getSubCommand('list');
         self::$mapCommand = self::$application->getCommand('asset')->getSubCommand('map');
+        self::$updateCommand = self::$application->getCommand('asset')->getSubCommand('update');
         self::$removeCommand = self::$application->getCommand('asset')->getSubCommand('remove');
         self::$installCommand = self::$application->getCommand('asset')->getSubCommand('install');
     }
@@ -377,23 +383,111 @@ EOF;
         $this->assertSame(0, $this->handler->handleMap($args));
     }
 
+    public function testUpdateMapping()
+    {
+        $args = self::$updateCommand->parseArgs(new StringArgs('abcd --path /new --web-path /new-web --target new-target'));
+
+        $mapping = new AssetMapping('/app/public', 'local', '/');
+        $uuid = $mapping->getUuid();
+
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->willReturn(array($mapping));
+
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping) use ($uuid) {
+                PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
+                PHPUnit_Framework_Assert::assertSame('/new-web', $mapping->getWebPath());
+                PHPUnit_Framework_Assert::assertSame('new-target', $mapping->getTargetName());
+                PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
+            });
+
+        $this->assertSame(0, $this->handler->handleUpdate($args));
+    }
+
+    public function testUpdateMappingRelativePath()
+    {
+        $args = self::$updateCommand->parseArgs(new StringArgs('abcd --path new'));
+
+        $mapping = new AssetMapping('/app/public', 'local', '/');
+        $uuid = $mapping->getUuid();
+
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->willReturn(array($mapping));
+
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping) use ($uuid) {
+                PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
+                PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
+                PHPUnit_Framework_Assert::assertSame('local', $mapping->getTargetName());
+                PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
+            });
+
+        $this->assertSame(0, $this->handler->handleUpdate($args));
+    }
+
+    public function testUpdateMappingRelativeWebPath()
+    {
+        $args = self::$updateCommand->parseArgs(new StringArgs('abcd --web-path new'));
+
+        $mapping = new AssetMapping('/app/public', 'local', '/');
+        $uuid = $mapping->getUuid();
+
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->willReturn(array($mapping));
+
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping) use ($uuid) {
+                PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
+                PHPUnit_Framework_Assert::assertSame('/new', $mapping->getWebPath());
+                PHPUnit_Framework_Assert::assertSame('local', $mapping->getTargetName());
+                PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
+            });
+
+        $this->assertSame(0, $this->handler->handleUpdate($args));
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Nothing to update.
+     */
+    public function testUpdateMappingFailsIfNoChanges()
+    {
+        $args = self::$updateCommand->parseArgs(new StringArgs('abcd'));
+
+        $mapping = new AssetMapping('/app/public', 'local', '/');
+
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->willReturn(array($mapping));
+
+        $this->assetManager->expects($this->never())
+            ->method('addAssetMapping');
+
+        $this->assertSame(0, $this->handler->handleUpdate($args));
+    }
+
     public function testRemoveMapping()
     {
-        $this->assetManager->expects($this->at(0))
+        $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
             ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
             ->willReturn(array(
-                $mapping1 = new AssetMapping('/app/public', 'local', '/'),
-                $mapping2 = new AssetMapping('/acme/blog/public', 'remote', '/blog'),
+                $mapping = new AssetMapping('/app/public', 'local', '/'),
             ));
 
-        $this->assetManager->expects($this->at(1))
+        $this->assetManager->expects($this->once())
             ->method('removeAssetMapping')
-            ->with($mapping1->getUuid());
-
-        $this->assetManager->expects($this->at(2))
-            ->method('removeAssetMapping')
-            ->with($mapping2->getUuid());
+            ->with($mapping->getUuid());
 
         $args = self::$removeCommand->parseArgs(new StringArgs('abcd'));
 
@@ -402,6 +496,7 @@ EOF;
 
     /**
      * @expectedException \RuntimeException
+     * @expectedExceptionMessage The mapping with the UUID prefix "abcd" does not exist.
      */
     public function testRemoveMappingFailsIfNotFound()
     {
@@ -409,6 +504,28 @@ EOF;
             ->method('findAssetMappings')
             ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
             ->willReturn(array());
+
+        $this->assetManager->expects($this->never())
+            ->method('removeAssetMapping');
+
+        $args = self::$removeCommand->parseArgs(new StringArgs('abcd'));
+
+        $this->handler->handleRemove($args);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage More than one mapping matches the UUID prefix "abcd".
+     */
+    public function testRemoveMappingFailsIfAmbiguous()
+    {
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->willReturn(array(
+                new AssetMapping('/app/public1', 'local', '/'),
+                new AssetMapping('/app/public2', 'local', '/'),
+            ));
 
         $this->assetManager->expects($this->never())
             ->method('removeAssetMapping');

@@ -9,17 +9,18 @@ Changelog
  * renamed `WebPathMapping` to `AssetMapping`
  * renamed `WebPathManager` to `AssetManager`
  * moved all code to `Puli\AssetPlugin` namespace
- * renamed "web" command to "asset" and "web add" to "asset map"
+ * renamed `puli web` command to `puli asset` and `puli web add` to `puli asset map`
  * renamed `PuliWebFactory` to `UrlGeneratorFactory` and removed the parent
    interface `PuliFactory`
  * renamed binding type "puli/web-resource" to "puli/asset-mapping"
  * renamed `ResourceUrlGenerator` to `AssetUrlGenerator`
  * added `IGNORE_TARGET_NOT_FOUND` flag to suppress sanity check in `AssetManager::addAssetMapping()`
- * added --force option to "asset map" command
- * the "asset map" command now supports relative paths
- * fixed "asset" command when asset mappings have a non-existing target
+ * added `--force` option to `puli asset map` command
+ * the `puli asset map` command now supports relative paths
+ * fixed `puli asset` command when asset mappings have a non-existing target
  * renamed binding type "puli/asset-mapping" to "puli/asset"
  * removed `$code` arguments of static exception factory methods
+ * added `puli asset update` command
  
 * 1.0.0-beta (2015-03-19)
 
