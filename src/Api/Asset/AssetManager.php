@@ -24,9 +24,14 @@ use Webmozart\Expression\Expression;
 interface AssetManager
 {
     /**
+     * Flag: Override existing asset mappings in {@link addAssetMapping()}.
+     */
+    const OVERRIDE = 1;
+
+    /**
      * Flag: Ignore if the target does not exist in {@link addAssetMapping()}.
      */
-    const IGNORE_TARGET_NOT_FOUND = 1;
+    const IGNORE_TARGET_NOT_FOUND = 2;
 
     /**
      * Adds an asset mapping to the repository.
@@ -37,6 +42,8 @@ interface AssetManager
      *
      * @throws NoSuchTargetException If the target referred to by the mapping
      *                               does not exist.
+     * @throws DuplicateAssetMappingException If a mapping with the same UUID
+     *                                        exists already.
      */
     public function addAssetMapping(AssetMapping $mapping, $flags = 0);
 

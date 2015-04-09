@@ -13,6 +13,7 @@ namespace Puli\AssetPlugin\Asset;
 
 use Puli\AssetPlugin\Api\Asset\AssetManager;
 use Puli\AssetPlugin\Api\Asset\AssetMapping;
+use Puli\AssetPlugin\Api\Asset\DuplicateAssetMappingException;
 use Puli\AssetPlugin\Api\Asset\NoSuchAssetMappingException;
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
@@ -63,6 +64,10 @@ class DiscoveryAssetManager implements AssetManager
             throw NoSuchTargetException::forTargetName($mapping->getTargetName());
         }
 
+        if (!($flags & self::OVERRIDE) && $this->hasAssetMapping($mapping->getUuid())) {
+            throw DuplicateAssetMappingException::forUuid($mapping->getUuid());
+        }
+
         $this->discoveryManager->addRootBinding(new BindingDescriptor(
             // Match directories as well as all of their contents
             $mapping->getGlob().'{,/**/*}',
@@ -73,7 +78,7 @@ class DiscoveryAssetManager implements AssetManager
             ),
             'glob',
             $mapping->getUuid()
-        ));
+        ), ($flags & self::OVERRIDE) ? DiscoveryManager::OVERRIDE : 0);
     }
 
     /**
