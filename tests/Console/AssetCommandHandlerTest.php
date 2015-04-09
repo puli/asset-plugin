@@ -455,6 +455,31 @@ EOF;
         $this->assertSame(0, $this->handler->handleUpdate($args));
     }
 
+    public function testUpdateMappingForce()
+    {
+        $args = self::$updateCommand->parseArgs(new StringArgs('abcd --path /new --force'));
+
+        $mapping = new AssetMapping('/app/public', 'local', '/');
+        $uuid = $mapping->getUuid();
+
+        $this->assetManager->expects($this->once())
+            ->method('findAssetMappings')
+            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->willReturn(array($mapping));
+
+        $this->assetManager->expects($this->once())
+            ->method('addAssetMapping')
+            ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
+                PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
+                PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
+                PHPUnit_Framework_Assert::assertSame('local', $mapping->getTargetName());
+                PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
+                PHPUnit_Framework_Assert::assertSame(AssetManager::IGNORE_TARGET_NOT_FOUND, $flags);
+            });
+
+        $this->assertSame(0, $this->handler->handleUpdate($args));
+    }
+
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Nothing to update.
