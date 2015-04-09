@@ -397,11 +397,12 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('addAssetMapping')
-            ->willReturnCallback(function (AssetMapping $mapping) use ($uuid) {
+            ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
                 PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/new-web', $mapping->getWebPath());
                 PHPUnit_Framework_Assert::assertSame('new-target', $mapping->getTargetName());
                 PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
+                PHPUnit_Framework_Assert::assertSame(AssetManager::OVERRIDE, $flags);
             });
 
         $this->assertSame(0, $this->handler->handleUpdate($args));
@@ -421,11 +422,12 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('addAssetMapping')
-            ->willReturnCallback(function (AssetMapping $mapping) use ($uuid) {
+            ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
                 PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
                 PHPUnit_Framework_Assert::assertSame('local', $mapping->getTargetName());
                 PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
+                PHPUnit_Framework_Assert::assertSame(AssetManager::OVERRIDE, $flags);
             });
 
         $this->assertSame(0, $this->handler->handleUpdate($args));
@@ -445,11 +447,12 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('addAssetMapping')
-            ->willReturnCallback(function (AssetMapping $mapping) use ($uuid) {
+            ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/new', $mapping->getWebPath());
                 PHPUnit_Framework_Assert::assertSame('local', $mapping->getTargetName());
                 PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
+                PHPUnit_Framework_Assert::assertSame(AssetManager::OVERRIDE, $flags);
             });
 
         $this->assertSame(0, $this->handler->handleUpdate($args));
@@ -474,7 +477,7 @@ EOF;
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
                 PHPUnit_Framework_Assert::assertSame('local', $mapping->getTargetName());
                 PHPUnit_Framework_Assert::assertSame($uuid, $mapping->getUuid());
-                PHPUnit_Framework_Assert::assertSame(AssetManager::IGNORE_TARGET_NOT_FOUND, $flags);
+                PHPUnit_Framework_Assert::assertSame(AssetManager::OVERRIDE | AssetManager::IGNORE_TARGET_NOT_FOUND, $flags);
             });
 
         $this->assertSame(0, $this->handler->handleUpdate($args));

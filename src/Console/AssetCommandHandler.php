@@ -152,7 +152,9 @@ class AssetCommandHandler
 
     public function handleUpdate(Args $args)
     {
-        $flags = $args->isOptionSet('force') ? AssetManager::IGNORE_TARGET_NOT_FOUND : 0;
+        $flags = $args->isOptionSet('force')
+            ? AssetManager::OVERRIDE | AssetManager::IGNORE_TARGET_NOT_FOUND
+            : AssetManager::OVERRIDE;
         $mappingToUpdate = $this->getMappingByUuidPrefix($args->getArgument('uuid'));
         $path = $mappingToUpdate->getGlob();
         $webPath = $mappingToUpdate->getWebPath();
