@@ -26,17 +26,16 @@ class NoSuchParameterException extends Exception
      *
      * @param string    $parameterName The parameter name.
      * @param string    $installerName The installer name.
-     * @param int       $code          The exception code.
      * @param Exception $cause         The exception that caused this exception.
      *
      * @return static The created exception.
      */
-    public static function forParameterName($parameterName, $installerName, $code = 0, Exception $cause = null)
+    public static function forParameterName($parameterName, $installerName, Exception $cause = null)
     {
         return new static(sprintf(
             'The installer parameter "%s" does not exist for the "%s" installer.',
             $parameterName,
             $installerName
-        ), $code, $cause);
+        ), 0, $cause);
     }
 }

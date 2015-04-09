@@ -25,16 +25,15 @@ class NoSuchInstallerException extends Exception
      * Creates an exception for an installer name that was not found.
      *
      * @param string    $installerName The installer name.
-     * @param int       $code          The exception code.
      * @param Exception $cause         The exception that caused this exception.
      *
      * @return static The created exception.
      */
-    public static function forInstallerName($installerName, $code = 0, Exception $cause = null)
+    public static function forInstallerName($installerName, Exception $cause = null)
     {
         return new static(sprintf(
             'The installer "%s" does not exist.',
             $installerName
-        ), $code, $cause);
+        ), 0, $cause);
     }
 }

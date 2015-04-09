@@ -19,6 +19,7 @@ Changelog
  * the "asset map" command now supports relative paths
  * fixed "asset" command when asset mappings have a non-existing target
  * renamed binding type "puli/asset-mapping" to "puli/asset"
+ * removed `$code` arguments of static exception factory methods
  
 * 1.0.0-beta (2015-03-19)
 

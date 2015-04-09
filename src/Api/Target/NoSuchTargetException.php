@@ -25,16 +25,15 @@ class NoSuchTargetException extends Exception
      * Creates an exception for a target name that was not found.
      *
      * @param string    $targetName The target name.
-     * @param int       $code       The exception code.
      * @param Exception $cause      The exception that caused this exception.
      *
      * @return static The created exception.
      */
-    public static function forTargetName($targetName, $code = 0, Exception $cause = null)
+    public static function forTargetName($targetName, Exception $cause = null)
     {
         return new static(sprintf(
             'The install target "%s" does not exist.',
             $targetName
-        ), $code, $cause);
+        ), 0, $cause);
     }
 }

@@ -26,16 +26,15 @@ class NoSuchAssetMappingException extends Exception
      * Creates an exception for a UUID that was not found.
      *
      * @param Uuid      $uuid  The UUID of the mapping.
-     * @param int       $code  The exception code.
      * @param Exception $cause The exception that caused this exception.
      *
      * @return static The created exception.
      */
-    public static function forUuid(Uuid $uuid, $code = 0, Exception $cause = null)
+    public static function forUuid(Uuid $uuid, Exception $cause = null)
     {
         return new static(sprintf(
             'The asset mapping "%s" does not exist.',
             $uuid->toString()
-        ), $code, $cause);
+        ), 0, $cause);
     }
 }
