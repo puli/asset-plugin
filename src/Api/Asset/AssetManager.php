@@ -24,10 +24,9 @@ use Webmozart\Expression\Expression;
 interface AssetManager
 {
     /**
-     * Flag: Don't check whether the install target exists in
-     * {@link addAssetMapping()}.
+     * Flag: Ignore if the target does not exist in {@link addAssetMapping()}.
      */
-    const NO_TARGET_CHECK = 1;
+    const IGNORE_TARGET_NOT_FOUND = 1;
 
     /**
      * Adds an asset mapping to the repository.

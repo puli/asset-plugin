@@ -14,7 +14,7 @@ Changelog
    interface `PuliFactory`
  * renamed binding type "puli/web-resource" to "puli/asset-mapping"
  * renamed `ResourceUrlGenerator` to `AssetUrlGenerator`
- * added NO_TARGET_CHECK flag to suppress sanity check in `AssetManager::addAssetMapping()`
+ * added `IGNORE_TARGET_NOT_FOUND` flag to suppress sanity check in `AssetManager::addAssetMapping()`
  * added --force option to "asset map" command
  * the "asset map" command now supports relative paths
  * fixed "asset" command when asset mappings have a non-existing target

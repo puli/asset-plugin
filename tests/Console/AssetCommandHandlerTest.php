@@ -339,7 +339,7 @@ EOF;
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
                 PHPUnit_Framework_Assert::assertSame(InstallTarget::DEFAULT_TARGET, $mapping->getTargetName());
-                PHPUnit_Framework_Assert::assertSame(AssetManager::NO_TARGET_CHECK, $flags);
+                PHPUnit_Framework_Assert::assertSame(AssetManager::IGNORE_TARGET_NOT_FOUND, $flags);
             });
 
         $args = self::$mapCommand->parseArgs(new StringArgs('--force /app/public /'));

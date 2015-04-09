@@ -138,7 +138,7 @@ class AssetCommandHandler
 
     public function handleMap(Args $args)
     {
-        $flags = $args->isOptionSet('force') ? AssetManager::NO_TARGET_CHECK : 0;
+        $flags = $args->isOptionSet('force') ? AssetManager::IGNORE_TARGET_NOT_FOUND : 0;
         $path = Path::makeAbsolute($args->getArgument('path'), $this->currentPath);
 
         $this->assetManager->addAssetMapping(new AssetMapping(

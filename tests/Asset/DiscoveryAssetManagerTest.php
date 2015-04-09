@@ -148,7 +148,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css'));
     }
 
-    public function testAddAssetMappingDoesNotFailIfTargetNotFoundAndNoTargetCheck()
+    public function testAddAssetMappingDoesNotFailIfTargetNotFoundAndIgnoreTargetNotFound()
     {
         $uuid = Uuid::uuid4();
 
@@ -167,7 +167,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->method('addRootBinding')
             ->with($expectedBinding);
 
-        $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css', $uuid), AssetManager::NO_TARGET_CHECK);
+        $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css', $uuid), AssetManager::IGNORE_TARGET_NOT_FOUND);
     }
 
     public function testRemoveRootAssetMapping()
