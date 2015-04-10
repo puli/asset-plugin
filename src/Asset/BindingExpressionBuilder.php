@@ -22,8 +22,8 @@ use Webmozart\Expression\Comparison\NotSame;
 use Webmozart\Expression\Comparison\Same;
 use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
-use Webmozart\Expression\Key\Key;
 use Webmozart\Expression\Logic\Conjunction;
+use Webmozart\Expression\Selector\Key;
 use Webmozart\Expression\Traversal\ExpressionTraverser;
 use Webmozart\Expression\Traversal\ExpressionVisitor;
 
@@ -54,9 +54,9 @@ class BindingExpressionBuilder implements ExpressionVisitor
     public function buildExpression(Expression $expr = null)
     {
         if (!$this->defaultExpression) {
-            $this->defaultExpression = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-                ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-                ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}');
+            $this->defaultExpression = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+                ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+                ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY);
         }
 
         if (!$expr) {

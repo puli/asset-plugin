@@ -347,7 +347,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->webPath('/other/path'))
             ->willReturn(array($this->binding2));
 
-        $expr = Expr::same(AssetMapping::WEB_PATH, '/other/path');
+        $expr = Expr::same('/other/path', AssetMapping::WEB_PATH);
         $expected = new AssetMapping('/other/path', 'target2', '/js', $this->binding2->getUuid());
 
         $this->assertEquals(array($expected), $this->manager->findAssetMappings($expr));
@@ -360,7 +360,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->webPath('/foobar'))
             ->willReturn(array());
 
-        $expr = Expr::same(AssetMapping::WEB_PATH, '/foobar');
+        $expr = Expr::same('/foobar', AssetMapping::WEB_PATH);
 
         $this->assertEquals(array(), $this->manager->findAssetMappings($expr));
     }
@@ -416,25 +416,31 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->with($this->webPath('/path'))
             ->willReturn(true);
 
-        $expr = Expr::same(AssetMapping::WEB_PATH, '/path');
+        $expr = Expr::same('/path', AssetMapping::WEB_PATH);
 
         $this->assertTrue($this->manager->hasAssetMappings($expr));
     }
 
     private function defaultExpr()
     {
-        return Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}');
+        return Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY);
     }
 
     private function uuid(Uuid $uuid)
     {
-        return $this->defaultExpr()->andSame(BindingDescriptor::UUID, $uuid->toString());
+        return $this->defaultExpr()->andSame($uuid->toString(), BindingDescriptor::UUID);
     }
 
     private function webPath($path)
     {
-        return $this->defaultExpr()->andKeySame(BindingDescriptor::PARAMETER_VALUES, AssetPlugin::PATH_PARAMETER, $path);
+        return $this->defaultExpr()->andKey(
+            BindingDescriptor::PARAMETER_VALUES,
+            Expr::key(
+                AssetPlugin::PATH_PARAMETER,
+                Expr::same($path)
+            )
+        );
     }
 }

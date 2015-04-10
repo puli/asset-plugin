@@ -86,7 +86,7 @@ class DiscoveryAssetManager implements AssetManager
      */
     public function removeAssetMapping(Uuid $uuid)
     {
-        $expr = Expr::same(BindingDescriptor::UUID, $uuid->toString())
+        $expr = Expr::same($uuid->toString(), BindingDescriptor::UUID)
             ->andX($this->exprBuilder->buildExpression());
 
         $bindings = $this->discoveryManager->findBindings($expr);
@@ -110,7 +110,7 @@ class DiscoveryAssetManager implements AssetManager
      */
     public function getAssetMapping(Uuid $uuid)
     {
-        $expr = Expr::same(BindingDescriptor::UUID, $uuid->toString())
+        $expr = Expr::same($uuid->toString(), BindingDescriptor::UUID)
             ->andX($this->exprBuilder->buildExpression());
 
         $bindings = $this->discoveryManager->findBindings($expr);
@@ -159,7 +159,7 @@ class DiscoveryAssetManager implements AssetManager
      */
     public function hasAssetMapping(Uuid $uuid)
     {
-        $expr = Expr::same(BindingDescriptor::UUID, $uuid->toString())
+        $expr = Expr::same($uuid->toString(), BindingDescriptor::UUID)
             ->andX($this->exprBuilder->buildExpression());
 
         return $this->discoveryManager->hasBindings($expr);

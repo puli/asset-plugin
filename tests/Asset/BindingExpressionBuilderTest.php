@@ -37,31 +37,31 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testBuildDefaultExpression()
     {
-        $expr = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}');
+        $expr = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY);
 
         $this->assertEquals($expr, $this->builder->buildExpression());
     }
 
     public function testBuildExpressionWithCustomCriteria()
     {
-        $expr1 = Expr::startsWith(AssetMapping::UUID, 'abcd')
-            ->orSame(AssetMapping::TARGET_NAME, 'local')
+        $expr1 = Expr::startsWith('abcd', AssetMapping::UUID)
+            ->orSame('local', AssetMapping::TARGET_NAME)
             ->orX(
-                Expr::same(AssetMapping::GLOB, '/path')
-                    ->andSame(AssetMapping::WEB_PATH, 'css')
+                Expr::same('/path', AssetMapping::GLOB)
+                    ->andSame('css', AssetMapping::WEB_PATH)
             );
 
-        $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
+        $expr2 = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY)
             ->andX(
-                Expr::startsWith(BindingDescriptor::UUID, 'abcd')
-                    ->orKeySame(BindingDescriptor::PARAMETER_VALUES, AssetPlugin::TARGET_PARAMETER, 'local')
+                Expr::startsWith('abcd', BindingDescriptor::UUID)
+                    ->orKey(BindingDescriptor::PARAMETER_VALUES, Expr::key(AssetPlugin::TARGET_PARAMETER, Expr::same('local')))
                     ->orX(
-                        Expr::same(BindingDescriptor::QUERY, '/path{,/**/*}')
-                            ->andKeySame(BindingDescriptor::PARAMETER_VALUES, AssetPlugin::PATH_PARAMETER, 'css')
+                        Expr::same('/path{,/**/*}', BindingDescriptor::QUERY)
+                            ->andKey(BindingDescriptor::PARAMETER_VALUES, Expr::key(AssetPlugin::PATH_PARAMETER, Expr::same('css')))
                     )
             );
 
@@ -70,60 +70,60 @@ class BindingExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testAppendDefaultQuerySuffixForSame()
     {
-        $expr1 = Expr::same(AssetMapping::GLOB, '/path');
+        $expr1 = Expr::same('/path', AssetMapping::GLOB);
 
-        $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
-            ->andSame(BindingDescriptor::QUERY, '/path{,/**/*}');
+        $expr2 = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY)
+            ->andSame('/path{,/**/*}', BindingDescriptor::QUERY);
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
 
     public function testAppendDefaultQuerySuffixForEquals()
     {
-        $expr1 = Expr::equals(AssetMapping::GLOB, '/path');
+        $expr1 = Expr::equals('/path', AssetMapping::GLOB);
 
-        $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
-            ->andEquals(BindingDescriptor::QUERY, '/path{,/**/*}');
+        $expr2 = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY)
+            ->andEquals('/path{,/**/*}', BindingDescriptor::QUERY);
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
 
     public function testAppendDefaultQuerySuffixForNotSame()
     {
-        $expr1 = Expr::notSame(AssetMapping::GLOB, '/path');
+        $expr1 = Expr::notSame('/path', AssetMapping::GLOB);
 
-        $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
-            ->andNotSame(BindingDescriptor::QUERY, '/path{,/**/*}');
+        $expr2 = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY)
+            ->andNotSame('/path{,/**/*}', BindingDescriptor::QUERY);
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
 
     public function testAppendDefaultQuerySuffixForNotEquals()
     {
-        $expr1 = Expr::notEquals(AssetMapping::GLOB, '/path');
+        $expr1 = Expr::notEquals('/path', AssetMapping::GLOB);
 
-        $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
-            ->andNotEquals(BindingDescriptor::QUERY, '/path{,/**/*}');
+        $expr2 = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY)
+            ->andNotEquals('/path{,/**/*}', BindingDescriptor::QUERY);
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }
 
     public function testAppendDefaultQuerySuffixForEndsWith()
     {
-        $expr1 = Expr::endsWith(AssetMapping::GLOB, '.css');
+        $expr1 = Expr::endsWith('.css', AssetMapping::GLOB);
 
-        $expr2 = Expr::same(BindingDescriptor::STATE, BindingState::ENABLED)
-            ->andSame(BindingDescriptor::TYPE_NAME, AssetPlugin::BINDING_TYPE)
-            ->andEndsWith(BindingDescriptor::QUERY, '{,/**/*}')
-            ->andEndsWith(BindingDescriptor::QUERY, '.css{,/**/*}');
+        $expr2 = Expr::same(BindingState::ENABLED, BindingDescriptor::STATE)
+            ->andSame(AssetPlugin::BINDING_TYPE, BindingDescriptor::TYPE_NAME)
+            ->andEndsWith('{,/**/*}', BindingDescriptor::QUERY)
+            ->andEndsWith('.css{,/**/*}', BindingDescriptor::QUERY);
 
         $this->assertEquals($expr2, $this->builder->buildExpression($expr1));
     }

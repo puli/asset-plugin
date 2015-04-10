@@ -392,7 +392,7 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
@@ -417,7 +417,7 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
@@ -442,7 +442,7 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
@@ -467,7 +467,7 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
@@ -495,7 +495,7 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->never())
@@ -508,7 +508,7 @@ EOF;
     {
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array(
                 $mapping = new AssetMapping('/app/public', 'local', '/'),
             ));
@@ -530,7 +530,7 @@ EOF;
     {
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array());
 
         $this->assetManager->expects($this->never())
@@ -549,7 +549,7 @@ EOF;
     {
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::startsWith(AssetMapping::UUID, 'abcd'))
+            ->with(Expr::startsWith('abcd', AssetMapping::UUID))
             ->willReturn(array(
                 new AssetMapping('/app/public1', 'local', '/'),
                 new AssetMapping('/app/public2', 'local', '/'),
@@ -670,7 +670,7 @@ EOF;
 
         $this->assetManager->expects($this->once())
             ->method('findAssetMappings')
-            ->with(Expr::same(AssetMapping::TARGET_NAME, 'local'))
+            ->with(Expr::same('local', AssetMapping::TARGET_NAME))
             ->willReturn(array($mapping1, $mapping2));
 
         $this->installationManager->expects($this->at(0))

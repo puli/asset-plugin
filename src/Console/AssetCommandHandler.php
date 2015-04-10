@@ -195,7 +195,7 @@ class AssetCommandHandler
     public function handleInstall(Args $args, IO $io)
     {
         if ($args->isArgumentSet('target')) {
-            $expr = Expr::same(AssetMapping::TARGET_NAME, $args->getArgument('target'));
+            $expr = Expr::same($args->getArgument('target'), AssetMapping::TARGET_NAME);
             $mappings = $this->assetManager->findAssetMappings($expr);
         } else {
             $mappings = $this->assetManager->getAssetMappings();
@@ -271,7 +271,7 @@ class AssetCommandHandler
      */
     private function getMappingByUuidPrefix($uuidPrefix)
     {
-        $expr = Expr::startsWith(AssetMapping::UUID, $uuidPrefix);
+        $expr = Expr::startsWith($uuidPrefix, AssetMapping::UUID);
 
         $mappings = $this->assetManager->findAssetMappings($expr);
 
