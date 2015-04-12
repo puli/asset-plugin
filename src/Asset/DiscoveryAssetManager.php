@@ -89,20 +89,23 @@ class DiscoveryAssetManager implements AssetManager
         $expr = Expr::same($uuid->toString(), BindingDescriptor::UUID)
             ->andX($this->exprBuilder->buildExpression());
 
-        $bindings = $this->discoveryManager->findBindings($expr);
+        $this->discoveryManager->removeRootBindings($expr);
+    }
 
-        // There should be either none or one binding, as there cannot be more
-        // than one enabled binding with the same UUID at the same time
-        // Anyway, be defensive and loop over all bindings
-        foreach ($bindings as $binding) {
-            $package = $binding->getContainingPackage();
+    /**
+     * {@inheritdoc}
+     */
+    public function removeAssetMappings(Expression $expr)
+    {
+        $this->discoveryManager->removeRootBindings($this->exprBuilder->buildExpression($expr));
+    }
 
-            if ($package instanceof RootPackage) {
-                $this->discoveryManager->removeRootBinding($uuid);
-            } else {
-                $this->discoveryManager->disableBinding($uuid, $package->getName());
-            }
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function clearAssetMappings()
+    {
+        $this->discoveryManager->removeRootBindings($this->exprBuilder->buildExpression());
     }
 
     /**

@@ -22,6 +22,8 @@ Changelog
  * removed `$code` arguments of static exception factory methods
  * added `puli asset update` command
  * added `OVERRIDE` flag to `AssetManager`
+ * added `AssetManager::removeAssetMappings()
+ * added `AssetManager::clearAssetMappings()
  
 * 1.0.0-beta (2015-03-19)
 

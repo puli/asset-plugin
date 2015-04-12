@@ -227,7 +227,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->addAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid), AssetManager::OVERRIDE);
     }
 
-    public function testRemoveRootAssetMapping()
+    public function testRemoveAssetMapping()
     {
         $uuid = $this->binding1->getUuid();
 
@@ -235,55 +235,31 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->binding1->load($this->rootPackage, $this->bindingType);
 
         $this->discoveryManager->expects($this->at(0))
-            ->method('findBindings')
-            ->with($this->uuid($uuid))
-            ->willReturn(array($this->binding1));
-
-        $this->discoveryManager->expects($this->at(1))
-            ->method('removeRootBinding')
-            ->with($uuid);
-        $this->discoveryManager->expects($this->never())
-            ->method('disableBinding');
+            ->method('removeRootBindings')
+            ->with($this->uuid($uuid));
 
         $this->manager->removeAssetMapping($uuid);
     }
 
-    public function testDisablePackageAssetMapping()
+    public function testRemoveAssetMappings()
     {
-        $uuid = $this->binding1->getUuid();
-
-        $this->bindingType->load($this->package);
-        $this->binding1->load($this->package, $this->bindingType);
-
-        $this->discoveryManager->expects($this->at(0))
-            ->method('findBindings')
-            ->with($this->uuid($uuid))
-            ->willReturn(array($this->binding1));
-
-        $this->discoveryManager->expects($this->never())
-            ->method('removeRootBinding');
-        $this->discoveryManager->expects($this->at(1))
-            ->method('disableBinding')
-            ->with($uuid, 'vendor/package');
-
-        $this->manager->removeAssetMapping($uuid);
-    }
-
-    public function testRemoveIgnoresNonExistingAssetMapping()
-    {
-        $uuid = Uuid::uuid4();
-
         $this->discoveryManager->expects($this->once())
-            ->method('findBindings')
-            ->with($this->uuid($uuid))
-            ->willReturn(array());
+            ->method('removeRootBindings')
+            ->with($this->defaultExpr()->andKey(
+                BindingDescriptor::PARAMETER_VALUES,
+                Expr::key(AssetPlugin::TARGET_PARAMETER, Expr::same('target1'))
+            ));
 
-        $this->discoveryManager->expects($this->never())
-            ->method('removeRootBinding');
-        $this->discoveryManager->expects($this->never())
-            ->method('disableBinding');
+        $this->manager->removeAssetMappings(Expr::same('target1', AssetMapping::TARGET_NAME));
+    }
 
-        $this->manager->removeAssetMapping($uuid);
+    public function testClearAssetMappings()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('removeRootBindings')
+            ->with($this->defaultExpr());
+
+        $this->manager->clearAssetMappings();
     }
 
     public function testGetAssetMapping()

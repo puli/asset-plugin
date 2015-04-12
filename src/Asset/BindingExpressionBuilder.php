@@ -85,35 +85,35 @@ class BindingExpressionBuilder implements ExpressionVisitor
         if ($expr instanceof Key) {
             switch ($expr->getKey()) {
                 case AssetMapping::UUID:
-                    return new Key(BindingDescriptor::UUID, $expr->getExpression());
+                    return Expr::key(BindingDescriptor::UUID, $expr->getExpression());
 
                 case AssetMapping::GLOB:
                     $queryExpr = $expr->getExpression();
 
                     if ($queryExpr instanceof Same) {
-                        $queryExpr = new Same($queryExpr->getComparedValue().'{,/**/*}');
+                        $queryExpr = Expr::same($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof Equals) {
-                        $queryExpr = new Equals($queryExpr->getComparedValue().'{,/**/*}');
+                        $queryExpr = Expr::equals($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof NotSame) {
-                        $queryExpr = new NotSame($queryExpr->getComparedValue().'{,/**/*}');
+                        $queryExpr = Expr::notSame($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof NotEquals) {
-                        $queryExpr = new NotEquals($queryExpr->getComparedValue().'{,/**/*}');
+                        $queryExpr = Expr::notEquals($queryExpr->getComparedValue().'{,/**/*}');
                     } elseif ($queryExpr instanceof EndsWith) {
-                        $queryExpr = new EndsWith($queryExpr->getAcceptedSuffix().'{,/**/*}');
+                        $queryExpr = Expr::endsWith($queryExpr->getAcceptedSuffix().'{,/**/*}');
                     }
 
-                    return new Key(BindingDescriptor::QUERY, $queryExpr);
+                    return Expr::key(BindingDescriptor::QUERY, $queryExpr);
 
                 case AssetMapping::TARGET_NAME:
-                    return new Key(
+                    return Expr::key(
                         BindingDescriptor::PARAMETER_VALUES,
-                        new Key(AssetPlugin::TARGET_PARAMETER, $expr->getExpression())
+                        Expr::key(AssetPlugin::TARGET_PARAMETER, $expr->getExpression())
                     );
 
                 case AssetMapping::WEB_PATH:
-                    return new Key(
+                    return Expr::key(
                         BindingDescriptor::PARAMETER_VALUES,
-                        new Key(AssetPlugin::PATH_PARAMETER, $expr->getExpression())
+                        Expr::key(AssetPlugin::PATH_PARAMETER, $expr->getExpression())
                     );
             }
         }

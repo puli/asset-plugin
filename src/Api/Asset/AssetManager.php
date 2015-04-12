@@ -55,6 +55,18 @@ interface AssetManager
     public function removeAssetMapping(Uuid $uuid);
 
     /**
+     * Removes all asset mappings matching the given expression.
+     *
+     * @param Expression $expr The search criteria.
+     */
+    public function removeAssetMappings(Expression $expr);
+
+    /**
+     * Removes all asset mappings from the repository.
+     */
+    public function clearAssetMappings();
+
+    /**
      * Returns the asset mapping for a web path.
      *
      * @param Uuid $uuid The UUID of the mapping.
