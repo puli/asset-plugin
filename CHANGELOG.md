@@ -24,6 +24,8 @@ Changelog
  * added `OVERRIDE` flag to `AssetManager`
  * added `AssetManager::removeAssetMappings()
  * added `AssetManager::clearAssetMappings()
+ * added `InstallerManager::removeInstallerDescriptors()
+ * added `InstallerManager::clearInstallerDescriptors()
  
 * 1.0.0-beta (2015-03-19)
 

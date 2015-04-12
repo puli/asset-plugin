@@ -11,6 +11,8 @@
 
 namespace Puli\AssetPlugin\Api\Installer;
 
+use Webmozart\Expression\Expression;
+
 /**
  * Manages the installers used to install resources on install targets.
  *
@@ -34,6 +36,18 @@ interface InstallerManager
      * @param string $name The installer name.
      */
     public function removeInstallerDescriptor($name);
+
+    /**
+     * Removes all installer descriptors matching the given expression.
+     *
+     * @param Expression $expr The search criteria.
+     */
+    public function removeInstallerDescriptors(Expression $expr);
+
+    /**
+     * Removes all installer descriptors.
+     */
+    public function clearInstallerDescriptors();
 
     /**
      * Returns the installer descriptor with the given name.
@@ -64,8 +78,13 @@ interface InstallerManager
     /**
      * Returns whether the manager contains any installer descriptors.
      *
+     * You can optionally pass an expression to check whether the manager has
+     * installers matching that expression.
+     *
+     * @param Expression $expr The search criteria.
+     *
      * @return boolean Returns `true` if the manager contains installers and
      *                 `false` otherwise.
      */
-    public function hasInstallerDescriptors();
+    public function hasInstallerDescriptors(Expression $expr = null);
 }

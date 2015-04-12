@@ -23,6 +23,8 @@ use Puli\Manager\Api\Package\RootPackage;
 use Puli\Manager\Api\Package\RootPackageFileManager;
 use RuntimeException;
 use stdClass;
+use Webmozart\Expression\Expr;
+use Webmozart\Expression\Expression;
 use Webmozart\Json\JsonValidator;
 use Webmozart\Json\ValidationFailedException;
 
@@ -138,6 +140,42 @@ class PackageFileInstallerManager implements InstallerManager
     /**
      * {@inheritdoc}
      */
+    public function removeInstallerDescriptors(Expression $expr)
+    {
+        $this->assertInstallersLoaded();
+
+        $previousInstallers = $this->rootInstallerDescriptors;
+        $previousRootInstallers = $this->rootInstallerDescriptors;
+
+        try {
+            // Only remove root installers
+            foreach ($previousRootInstallers as $installer) {
+                if ($installer->match($expr)) {
+                    unset($this->installerDescriptors[$installer->getName()]);
+                    unset($this->rootInstallerDescriptors[$installer->getName()]);
+                }
+            }
+
+            $this->persistInstallersData();
+        } catch (Exception $e) {
+            $this->installerDescriptors = $previousInstallers;
+            $this->rootInstallerDescriptors = $previousRootInstallers;
+
+            throw $e;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clearInstallerDescriptors()
+    {
+        $this->removeInstallerDescriptors(Expr::valid());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getInstallerDescriptor($name, $packageName = null)
     {
         $this->assertInstallersLoaded();
@@ -172,7 +210,7 @@ class PackageFileInstallerManager implements InstallerManager
     /**
      * {@inheritdoc}
      */
-    public function hasInstallerDescriptors()
+    public function hasInstallerDescriptors(Expression $expr = null)
     {
         $this->assertInstallersLoaded();
 

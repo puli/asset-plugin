@@ -24,6 +24,7 @@ use Puli\Manager\Api\Package\RootPackage;
 use Puli\Manager\Api\Package\RootPackageFile;
 use Puli\Manager\Api\Package\RootPackageFileManager;
 use Puli\Manager\Tests\TestException;
+use Webmozart\Expression\Expr;
 
 /**
  * @since  1.0
@@ -398,15 +399,22 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
             ->with(AssetPlugin::INSTALLERS_KEY)
             ->willThrowException(new TestException());
 
-        $previousDescriptor = new InstallerDescriptor('symlink', 'PreviousInstaller');
-
         try {
             $this->manager->removeInstallerDescriptor('symlink');
             $this->fail('Expected a TestException');
         } catch (TestException $e) {
         }
 
-        $this->assertEquals($previousDescriptor, $this->manager->getInstallerDescriptor('symlink'));
+        $this->assertEquals((object) array(
+            'symlink' => (object) array(
+                'class' => 'PreviousInstaller',
+            )
+        ), $this->rootPackageFile->getExtraKey(AssetPlugin::INSTALLERS_KEY));
+
+        $this->assertEquals(
+            new InstallerDescriptor('symlink', 'PreviousInstaller'),
+            $this->manager->getInstallerDescriptor('symlink')
+        );
     }
 
     /**
@@ -434,6 +442,98 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
             ->method('setExtraKey');
 
         $this->manager->removeInstallerDescriptor('foobar');
+    }
+
+    public function testRemoveInstallerDescriptors()
+    {
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
+            'symlink1' => (object) array(
+                'class' => 'SymlinkInstaller',
+            ),
+            'cdn' => (object) array(
+                'class' => 'CdnInstaller',
+            ),
+        ));
+
+        $this->packageFile1->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
+            'symlink2' => (object) array(
+                'class' => 'SymlinkInstaller',
+            ),
+        ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('setExtraKey')
+            ->with(AssetPlugin::INSTALLERS_KEY, (object) array(
+                'cdn' => (object) array(
+                    'class' => 'CdnInstaller',
+                ),
+            ));
+
+        $this->manager->removeInstallerDescriptors(Expr::startsWith('symlink', InstallerDescriptor::NAME));
+
+        $this->assertTrue($this->manager->hasInstallerDescriptor('cdn'));
+        $this->assertTrue($this->manager->hasInstallerDescriptor('symlink2'));
+        $this->assertFalse($this->manager->hasInstallerDescriptor('symlink1'));
+    }
+
+    public function testRemoveInstallerDescriptorsRestoresPreviousInstallersIfSavingFails()
+    {
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
+            'symlink' => (object) array(
+                'class' => 'SymlinkInstaller',
+            ),
+            'cdn' => (object) array(
+                'class' => 'CdnInstaller',
+            ),
+        ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('setExtraKey')
+            ->with(AssetPlugin::INSTALLERS_KEY, (object) array(
+                'cdn' => (object) array(
+                    'class' => 'CdnInstaller',
+                ),
+            ))
+            ->willThrowException(new TestException());
+
+        try {
+            $this->manager->removeInstallerDescriptors(Expr::startsWith('symlink', InstallerDescriptor::NAME));
+            $this->fail('Expected a TestException');
+        } catch (TestException $e) {
+        }
+
+        $this->assertEquals((object) array(
+            'symlink' => (object) array(
+                'class' => 'SymlinkInstaller',
+            ),
+            'cdn' => (object) array(
+                'class' => 'CdnInstaller',
+            ),
+        ), $this->rootPackageFile->getExtraKey(AssetPlugin::INSTALLERS_KEY));
+
+        $this->assertTrue($this->manager->hasInstallerDescriptor('symlink'));
+        $this->assertTrue($this->manager->hasInstallerDescriptor('cdn'));
+    }
+
+    public function testClearInstallerDescriptors()
+    {
+        $this->rootPackageFile->setExtraKey(AssetPlugin::INSTALLERS_KEY, (object) array(
+            'symlink' => (object) array(
+                'class' => 'SymlinkInstaller',
+            ),
+            'cdn' => (object) array(
+                'class' => 'CdnInstaller',
+            ),
+        ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('removeExtraKey')
+            ->with(AssetPlugin::INSTALLERS_KEY);
+
+        $this->manager->clearInstallerDescriptors();
+
+        $this->assertFalse($this->manager->hasInstallerDescriptor('symlink'));
+        $this->assertFalse($this->manager->hasInstallerDescriptor('cdn'));
     }
 
     protected function populateDefaultManager()

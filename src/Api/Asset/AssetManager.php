@@ -105,8 +105,8 @@ interface AssetManager
     /**
      * Returns whether a web path is mapped.
      *
-     * You can optionally pass ane expression to check whether the manager has
-     * bindings matching that expression.
+     * You can optionally pass an expression to check whether the manager has
+     * mappings matching that expression.
      *
      * @param Expression $expr The search criteria.
      *
