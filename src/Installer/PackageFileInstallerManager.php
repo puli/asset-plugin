@@ -214,7 +214,17 @@ class PackageFileInstallerManager implements InstallerManager
     {
         $this->assertInstallersLoaded();
 
-        return count($this->installerDescriptors) > 0;
+        if (!$expr) {
+            return count($this->installerDescriptors) > 0;
+        }
+
+        foreach ($this->installerDescriptors as $installer) {
+            if ($installer->match($expr)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function assertInstallersLoaded()

@@ -186,6 +186,8 @@ class PackageFileInstallerManagerUnloadedTest extends PHPUnit_Framework_TestCase
         $this->populateDefaultManager();
 
         $this->assertTrue($this->manager->hasInstallerDescriptors());
+        $this->assertTrue($this->manager->hasInstallerDescriptors(Expr::same('symlink', InstallerDescriptor::NAME)));
+        $this->assertFalse($this->manager->hasInstallerDescriptors(Expr::same('foobar', InstallerDescriptor::NAME)));
     }
 
     public function testHasNoInstallerDescriptors()

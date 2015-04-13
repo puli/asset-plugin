@@ -26,6 +26,8 @@ Changelog
  * added `AssetManager::clearAssetMappings()
  * added `InstallerManager::removeInstallerDescriptors()
  * added `InstallerManager::clearInstallerDescriptors()
+ * added optional argument `$expr` to `InstallerManager::hasInstallerDescriptors()`
+ * added `AssetManager` methods for manipulating and accessing root mappings
  
 * 1.0.0-beta (2015-03-19)
 

@@ -310,7 +310,7 @@ EOF;
     public function testMap()
     {
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
@@ -325,7 +325,7 @@ EOF;
     public function testMapWithTarget()
     {
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
@@ -340,7 +340,7 @@ EOF;
     public function testMapForce()
     {
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping, $flags) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
@@ -356,7 +356,7 @@ EOF;
     public function testMapWithRelativeRepositoryPath()
     {
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
@@ -371,7 +371,7 @@ EOF;
     public function testMapWithRelativeWebPath()
     {
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/path', $mapping->getWebPath());
@@ -396,7 +396,7 @@ EOF;
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
                 PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/new-web', $mapping->getWebPath());
@@ -421,7 +421,7 @@ EOF;
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
                 PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
@@ -446,7 +446,7 @@ EOF;
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
                 PHPUnit_Framework_Assert::assertSame('/app/public', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/new', $mapping->getWebPath());
@@ -471,7 +471,7 @@ EOF;
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->once())
-            ->method('addAssetMapping')
+            ->method('addRootAssetMapping')
             ->willReturnCallback(function (AssetMapping $mapping, $flags) use ($uuid) {
                 PHPUnit_Framework_Assert::assertSame('/new', $mapping->getGlob());
                 PHPUnit_Framework_Assert::assertSame('/', $mapping->getWebPath());
@@ -499,7 +499,7 @@ EOF;
             ->willReturn(array($mapping));
 
         $this->assetManager->expects($this->never())
-            ->method('addAssetMapping');
+            ->method('addRootAssetMapping');
 
         $this->assertSame(0, $this->handler->handleUpdate($args));
     }
@@ -514,7 +514,7 @@ EOF;
             ));
 
         $this->assetManager->expects($this->once())
-            ->method('removeAssetMapping')
+            ->method('removeRootAssetMapping')
             ->with($mapping->getUuid());
 
         $args = self::$removeCommand->parseArgs(new StringArgs('abcd'));
@@ -534,7 +534,7 @@ EOF;
             ->willReturn(array());
 
         $this->assetManager->expects($this->never())
-            ->method('removeAssetMapping');
+            ->method('removeRootAssetMapping');
 
         $args = self::$removeCommand->parseArgs(new StringArgs('abcd'));
 
@@ -556,7 +556,7 @@ EOF;
             ));
 
         $this->assetManager->expects($this->never())
-            ->method('removeAssetMapping');
+            ->method('removeRootAssetMapping');
 
         $args = self::$removeCommand->parseArgs(new StringArgs('abcd'));
 

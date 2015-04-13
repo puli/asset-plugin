@@ -114,7 +114,7 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddAssetMapping()
+    public function testAddRootAssetMapping()
     {
         $uuid = Uuid::uuid4();
 
@@ -138,14 +138,14 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->method('addRootBinding')
             ->with($expectedBinding);
 
-        $this->manager->addAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid));
+        $this->manager->addRootAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid));
     }
 
     /**
      * @expectedException \Puli\AssetPlugin\Api\Target\NoSuchTargetException
      * @expectedExceptionMessage foobar
      */
-    public function testAddAssetMappingFailsIfTargetNotFound()
+    public function testAddRootAssetMappingFailsIfTargetNotFound()
     {
         $this->discoveryManager->expects($this->never())
             ->method('hasBindings');
@@ -153,10 +153,10 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->discoveryManager->expects($this->never())
             ->method('addRootBinding');
 
-        $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css'));
+        $this->manager->addRootAssetMapping(new AssetMapping('/path', 'foobar', '/css'));
     }
 
-    public function testAddAssetMappingDoesNotFailIfTargetNotFoundAndIgnoreTargetNotFound()
+    public function testAddRootAssetMappingDoesNotFailIfTargetNotFoundAndIgnoreTargetNotFound()
     {
         $uuid = Uuid::uuid4();
 
@@ -180,14 +180,14 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->method('addRootBinding')
             ->with($expectedBinding);
 
-        $this->manager->addAssetMapping(new AssetMapping('/path', 'foobar', '/css', $uuid), AssetManager::IGNORE_TARGET_NOT_FOUND);
+        $this->manager->addRootAssetMapping(new AssetMapping('/path', 'foobar', '/css', $uuid), AssetManager::IGNORE_TARGET_NOT_FOUND);
     }
 
     /**
      * @expectedException \Puli\AssetPlugin\Api\Asset\DuplicateAssetMappingException
      * @expectedExceptionMessage The asset mapping "76e83c4e-2c0d-44de-b1cb-57a3e0d925a1" exists already.
      */
-    public function testAddAssetMappingFailsIfUuidExistsAlready()
+    public function testAddRootAssetMappingFailsIfUuidExistsAlready()
     {
         $uuid = Uuid::fromString('76e83c4e-2c0d-44de-b1cb-57a3e0d925a1');
 
@@ -199,10 +199,10 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $this->discoveryManager->expects($this->never())
             ->method('addRootBinding');
 
-        $this->manager->addAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid));
+        $this->manager->addRootAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid));
     }
 
-    public function testAddAssetMappingDoesNotFailIfUuidExistsAlreadyAndOverride()
+    public function testAddRootAssetMappingDoesNotFailIfUuidExistsAlreadyAndOverride()
     {
         $uuid = Uuid::fromString('76e83c4e-2c0d-44de-b1cb-57a3e0d925a1');
 
@@ -224,10 +224,10 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->method('addRootBinding')
             ->with($expectedBinding, DiscoveryManager::OVERRIDE);
 
-        $this->manager->addAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid), AssetManager::OVERRIDE);
+        $this->manager->addRootAssetMapping(new AssetMapping('/path', 'target1', '/css', $uuid), AssetManager::OVERRIDE);
     }
 
-    public function testRemoveAssetMapping()
+    public function testRemoveRootAssetMapping()
     {
         $uuid = $this->binding1->getUuid();
 
@@ -238,10 +238,10 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
             ->method('removeRootBindings')
             ->with($this->uuid($uuid));
 
-        $this->manager->removeAssetMapping($uuid);
+        $this->manager->removeRootAssetMapping($uuid);
     }
 
-    public function testRemoveAssetMappings()
+    public function testRemoveRootAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('removeRootBindings')
@@ -250,16 +250,16 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
                 Expr::key(AssetPlugin::TARGET_PARAMETER, Expr::same('target1'))
             ));
 
-        $this->manager->removeAssetMappings(Expr::same('target1', AssetMapping::TARGET_NAME));
+        $this->manager->removeRootAssetMappings(Expr::same('target1', AssetMapping::TARGET_NAME));
     }
 
-    public function testClearAssetMappings()
+    public function testClearRootAssetMappings()
     {
         $this->discoveryManager->expects($this->once())
             ->method('removeRootBindings')
             ->with($this->defaultExpr());
 
-        $this->manager->clearAssetMappings();
+        $this->manager->clearRootAssetMappings();
     }
 
     public function testGetAssetMapping()
@@ -395,6 +395,141 @@ class DiscoveryAssetManagerTest extends PHPUnit_Framework_TestCase
         $expr = Expr::same('/path', AssetMapping::WEB_PATH);
 
         $this->assertTrue($this->manager->hasAssetMappings($expr));
+    }
+
+    public function testGetRootAssetMapping()
+    {
+        $uuid = $this->binding1->getUuid();
+
+        $this->discoveryManager->expects($this->at(0))
+            ->method('findRootBindings')
+            ->with($this->uuid($uuid))
+            ->willReturn(array($this->binding1));
+
+        $expected = new AssetMapping('/path', 'target1', '/css', $uuid);
+
+        $this->assertEquals($expected, $this->manager->getRootAssetMapping($uuid));
+    }
+
+    /**
+     * @expectedException \Puli\AssetPlugin\Api\Asset\NoSuchAssetMappingException
+     */
+    public function testGetRootAssetMappingFailsIfNotFound()
+    {
+        $uuid = Uuid::uuid4();
+
+        $this->discoveryManager->expects($this->at(0))
+            ->method('findRootBindings')
+            ->with($this->uuid($uuid))
+            ->willReturn(array());
+
+        $this->manager->getRootAssetMapping($uuid);
+    }
+
+    public function testGetRootAssetMappings()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('findRootBindings')
+            ->with($this->defaultExpr())
+            ->willReturn(array($this->binding1, $this->binding2));
+
+        $expected = array(
+            new AssetMapping('/path', 'target1', '/css', $this->binding1->getUuid()),
+            new AssetMapping('/other/path', 'target2', '/js', $this->binding2->getUuid()),
+        );
+
+        $this->assertEquals($expected, $this->manager->getRootAssetMappings());
+    }
+
+    public function testGetNoRootAssetMappings()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('findRootBindings')
+            ->with($this->defaultExpr())
+            ->willReturn(array());
+
+        $this->assertEquals(array(), $this->manager->getRootAssetMappings());
+    }
+
+    public function testFindRootAssetMappings()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('findRootBindings')
+            ->with($this->webPath('/other/path'))
+            ->willReturn(array($this->binding2));
+
+        $expr = Expr::same('/other/path', AssetMapping::WEB_PATH);
+        $expected = new AssetMapping('/other/path', 'target2', '/js', $this->binding2->getUuid());
+
+        $this->assertEquals(array($expected), $this->manager->findRootAssetMappings($expr));
+    }
+
+    public function testFindNoRootAssetMappings()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('findRootBindings')
+            ->with($this->webPath('/foobar'))
+            ->willReturn(array());
+
+        $expr = Expr::same('/foobar', AssetMapping::WEB_PATH);
+
+        $this->assertEquals(array(), $this->manager->findRootAssetMappings($expr));
+    }
+
+    public function testHasRootAssetMapping()
+    {
+        $uuid = Uuid::uuid4();
+
+        $this->discoveryManager->expects($this->once())
+            ->method('hasRootBindings')
+            ->with($this->uuid($uuid))
+            ->willReturn(true);
+
+        $this->assertTrue($this->manager->hasRootAssetMapping($uuid));
+    }
+
+    public function testNotHasRootAssetMapping()
+    {
+        $uuid = Uuid::uuid4();
+
+        $this->discoveryManager->expects($this->once())
+            ->method('hasRootBindings')
+            ->with($this->uuid($uuid))
+            ->willReturn(false);
+
+        $this->assertFalse($this->manager->hasRootAssetMapping($uuid));
+    }
+
+    public function testHasRootAssetMappings()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('hasRootBindings')
+            ->with($this->defaultExpr())
+            ->willReturn(true);
+
+        $this->assertTrue($this->manager->hasRootAssetMappings());
+    }
+
+    public function testHasNoRootAssetMappings()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('hasRootBindings')
+            ->with($this->defaultExpr())
+            ->willReturn(false);
+
+        $this->assertFalse($this->manager->hasRootAssetMappings());
+    }
+
+    public function testHasRootAssetMappingsWithExpression()
+    {
+        $this->discoveryManager->expects($this->once())
+            ->method('hasRootBindings')
+            ->with($this->webPath('/path'))
+            ->willReturn(true);
+
+        $expr = Expr::same('/path', AssetMapping::WEB_PATH);
+
+        $this->assertTrue($this->manager->hasRootAssetMappings($expr));
     }
 
     private function defaultExpr()

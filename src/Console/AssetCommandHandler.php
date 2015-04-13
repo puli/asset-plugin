@@ -141,7 +141,7 @@ class AssetCommandHandler
         $flags = $args->isOptionSet('force') ? AssetManager::IGNORE_TARGET_NOT_FOUND : 0;
         $path = Path::makeAbsolute($args->getArgument('path'), $this->currentPath);
 
-        $this->assetManager->addAssetMapping(new AssetMapping(
+        $this->assetManager->addRootAssetMapping(new AssetMapping(
             $path,
             $args->getOption('target'),
             $args->getArgument('web-path')
@@ -178,7 +178,7 @@ class AssetCommandHandler
             throw new RuntimeException('Nothing to update.');
         }
 
-        $this->assetManager->addAssetMapping($updatedMapping, $flags);
+        $this->assetManager->addRootAssetMapping($updatedMapping, $flags);
 
         return 0;
     }
@@ -187,7 +187,7 @@ class AssetCommandHandler
     {
         $mapping = $this->getMappingByUuidPrefix($args->getArgument('uuid'));
 
-        $this->assetManager->removeAssetMapping($mapping->getUuid());
+        $this->assetManager->removeRootAssetMapping($mapping->getUuid());
 
         return 0;
     }

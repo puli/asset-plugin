@@ -36,6 +36,8 @@ interface AssetManager
     /**
      * Adds an asset mapping to the repository.
      *
+     * The mapping is added to the root package.
+     *
      * @param AssetMapping $mapping The asset mapping.
      * @param int          $flags   A bitwise combination of the flag constants
      *                              in this class.
@@ -45,26 +47,86 @@ interface AssetManager
      * @throws DuplicateAssetMappingException If a mapping with the same UUID
      *                                        exists already.
      */
-    public function addAssetMapping(AssetMapping $mapping, $flags = 0);
+    public function addRootAssetMapping(AssetMapping $mapping, $flags = 0);
 
     /**
      * Removes an asset mapping from the repository.
      *
+     * The mapping is removed from the root package. If the UUID is not found,
+     * this method does nothing.
+     *
      * @param Uuid $uuid The UUID of the mapping.
      */
-    public function removeAssetMapping(Uuid $uuid);
+    public function removeRootAssetMapping(Uuid $uuid);
 
     /**
      * Removes all asset mappings matching the given expression.
      *
+     * The mappings are removed from the root package. If no matching mappings
+     * are found, this method does nothing.
+     *
      * @param Expression $expr The search criteria.
      */
-    public function removeAssetMappings(Expression $expr);
+    public function removeRootAssetMappings(Expression $expr);
 
     /**
      * Removes all asset mappings from the repository.
+     *
+     * The mappings are removed from the root package. If no matching mappings
+     * are found, this method does nothing.
      */
-    public function clearAssetMappings();
+    public function clearRootAssetMappings();
+
+    /**
+     * Returns the asset mapping for a web path from the root package.
+     *
+     * @param Uuid $uuid The UUID of the mapping.
+     *
+     * @return AssetMapping The corresponding asset mapping.
+     *
+     * @throws NoSuchAssetMappingException If the web path is not mapped in the
+     *                                     root package.
+     */
+    public function getRootAssetMapping(Uuid $uuid);
+
+    /**
+     * Returns all asset mappings in the root package.
+     *
+     * @return AssetMapping[] The asset mappings.
+     */
+    public function getRootAssetMappings();
+
+    /**
+     * Returns whether a web path is mapped in the root package.
+     *
+     * @param Uuid $uuid The UUID of the mapping.
+     *
+     * @return bool Returns `true` if the web path is mapped in the root package.
+     */
+    public function hasRootAssetMapping(Uuid $uuid);
+
+    /**
+     * Returns all asset mappings in the root package matching the given
+     * expression.
+     *
+     * @param Expression $expr The search criteria.
+     *
+     * @return AssetMapping[] The asset mappings matching the expression.
+     */
+    public function findRootAssetMappings(Expression $expr);
+
+    /**
+     * Returns whether any web paths are mapped in the root package.
+     *
+     * You can optionally pass an expression to check whether the manager has
+     * mappings matching that expression.
+     *
+     * @param Expression $expr The search criteria.
+     *
+     * @return bool Returns `true` if any web paths are mapped in the root
+     *                      package.
+     */
+    public function hasRootAssetMappings(Expression $expr = null);
 
     /**
      * Returns the asset mapping for a web path.
@@ -103,14 +165,14 @@ interface AssetManager
     public function hasAssetMapping(Uuid $uuid);
 
     /**
-     * Returns whether a web path is mapped.
+     * Returns whether any web paths are mapped.
      *
      * You can optionally pass an expression to check whether the manager has
      * mappings matching that expression.
      *
      * @param Expression $expr The search criteria.
      *
-     * @return bool Returns `true` if the web path is mapped.
+     * @return bool Returns `true` if any web paths are mapped.
      */
     public function hasAssetMappings(Expression $expr = null);
 

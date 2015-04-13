@@ -58,7 +58,7 @@ class DiscoveryAssetManager implements AssetManager
     /**
      * {@inheritdoc}
      */
-    public function addAssetMapping(AssetMapping $mapping, $flags = 0)
+    public function addRootAssetMapping(AssetMapping $mapping, $flags = 0)
     {
         if (!($flags & self::IGNORE_TARGET_NOT_FOUND) && !$this->installTargets->contains($mapping->getTargetName())) {
             throw NoSuchTargetException::forTargetName($mapping->getTargetName());
@@ -84,7 +84,7 @@ class DiscoveryAssetManager implements AssetManager
     /**
      * {@inheritdoc}
      */
-    public function removeAssetMapping(Uuid $uuid)
+    public function removeRootAssetMapping(Uuid $uuid)
     {
         $expr = Expr::same($uuid->toString(), BindingDescriptor::UUID)
             ->andX($this->exprBuilder->buildExpression());
@@ -95,7 +95,7 @@ class DiscoveryAssetManager implements AssetManager
     /**
      * {@inheritdoc}
      */
-    public function removeAssetMappings(Expression $expr)
+    public function removeRootAssetMappings(Expression $expr)
     {
         $this->discoveryManager->removeRootBindings($this->exprBuilder->buildExpression($expr));
     }
@@ -103,7 +103,7 @@ class DiscoveryAssetManager implements AssetManager
     /**
      * {@inheritdoc}
      */
-    public function clearAssetMappings()
+    public function clearRootAssetMappings()
     {
         $this->discoveryManager->removeRootBindings($this->exprBuilder->buildExpression());
     }
@@ -111,28 +111,50 @@ class DiscoveryAssetManager implements AssetManager
     /**
      * {@inheritdoc}
      */
-    public function getAssetMapping(Uuid $uuid)
+    public function getRootAssetMapping(Uuid $uuid)
     {
-        $expr = Expr::same($uuid->toString(), BindingDescriptor::UUID)
-            ->andX($this->exprBuilder->buildExpression());
+        $mappings = $this->findRootAssetMappings(Expr::same($uuid->toString(), AssetMapping::UUID));
 
-        $bindings = $this->discoveryManager->findBindings($expr);
-
-        if (!$bindings) {
+        if (!$mappings) {
             throw NoSuchAssetMappingException::forUuid($uuid);
         }
 
-        // Since we are looking for enabled bindings only, there should only be
-        // one result for the given UUID
-        return $this->bindingToMapping(reset($bindings));
+        return reset($mappings);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAssetMappings()
+    public function getRootAssetMappings()
     {
-        $bindings = $this->discoveryManager->findBindings($this->exprBuilder->buildExpression());
+        return $this->findRootAssetMappings(Expr::valid());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRootAssetMapping(Uuid $uuid)
+    {
+        $expr = Expr::same($uuid->toString(), BindingDescriptor::UUID)
+            ->andX($this->exprBuilder->buildExpression());
+
+        return $this->discoveryManager->hasRootBindings($expr);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRootAssetMappings(Expression $expr = null)
+    {
+        return $this->discoveryManager->hasRootBindings($this->exprBuilder->buildExpression($expr));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findRootAssetMappings(Expression $expr)
+    {
+        $bindings = $this->discoveryManager->findRootBindings($this->exprBuilder->buildExpression($expr));
         $mappings = array();
 
         foreach ($bindings as $binding) {
@@ -140,6 +162,28 @@ class DiscoveryAssetManager implements AssetManager
         }
 
         return $mappings;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAssetMapping(Uuid $uuid)
+    {
+        $mappings = $this->findAssetMappings(Expr::same($uuid->toString(), AssetMapping::UUID));
+
+        if (!$mappings) {
+            throw NoSuchAssetMappingException::forUuid($uuid);
+        }
+
+        return reset($mappings);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAssetMappings()
+    {
+        return $this->findAssetMappings(Expr::valid());
     }
 
     /**
