@@ -1,14 +1,14 @@
 The Puli Asset Plugin
 =====================
 
-[![Build Status](https://travis-ci.org/puli/asset-plugin.svg?branch=master)](https://travis-ci.org/puli/asset-plugin)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/puli/asset-plugin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/puli/asset-plugin/?branch=master)
+[![Build Status](https://travis-ci.org/puli/asset-plugin.svg?branch=1.0.0-beta2)](https://travis-ci.org/puli/asset-plugin)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/puli/asset-plugin/badges/quality-score.png?b=1.0.0-beta2)](https://scrutinizer-ci.com/g/puli/asset-plugin/?branch=1.0.0-beta2)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2197ba95-f3a5-4434-a11f-0ea4e37a74de/mini.png)](https://insight.sensiolabs.com/projects/2197ba95-f3a5-4434-a11f-0ea4e37a74de)
 [![Latest Stable Version](https://poser.pugx.org/puli/asset-plugin/v/stable.svg)](https://packagist.org/packages/puli/asset-plugin)
 [![Total Downloads](https://poser.pugx.org/puli/asset-plugin/downloads.svg)](https://packagist.org/packages/puli/asset-plugin)
 [![Dependency Status](https://www.versioneye.com/php/puli:asset-plugin/1.0.0/badge.svg)](https://www.versioneye.com/php/puli:asset-plugin/1.0.0)
 
-Latest release: [1.0.0-beta](https://packagist.org/packages/puli/asset-plugin#1.0.0-beta)
+Latest release: [1.0.0-beta2](https://packagist.org/packages/puli/asset-plugin#1.0.0-beta2)
 
 PHP >= 5.3.9
 
