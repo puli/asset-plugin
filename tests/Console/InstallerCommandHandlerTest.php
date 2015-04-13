@@ -118,7 +118,7 @@ EOF;
         $descriptor = new InstallerDescriptor('symlink', 'Puli\Installer\SymlinkInstaller');
 
         $this->installerManager->expects($this->once())
-            ->method('addInstallerDescriptor')
+            ->method('addRootInstallerDescriptor')
             ->with($descriptor);
 
         $this->assertSame(0, $this->handler->handleAdd($args));
@@ -131,7 +131,7 @@ EOF;
         $descriptor = new InstallerDescriptor('symlink', 'Puli\Installer\SymlinkInstaller', 'The description');
 
         $this->installerManager->expects($this->once())
-            ->method('addInstallerDescriptor')
+            ->method('addRootInstallerDescriptor')
             ->with($descriptor);
 
         $this->assertSame(0, $this->handler->handleAdd($args));
@@ -147,7 +147,7 @@ EOF;
         ));
 
         $this->installerManager->expects($this->once())
-            ->method('addInstallerDescriptor')
+            ->method('addRootInstallerDescriptor')
             ->with($descriptor);
 
         $this->assertSame(0, $this->handler->handleAdd($args));
@@ -163,7 +163,7 @@ EOF;
             ->willReturn(true);
 
         $this->installerManager->expects($this->once())
-            ->method('removeInstallerDescriptor')
+            ->method('removeRootInstallerDescriptor')
             ->with('symlink');
 
         $this->assertSame(0, $this->handler->handleRemove($args));
@@ -182,7 +182,7 @@ EOF;
             ->willReturn(false);
 
         $this->installerManager->expects($this->never())
-            ->method('removeInstallerDescriptor');
+            ->method('removeRootInstallerDescriptor');
 
         $this->handler->handleRemove($args);
     }
