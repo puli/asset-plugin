@@ -81,12 +81,22 @@ final class WebConsoleConfig
                 ->end()
 
                 ->beginSubCommand('add')
-                    ->addArgument('name', Argument::REQUIRED, 'The name of the target')
+                    ->addArgument('name', Argument::REQUIRED, 'The name of the added target')
                     ->addArgument('location', Argument::REQUIRED, 'The location where the web resources are installed')
                     ->addOption('installer', null, Option::REQUIRED_VALUE, 'The name of the used installer', 'symlink')
                     ->addOption('url-format', null, Option::REQUIRED_VALUE, 'The format of the generated resource URLs', InstallTarget::DEFAULT_URL_FORMAT)
                     ->addOption('param', null, Option::REQUIRED_VALUE | Option::MULTI_VALUED, 'Additional parameters to store with the target')
                     ->setHandlerMethod('handleAdd')
+                ->end()
+
+                ->beginSubCommand('update')
+                    ->addArgument('name', Argument::REQUIRED, 'The name of the updated target')
+                    ->addOption('location', null, Option::REQUIRED_VALUE, 'The location where the web resources are installed')
+                    ->addOption('installer', null, Option::REQUIRED_VALUE, 'The name of the used installer', 'symlink')
+                    ->addOption('url-format', null, Option::REQUIRED_VALUE, 'The format of the generated resource URLs', InstallTarget::DEFAULT_URL_FORMAT)
+                    ->addOption('param', null, Option::REQUIRED_VALUE | Option::MULTI_VALUED, 'Additional parameters to store with the target')
+                    ->addOption('unset-param', null, Option::REQUIRED_VALUE | Option::MULTI_VALUED, 'Parameters to remove from the target')
+                    ->setHandlerMethod('handleUpdate')
                 ->end()
 
                 ->beginSubCommand('remove')

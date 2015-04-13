@@ -34,6 +34,7 @@ Changelog
  * added `InstallTargetManager::clearTargets()`
  * added `InstallTargetManager::findTargets()`
  * added optional argument `$expr` to `InstallTargetManager::hasTargets()`
+ * added `puli target update` command
  
 * 1.0.0-beta (2015-03-19)
 

@@ -75,18 +75,7 @@ class TargetCommandHandler
     {
         $parameters = array();
 
-        foreach ($args->getOption('param') as $parameter) {
-            $pos = strpos($parameter, '=');
-
-            if (false === $pos) {
-                throw new RuntimeException(sprintf(
-                    'Invalid parameter "%s". Expected "<name>=<value>".',
-                    $parameter
-                ));
-            }
-
-            $parameters[substr($parameter, 0, $pos)] = StringUtil::parseValue(substr($parameter, $pos + 1));
-        }
+        $this->parseParams($args, $parameters);
 
         $this->targetManager->addTarget(new InstallTarget(
             $args->getArgument('name'),
@@ -95,6 +84,47 @@ class TargetCommandHandler
             $args->getOption('url-format'),
             $parameters
         ));
+
+        return 0;
+    }
+
+    public function handleUpdate(Args $args)
+    {
+        $targetName = $args->getArgument('name');
+
+        if (!$this->targetManager->hasTarget($targetName)) {
+            throw NoSuchTargetException::forTargetName($targetName);
+        }
+
+        $targetToUpdate = $this->targetManager->getTarget($targetName);
+
+        $installerName = $targetToUpdate->getInstallerName();
+        $location = $targetToUpdate->getLocation();
+        $urlFormat = $targetToUpdate->getUrlFormat();
+        $parameters = $targetToUpdate->getParameterValues();
+
+        if ($args->isOptionSet('installer')) {
+            $installerName = $args->getOption('installer');
+        }
+
+        if ($args->isOptionSet('location')) {
+            $location = $args->getOption('location');
+        }
+
+        if ($args->isOptionSet('url-format')) {
+            $urlFormat = $args->getOption('url-format');
+        }
+
+        $this->parseParams($args, $parameters);
+        $this->unsetParams($args, $parameters);
+
+        $updatedTarget = new InstallTarget($targetName, $installerName, $location, $urlFormat, $parameters);
+
+        if ($this->targetsEqual($targetToUpdate, $updatedTarget)) {
+            throw new RuntimeException('Nothing to update.');
+        }
+
+        $this->targetManager->addTarget($updatedTarget);
 
         return 0;
     }
@@ -124,5 +154,59 @@ class TargetCommandHandler
         $io->writeLine($this->targetManager->getDefaultTarget()->getName());
 
         return 0;
+    }
+
+    private function parseParams(Args $args, array &$parameters)
+    {
+        foreach ($args->getOption('param') as $parameter) {
+            $pos = strpos($parameter, '=');
+
+            if (false === $pos) {
+                throw new RuntimeException(sprintf(
+                    'Invalid parameter "%s". Expected "<name>=<value>".',
+                    $parameter
+                ));
+            }
+
+            $parameters[substr($parameter, 0, $pos)] = StringUtil::parseValue(substr($parameter, $pos + 1));
+        }
+    }
+
+    private function unsetParams(Args $args, array &$parameters)
+    {
+        foreach ($args->getOption('unset-param') as $parameter) {
+            unset($parameters[$parameter]);
+        }
+    }
+
+    private function targetsEqual(InstallTarget $target1, InstallTarget $target2)
+    {
+        if ($target1->getName() !== $target2->getName()) {
+            return false;
+        }
+
+        if ($target1->getInstallerName() !== $target2->getInstallerName()) {
+            return false;
+        }
+
+        if ($target1->getLocation() !== $target2->getLocation()) {
+            return false;
+        }
+
+        if ($target1->getUrlFormat() !== $target2->getUrlFormat()) {
+            return false;
+        }
+
+        $parameters1 = $target1->getParameterValues();
+        $parameters2 = $target2->getParameterValues();
+
+        ksort($parameters1);
+        ksort($parameters2);
+
+        if ($parameters1 !== $parameters2) {
+            return false;
+        }
+
+        return true;
     }
 }

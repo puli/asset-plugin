@@ -38,6 +38,11 @@ class TargetCommandHandlerTest extends AbstractCommandHandlerTest
     /**
      * @var Command
      */
+    private static $updateCommand;
+
+    /**
+     * @var Command
+     */
     private static $removeCommand;
 
     /**
@@ -66,6 +71,7 @@ class TargetCommandHandlerTest extends AbstractCommandHandlerTest
 
         self::$listCommand = self::$application->getCommand('target')->getSubCommand('list');
         self::$addCommand = self::$application->getCommand('target')->getSubCommand('add');
+        self::$updateCommand = self::$application->getCommand('target')->getSubCommand('update');
         self::$removeCommand = self::$application->getCommand('target')->getSubCommand('remove');
         self::$setDefaultCommand = self::$application->getCommand('target')->getSubCommand('set-default');
         self::$getDefaultCommand = self::$application->getCommand('target')->getSubCommand('get-default');
@@ -196,6 +202,88 @@ EOF;
         $args = self::$addCommand->parseArgs(new StringArgs('local public_html --param param1'));
 
         $this->handler->handleAdd($args);
+    }
+
+    public function testUpdateTarget()
+    {
+        $target = new InstallTarget('local', 'symlink', 'public_html', '/%s', array(
+            'param1' => 'old',
+            'param2' => 'value2',
+        ));
+
+        $this->targetManager->expects($this->once())
+            ->method('hasTarget')
+            ->with('local')
+            ->willReturn(true);
+
+        $this->targetManager->expects($this->once())
+            ->method('getTarget')
+            ->with('local')
+            ->willReturn($target);
+
+        $this->targetManager->expects($this->once())
+            ->method('addTarget')
+            ->with(new InstallTarget('local', 'copy', 'web', '/dir/%s', array(
+                'param1' => 'new',
+                'param2' => 'value2',
+            )));
+
+        $args = self::$updateCommand->parseArgs(new StringArgs('local --installer copy --location web --url-format /dir/%s --param param1=new'));
+
+        $this->assertSame(0, $this->handler->handleUpdate($args));
+    }
+
+    public function testUpdateTargetWithRemovedParameters()
+    {
+        $target = new InstallTarget('local', 'symlink', 'public_html', '/%s', array(
+            'param1' => 'value1',
+            'param2' => 'value2',
+        ));
+
+        $this->targetManager->expects($this->once())
+            ->method('hasTarget')
+            ->with('local')
+            ->willReturn(true);
+
+        $this->targetManager->expects($this->once())
+            ->method('getTarget')
+            ->with('local')
+            ->willReturn($target);
+
+        $this->targetManager->expects($this->once())
+            ->method('addTarget')
+            ->with(new InstallTarget('local', 'symlink', 'public_html', '/%s', array(
+                'param2' => 'value2',
+            )));
+
+        $args = self::$updateCommand->parseArgs(new StringArgs('local --unset-param param1'));
+
+        $this->assertSame(0, $this->handler->handleUpdate($args));
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testUpdateTargetFailsIfNoChange()
+    {
+        $target = new InstallTarget('local', 'symlink', 'public_html');
+
+        $this->targetManager->expects($this->once())
+            ->method('hasTarget')
+            ->with('local')
+            ->willReturn(true);
+
+        $this->targetManager->expects($this->once())
+            ->method('getTarget')
+            ->with('local')
+            ->willReturn($target);
+
+        $this->targetManager->expects($this->never())
+            ->method('addTarget');
+
+        $args = self::$updateCommand->parseArgs(new StringArgs('local'));
+
+        $this->handler->handleUpdate($args);
     }
 
     public function testRemoveTarget()
