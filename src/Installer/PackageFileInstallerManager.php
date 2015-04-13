@@ -48,6 +48,11 @@ class PackageFileInstallerManager implements InstallerManager
     private $packages;
 
     /**
+     * @var RootPackage
+     */
+    private $rootPackage;
+
+    /**
      * @var InstallerDescriptor[]
      */
     private $installerDescriptors;
@@ -61,12 +66,13 @@ class PackageFileInstallerManager implements InstallerManager
     {
         $this->rootPackageFileManager = $rootPackageFileManager;
         $this->packages = $packages;
+        $this->rootPackage = $packages->getRootPackage();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addInstallerDescriptor(InstallerDescriptor $descriptor)
+    public function addRootInstallerDescriptor(InstallerDescriptor $descriptor)
     {
         $this->assertInstallersLoaded();
 
@@ -103,7 +109,7 @@ class PackageFileInstallerManager implements InstallerManager
     /**
      * {@inheritdoc}
      */
-    public function removeInstallerDescriptor($name)
+    public function removeRootInstallerDescriptor($name)
     {
         $this->assertInstallersLoaded();
 
@@ -140,7 +146,7 @@ class PackageFileInstallerManager implements InstallerManager
     /**
      * {@inheritdoc}
      */
-    public function removeInstallerDescriptors(Expression $expr)
+    public function removeRootInstallerDescriptors(Expression $expr)
     {
         $this->assertInstallersLoaded();
 
@@ -168,15 +174,87 @@ class PackageFileInstallerManager implements InstallerManager
     /**
      * {@inheritdoc}
      */
-    public function clearInstallerDescriptors()
+    public function clearRootInstallerDescriptors()
     {
-        $this->removeInstallerDescriptors(Expr::valid());
+        $this->removeRootInstallerDescriptors(Expr::valid());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getInstallerDescriptor($name, $packageName = null)
+    public function getRootInstallerDescriptor($name)
+    {
+        $this->assertInstallersLoaded();
+
+        if (!isset($this->rootInstallerDescriptors[$name])) {
+            throw NoSuchInstallerException::forInstallerNameAndPackageName($name, $this->rootPackage->getName());
+        }
+
+        return $this->rootInstallerDescriptors[$name];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRootInstallerDescriptors()
+    {
+        $this->assertInstallersLoaded();
+
+        return $this->rootInstallerDescriptors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findRootInstallerDescriptors(Expression $expr)
+    {
+        $this->assertInstallersLoaded();
+
+        $installers = array();
+
+        foreach ($this->rootInstallerDescriptors as $installer) {
+            if ($installer->match($expr)) {
+                $installers[] = $installer;
+            }
+        }
+
+        return $installers;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRootInstallerDescriptor($name)
+    {
+        $this->assertInstallersLoaded();
+
+        return isset($this->rootInstallerDescriptors[$name]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRootInstallerDescriptors(Expression $expr = null)
+    {
+        $this->assertInstallersLoaded();
+
+        if (!$expr) {
+            return count($this->rootInstallerDescriptors) > 0;
+        }
+
+        foreach ($this->rootInstallerDescriptors as $installer) {
+            if ($installer->match($expr)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInstallerDescriptor($name)
     {
         $this->assertInstallersLoaded();
 
@@ -195,6 +273,24 @@ class PackageFileInstallerManager implements InstallerManager
         $this->assertInstallersLoaded();
 
         return $this->installerDescriptors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findInstallerDescriptors(Expression $expr)
+    {
+        $this->assertInstallersLoaded();
+
+        $installers = array();
+
+        foreach ($this->installerDescriptors as $installer) {
+            if ($installer->match($expr)) {
+                $installers[] = $installer;
+            }
+        }
+
+        return $installers;
     }
 
     /**
@@ -236,12 +332,12 @@ class PackageFileInstallerManager implements InstallerManager
         $this->installerDescriptors = array();
 
         foreach ($this->packages as $package) {
-            if (!$package instanceof RootPackage) {
+            if ($this->rootPackage !== $package) {
                 $this->loadInstallers($package);
             }
         }
 
-        $this->loadInstallers($this->packages->getRootPackage());
+        $this->loadInstallers($this->rootPackage);
     }
 
     private function persistInstallersData()

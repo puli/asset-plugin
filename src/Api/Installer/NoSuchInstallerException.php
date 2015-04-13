@@ -36,4 +36,23 @@ class NoSuchInstallerException extends Exception
             $installerName
         ), 0, $cause);
     }
+
+    /**
+     * Creates an exception for an installer name that was not found in a given
+     * package.
+     *
+     * @param string    $installerName The installer name.
+     * @param string    $packageName   The package name.
+     * @param Exception $cause         The exception that caused this exception.
+     *
+     * @return static The created exception.
+     */
+    public static function forInstallerNameAndPackageName($installerName, $packageName, Exception $cause = null)
+    {
+        return new static(sprintf(
+            'The installer "%s" does not exist in package "%s".',
+            $installerName,
+            $packageName
+        ), 0, $cause);
+    }
 }

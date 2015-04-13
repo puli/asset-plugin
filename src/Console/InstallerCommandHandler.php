@@ -110,7 +110,7 @@ class InstallerCommandHandler
             );
         }
 
-        $this->installerManager->addInstallerDescriptor(new InstallerDescriptor(
+        $this->installerManager->addRootInstallerDescriptor(new InstallerDescriptor(
             $args->getArgument('name'),
             $args->getArgument('class'),
             $description,
@@ -131,7 +131,7 @@ class InstallerCommandHandler
             ));
         }
 
-        $this->installerManager->removeInstallerDescriptor($installerName);
+        $this->installerManager->removeRootInstallerDescriptor($installerName);
 
         return 0;
     }

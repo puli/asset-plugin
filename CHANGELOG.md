@@ -22,12 +22,14 @@ Changelog
  * removed `$code` arguments of static exception factory methods
  * added `puli asset update` command
  * added `OVERRIDE` flag to `AssetManager`
- * added `AssetManager::removeAssetMappings()
- * added `AssetManager::clearAssetMappings()
- * added `InstallerManager::removeInstallerDescriptors()
- * added `InstallerManager::clearInstallerDescriptors()
+ * added `AssetManager::removeAssetMappings()`
+ * added `AssetManager::clearAssetMappings()`
+ * added `InstallerManager::removeInstallerDescriptors()`
+ * added `InstallerManager::clearInstallerDescriptors()`
  * added optional argument `$expr` to `InstallerManager::hasInstallerDescriptors()`
  * added `AssetManager` methods for manipulating and accessing root mappings
+ * added `InstallerManager` methods for manipulating and accessing root mappings
+ * added `InstallerManager::findInstallerDescriptors()`
  
 * 1.0.0-beta (2015-03-19)
 
