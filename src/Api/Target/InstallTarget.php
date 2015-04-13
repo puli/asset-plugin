@@ -14,6 +14,7 @@ namespace Puli\AssetPlugin\Api\Target;
 use Puli\AssetPlugin\Api\Installer\InstallerDescriptor;
 use Puli\AssetPlugin\Api\Installer\NoSuchParameterException;
 use Puli\Manager\Assert\Assert;
+use Webmozart\Expression\Expression;
 
 /**
  * A target where resources can be installed.
@@ -40,6 +41,31 @@ use Puli\Manager\Assert\Assert;
  */
 class InstallTarget
 {
+    /**
+     * The name field in {@link Expression} instances.
+     */
+    const NAME = 'name';
+
+    /**
+     * The installer name field in {@link Expression} instances.
+     */
+    const INSTALLER_NAME = 'installerName';
+
+    /**
+     * The location field in {@link Expression} instances.
+     */
+    const LOCATION = 'location';
+
+    /**
+     * The url format field in {@link Expression} instances.
+     */
+    const URL_FORMAT = 'urlFormat';
+
+    /**
+     * The parameter values field in {@link Expression} instances.
+     */
+    const PARAMETER_VALUES = 'parameterValues';
+
     /**
      * The alias for the default target.
      */
@@ -195,5 +221,27 @@ class InstallTarget
     public function hasParameterValues()
     {
         return count($this->parameterValues) > 0;
+    }
+
+    /**
+     * Returns whether the target matches the given expression.
+     *
+     * @param Expression $expr The search criteria. You can use the fields
+     *                         {@link NAME}, {@link CLASS_NAME},
+     *                         {@link LOCATION}, {@link URL_FORMAT} and
+     *                         {@link PARAMETER_VALUES} in the expression.
+     *
+     * @return bool Returns `true` if the target matches the expression and
+     *              `false` otherwise.
+     */
+    public function match(Expression $expr)
+    {
+        return $expr->evaluate(array(
+            self::NAME => $this->name,
+            self::INSTALLER_NAME => $this->installerName,
+            self::LOCATION => $this->location,
+            self::URL_FORMAT => $this->urlFormat,
+            self::PARAMETER_VALUES => $this->parameterValues,
+        ));
     }
 }

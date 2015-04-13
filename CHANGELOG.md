@@ -30,6 +30,10 @@ Changelog
  * added `AssetManager` methods for manipulating and accessing root mappings
  * added `InstallerManager` methods for manipulating and accessing root mappings
  * added `InstallerManager::findInstallerDescriptors()`
+ * added `InstallTargetManager::removeTargets()`
+ * added `InstallTargetManager::clearTargets()`
+ * added `InstallTargetManager::findTargets()`
+ * added optional argument `$expr` to `InstallTargetManager::hasTargets()`
  
 * 1.0.0-beta (2015-03-19)
 

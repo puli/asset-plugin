@@ -11,6 +11,7 @@
 
 namespace Puli\AssetPlugin\Target;
 
+use Exception;
 use Puli\AssetPlugin\Api\AssetPlugin;
 use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Installer\NoSuchInstallerException;
@@ -19,6 +20,8 @@ use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 use Puli\AssetPlugin\Api\Target\InstallTargetManager;
 use Puli\Manager\Api\Package\RootPackageFileManager;
 use stdClass;
+use Webmozart\Expression\Expr;
+use Webmozart\Expression\Expression;
 use Webmozart\Json\JsonValidator;
 use Webmozart\Json\ValidationFailedException;
 
@@ -67,11 +70,20 @@ class PackageFileInstallTargetManager implements InstallTargetManager
             throw NoSuchInstallerException::forInstallerName($target->getInstallerName());
         }
 
-        $this->targets->add($target);
+        $previousTargets = $this->targets->toArray();
+        $previousData = $this->targetsData;
 
+        $this->targets->add($target);
         $this->targetsData[$target->getName()] = $this->targetToData($target);
 
-        $this->persistTargetsData();
+        try {
+            $this->persistTargetsData();
+        } catch (Exception $e) {
+            $this->targets->replace($previousTargets);
+            $this->targetsData = $previousData;
+
+            throw $e;
+        }
     }
 
     /**
@@ -79,15 +91,48 @@ class PackageFileInstallTargetManager implements InstallTargetManager
      */
     public function removeTarget($targetName)
     {
+        $this->removeTargets(Expr::same($targetName, InstallTarget::NAME));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeTargets(Expression $expr)
+    {
         $this->assertTargetsLoaded();
 
-        $this->targets->remove($targetName);
+        $previousTargets = $this->targets->toArray();
+        $previousData = $this->targetsData;
+        $save = false;
 
-        if (isset($this->targetsData[$targetName])) {
-            unset($this->targetsData[$targetName]);
-
-            $this->persistTargetsData();
+        foreach ($this->targets as $target) {
+            if ($target->match($expr)) {
+                $this->targets->remove($target->getName());
+                unset($this->targetsData[$target->getName()]);
+                $save = true;
+            }
         }
+
+        if (!$save) {
+            return;
+        }
+
+        try {
+            $this->persistTargetsData();
+        } catch (Exception $e) {
+            $this->targets->replace($previousTargets);
+            $this->targetsData = $previousData;
+
+            throw $e;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clearTargets()
+    {
+        $this->removeTargets(Expr::valid());
     }
 
     /**
@@ -113,6 +158,24 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     /**
      * {@inheritdoc}
      */
+    public function findTargets(Expression $expr)
+    {
+        $this->assertTargetsLoaded();
+
+        $targets = array();
+
+        foreach ($this->targets as $target) {
+            if ($target->match($expr)) {
+                $targets[] = $target;
+            }
+        }
+
+        return new InstallTargetCollection($targets);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function hasTarget($targetName)
     {
         $this->assertTargetsLoaded();
@@ -123,11 +186,21 @@ class PackageFileInstallTargetManager implements InstallTargetManager
     /**
      * {@inheritdoc}
      */
-    public function hasTargets()
+    public function hasTargets(Expression $expr = null)
     {
         $this->assertTargetsLoaded();
 
-        return !$this->targets->isEmpty();
+        if (!$expr) {
+            return !$this->targets->isEmpty();
+        }
+
+        foreach ($this->targets as $target) {
+            if ($target->match($expr)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

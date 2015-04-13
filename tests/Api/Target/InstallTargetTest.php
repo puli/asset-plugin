@@ -13,6 +13,7 @@ namespace Puli\AssetPlugin\Tests\Api\Target;
 
 use PHPUnit_Framework_TestCase;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
+use Webmozart\Expression\Expr;
 
 /**
  * @since  1.0
@@ -192,5 +193,25 @@ class InstallTargetTest extends PHPUnit_Framework_TestCase
         $target = new InstallTarget('local', 'symlink', 'web', '/%s', array());
 
         $this->assertFalse($target->hasParameterValues());
+    }
+
+    public function testMatch()
+    {
+        $target = new InstallTarget('local', 'symlink', 'web', '/%s', array('param1' => 'value1', 'param2' => 'value2'));
+
+        $this->assertFalse($target->match(Expr::same('foobar', InstallTarget::NAME)));
+        $this->assertTrue($target->match(Expr::same('local', InstallTarget::NAME)));
+
+        $this->assertFalse($target->match(Expr::same('foobar', InstallTarget::INSTALLER_NAME)));
+        $this->assertTrue($target->match(Expr::same('symlink', InstallTarget::INSTALLER_NAME)));
+
+        $this->assertFalse($target->match(Expr::same('foobar', InstallTarget::LOCATION)));
+        $this->assertTrue($target->match(Expr::same('web', InstallTarget::LOCATION)));
+
+        $this->assertFalse($target->match(Expr::same('foobar', InstallTarget::URL_FORMAT)));
+        $this->assertTrue($target->match(Expr::same('/%s', InstallTarget::URL_FORMAT)));
+
+        $this->assertFalse($target->match(Expr::key(InstallTarget::PARAMETER_VALUES, Expr::keyExists('foobar'))));
+        $this->assertTrue($target->match(Expr::key(InstallTarget::PARAMETER_VALUES, Expr::keyExists('param1'))));
     }
 }

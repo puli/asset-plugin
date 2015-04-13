@@ -18,6 +18,8 @@ use Puli\AssetPlugin\Api\Installer\InstallerManager;
 use Puli\AssetPlugin\Api\Target\InstallTarget;
 use Puli\AssetPlugin\Target\PackageFileInstallTargetManager;
 use Puli\Manager\Api\Package\RootPackageFileManager;
+use Puli\Manager\Tests\TestException;
+use Webmozart\Expression\Expr;
 
 /**
  * @since  1.0
@@ -137,6 +139,39 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->assertEquals(array('local' => $target), $collection->toArray());
     }
 
+    public function testFindTargets()
+    {
+        $this->packageFileManager->expects($this->any())
+            ->method('getExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
+            ->willReturn((object) array(
+                'local1' => (object) array(
+                    'installer' => 'symlink',
+                    'location' => 'web',
+                    'url-format' => '/public/%s',
+                    'default' => true,
+                ),
+                'local2' => (object) array(
+                    'installer' => 'copy',
+                    'location' => 'alternative',
+                    'url-format' => '/alternative/%s',
+                ),
+                'cdn' => (object) array(
+                    'installer' => 'rsync',
+                    'location' => 'ssh://my.cdn.com',
+                    'parameters' => (object) array('param' => 'value'),
+                ),
+            ));
+
+        $target1 = new InstallTarget('local1', 'symlink', 'web', '/public/%s');
+        $target2 = new InstallTarget('local2', 'copy', 'alternative', '/alternative/%s');
+
+        $collection = $this->targetManager->findTargets(Expr::startsWith('local', InstallTarget::NAME));
+
+        $this->assertInstanceOf('Puli\AssetPlugin\Api\Target\InstallTargetCollection', $collection);
+        $this->assertEquals(array('local1' => $target1, 'local2' => $target2), $collection->toArray());
+    }
+
     public function testHasTarget()
     {
         $this->populateDefaultManager();
@@ -150,6 +185,8 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->populateDefaultManager();
 
         $this->assertTrue($this->targetManager->hasTargets());
+        $this->assertTrue($this->targetManager->hasTargets(Expr::same('local', InstallTarget::NAME)));
+        $this->assertFalse($this->targetManager->hasTargets(Expr::same('foobar', InstallTarget::NAME)));
     }
 
     public function testHasNoTargets()
@@ -259,6 +296,38 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->targetManager->addTarget($target);
     }
 
+    public function testAddTargetRevertsIfSavingFails()
+    {
+        $this->populateDefaultManager();
+
+        $this->packageFileManager->expects($this->any())
+            ->method('getExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
+            ->willReturn((object) array(
+                'local' => (object) array(
+                    'installer' => 'symlink',
+                    'location' => 'web',
+                    'url-format' => '/public/%s',
+                    'default' => true,
+                ),
+            ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('setExtraKey')
+            ->willThrowException(new TestException());
+
+        $target = new InstallTarget('cdn', 'rsync', 'ssh://my.cdn.com');
+
+        try {
+            $this->targetManager->addTarget($target);
+            $this->fail('Expected a TestException');
+        } catch (TestException $e) {
+        }
+
+        $this->assertTrue($this->targetManager->hasTarget('local'));
+        $this->assertFalse($this->targetManager->hasTarget('cdn'));
+    }
+
     public function testRemoveTarget()
     {
         $this->packageFileManager->expects($this->any())
@@ -320,6 +389,143 @@ class PackageFileInstallTargetManagerUnloadedTest extends PHPUnit_Framework_Test
         $this->targetManager->removeTarget('foobar');
 
         $this->assertTrue($this->targetManager->hasTarget('local'));
+    }
+
+    public function testRemoveTargetRevertsIfSavingFails()
+    {
+        $this->packageFileManager->expects($this->any())
+            ->method('getExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
+            ->willReturn((object) array(
+                'local' => (object) array(
+                    'installer' => 'symlink',
+                    'location' => 'web',
+                    'url-format' => '/public/%s',
+                    'default' => true,
+                ),
+                'cdn' => (object) array(
+                    'installer' => 'rsync',
+                    'location' => 'ssh://my.cdn.com',
+                    'parameters' => (object) array('param' => 'value'),
+                ),
+            ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('setExtraKey')
+            ->willThrowException(new TestException());
+
+        try {
+            $this->targetManager->removeTarget('local');
+            $this->fail('Expected a TestException');
+        } catch (TestException $e) {
+        }
+
+        $this->assertTrue($this->targetManager->hasTarget('local'));
+        $this->assertTrue($this->targetManager->hasTarget('cdn'));
+    }
+
+    public function testRemoveTargets()
+    {
+        $this->packageFileManager->expects($this->any())
+            ->method('getExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
+            ->willReturn((object) array(
+                'local1' => (object) array(
+                    'installer' => 'symlink',
+                    'location' => 'web',
+                    'url-format' => '/public/%s',
+                    'default' => true,
+                ),
+                'local2' => (object) array(
+                    'installer' => 'copy',
+                    'location' => 'alternative',
+                    'url-format' => '/alternative/%s',
+                ),
+                'cdn' => (object) array(
+                    'installer' => 'rsync',
+                    'location' => 'ssh://my.cdn.com',
+                    'parameters' => (object) array('param' => 'value'),
+                ),
+            ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('setExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY, (object) array(
+                'cdn' => (object) array(
+                    'installer' => 'rsync',
+                    'location' => 'ssh://my.cdn.com',
+                    'parameters' => (object) array('param' => 'value'),
+                    'default' => true,
+                ),
+            ));
+
+        $this->targetManager->removeTargets(Expr::startsWith('local', InstallTarget::NAME));
+
+        $this->assertFalse($this->targetManager->hasTarget('local1'));
+        $this->assertFalse($this->targetManager->hasTarget('local2'));
+        $this->assertTrue($this->targetManager->hasTarget('cdn'));
+    }
+
+    public function testRemoveTargetsRevertsIfSavingFails()
+    {
+        $this->packageFileManager->expects($this->any())
+            ->method('getExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
+            ->willReturn((object) array(
+                'local' => (object) array(
+                    'installer' => 'symlink',
+                    'location' => 'web',
+                    'url-format' => '/public/%s',
+                    'default' => true,
+                ),
+                'cdn' => (object) array(
+                    'installer' => 'rsync',
+                    'location' => 'ssh://my.cdn.com',
+                    'parameters' => (object) array('param' => 'value'),
+                ),
+            ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('setExtraKey')
+            ->willThrowException(new TestException());
+
+        try {
+            $this->targetManager->removeTargets(Expr::startsWith('local', InstallTarget::NAME));
+            $this->fail('Expected a TestException');
+        } catch (TestException $e) {
+        }
+
+        $this->assertTrue($this->targetManager->hasTarget('local'));
+        $this->assertTrue($this->targetManager->hasTarget('cdn'));
+    }
+
+    public function testClearTargets()
+    {
+        $this->packageFileManager->expects($this->any())
+            ->method('getExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY)
+            ->willReturn((object) array(
+                'local' => (object) array(
+                    'installer' => 'symlink',
+                    'location' => 'web',
+                    'url-format' => '/public/%s',
+                    'default' => true,
+                ),
+                'cdn' => (object) array(
+                    'installer' => 'rsync',
+                    'location' => 'ssh://my.cdn.com',
+                    'parameters' => (object) array('param' => 'value'),
+                ),
+            ));
+
+        $this->packageFileManager->expects($this->once())
+            ->method('removeExtraKey')
+            ->with(AssetPlugin::INSTALL_TARGETS_KEY);
+
+        $this->targetManager->clearTargets();
+
+        $this->assertFalse($this->targetManager->hasTarget('local1'));
+        $this->assertFalse($this->targetManager->hasTarget('cdn'));
     }
 
     public function testGetDefaultTarget()

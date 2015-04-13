@@ -12,6 +12,7 @@
 namespace Puli\AssetPlugin\Api\Target;
 
 use Puli\AssetPlugin\Api\Installer\NoSuchInstallerException;
+use Webmozart\Expression\Expression;
 
 /**
  * Manages the targets where resources can be installed.
@@ -44,6 +45,22 @@ interface InstallTargetManager
     public function removeTarget($targetName);
 
     /**
+     * Removes all install targets matching the given expression.
+     *
+     * If no matching targets are found, this method does nothing.
+     *
+     * @param Expression $expr The search criteria.
+     */
+    public function removeTargets(Expression $expr);
+
+    /**
+     * Removes all install targets.
+     *
+     * If no targets are found, this method does nothing.
+     */
+    public function clearTargets();
+
+    /**
      * Returns the install target with the given name.
      *
      * @param string $targetName The name of the target.
@@ -62,6 +79,15 @@ interface InstallTargetManager
     public function getTargets();
 
     /**
+     * Returns all install targets matching the given expression.
+     *
+     * @param Expression $expr The search criteria.
+     *
+     * @return InstallTargetCollection The install targets.
+     */
+    public function findTargets(Expression $expr);
+
+    /**
      * Returns whether an install target exists.
      *
      * @param string $targetName The name of the target.
@@ -73,10 +99,15 @@ interface InstallTargetManager
     /**
      * Returns whether the manager has any targets.
      *
+     * You can optionally pass an expression to check whether the manager has
+     * targets matching that expression.
+     *
+     * @param Expression $expr The search criteria.
+     *
      * @return bool Returns `true` if the manager has targets and `false`
      *              otherwise.
      */
-    public function hasTargets();
+    public function hasTargets(Expression $expr = null);
 
     /**
      * Sets the default target.
