@@ -1,7 +1,7 @@
 Changelog
 =========
 
-* 1.0.0-next (@release_date@)
+* 1.0.0-beta2 (2015-04-13)
 
  * fixed `SymlinkInstaller` when called twice for a mapping to the install 
    target root /
