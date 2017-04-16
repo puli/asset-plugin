@@ -20,7 +20,6 @@ use Puli\AssetPlugin\Api\Target\InstallTargetCollection;
 use Puli\AssetPlugin\Api\Target\NoSuchTargetException;
 use Puli\Manager\Api\Discovery\BindingDescriptor;
 use Puli\Manager\Api\Discovery\DiscoveryManager;
-use Puli\Manager\Api\Package\RootPackage;
 use Rhumsaa\Uuid\Uuid;
 use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
@@ -127,7 +126,7 @@ class DiscoveryAssetManager implements AssetManager
      */
     public function getRootAssetMappings()
     {
-        return $this->findRootAssetMappings(Expr::valid());
+        return $this->findRootAssetMappings(Expr::true());
     }
 
     /**
@@ -183,7 +182,7 @@ class DiscoveryAssetManager implements AssetManager
      */
     public function getAssetMappings()
     {
-        return $this->findAssetMappings(Expr::valid());
+        return $this->findAssetMappings(Expr::true());
     }
 
     /**

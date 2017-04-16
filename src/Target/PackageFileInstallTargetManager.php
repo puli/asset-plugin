@@ -132,7 +132,7 @@ class PackageFileInstallTargetManager implements InstallTargetManager
      */
     public function clearTargets()
     {
-        $this->removeTargets(Expr::valid());
+        $this->removeTargets(Expr::true());
     }
 
     /**
